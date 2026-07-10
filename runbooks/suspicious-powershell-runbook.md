@@ -35,7 +35,7 @@ The runbook helps the analyst determine:
 
 ## Runbook ID
 
-```text
+```
 RB-05
 ```
 
@@ -43,7 +43,7 @@ RB-05
 
 ## Related Exercise
 
-```text
+```
 EX-05 – Suspicious PowerShell
 ```
 
@@ -163,7 +163,7 @@ The investigation may begin from:
 
 Record:
 
-```text
+```
 Alert time:
 Alert source:
 Alert name:
@@ -292,7 +292,7 @@ Record the exact event time and timezone from:
 
 Use absolute timestamps.
 
-```text
+```
 YYYY-MM-DD HH:MM:SS Timezone
 ```
 
@@ -302,7 +302,7 @@ YYYY-MM-DD HH:MM:SS Timezone
 
 On the endpoint, run as an authorized administrator:
 
-```powershell
+```
 Get-CimInstance Win32_Process |
     Where-Object {
         $_.Name -match "powershell|pwsh"
@@ -322,7 +322,7 @@ If the process is still running, do not terminate it before preserving volatile 
 
 ## Step 3: Confirm Local PowerShell Events
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Microsoft-Windows-PowerShell/Operational"
@@ -338,7 +338,7 @@ Select-Object `
 
 Search by user, command, or script name:
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Microsoft-Windows-PowerShell/Operational"
@@ -356,7 +356,7 @@ Where-Object {
 
 ### Windows Security Event ID 4688
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -370,7 +370,7 @@ Where-Object {
 
 ### Sysmon Event ID 1
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Microsoft-Windows-Sysmon/Operational"
@@ -388,7 +388,7 @@ Where-Object {
 
 Record:
 
-```text
+```
 PowerShell executable:
 Executable path:
 Process ID:
@@ -414,7 +414,7 @@ End time:
 
 Expected paths commonly include:
 
-```text
+```
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
 C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe
 C:\Program Files\PowerShell\7\pwsh.exe
@@ -497,7 +497,7 @@ These patterns require context and are not automatically malicious.
 
 Save the exact original command before transformation.
 
-```text
+```
 Original command:
 Source event:
 Collection time:
@@ -526,7 +526,7 @@ PowerShell commonly uses UTF-16LE for `-EncodedCommand`.
 
 Use an isolated analysis session:
 
-```powershell
+```
 $Encoded = "<BASE64_VALUE>"
 
 [System.Text.Encoding]::Unicode.GetString(
@@ -540,7 +540,7 @@ Record the decoded text as evidence.
 
 ## Decode UTF-8 Base64 When Required
 
-```powershell
+```
 $Encoded = "<BASE64_VALUE>"
 
 [System.Text.Encoding]::UTF8.GetString(
@@ -556,14 +556,14 @@ Use UTF-8 only when evidence indicates that encoding.
 
 On Linux:
 
-```bash
+```
 printf '%s' '<BASE64_VALUE>' |
     base64 --decode
 ```
 
 For UTF-16LE content:
 
-```bash
+```
 printf '%s' '<BASE64_VALUE>' |
     base64 --decode |
     iconv -f UTF-16LE -t UTF-8
@@ -634,7 +634,7 @@ Increase concern when PowerShell is launched by:
 
 ## Validate the Parent Process
 
-```powershell
+```
 Get-Process `
     -Id <PARENT_PROCESS_ID> `
     -ErrorAction SilentlyContinue
@@ -644,7 +644,7 @@ Historical parent information should come from Event ID `4688` or Sysmon Event I
 
 Record:
 
-```text
+```
 Parent executable:
 Parent command line:
 Parent user:
@@ -708,7 +708,7 @@ Review:
 
 For a domain user:
 
-```powershell
+```
 Get-ADUser `
     -Identity "<USER_ACCOUNT>" `
     -Properties `
@@ -730,7 +730,7 @@ Select-Object `
 
 ## Review Successful Logon Context
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -775,7 +775,7 @@ Increase concern when:
 
 When `-File` or a script path is present, record:
 
-```text
+```
 Full path:
 Filename:
 Extension:
@@ -792,7 +792,7 @@ Origin:
 
 ## Review File Properties
 
-```powershell
+```
 Get-Item `
     -Path "<SCRIPT_PATH>" |
 Select-Object `
@@ -807,7 +807,7 @@ Select-Object `
 
 ## Hash the Script
 
-```powershell
+```
 Get-FileHash `
     -Path "<SCRIPT_PATH>" `
     -Algorithm SHA256
@@ -817,7 +817,7 @@ Get-FileHash `
 
 ## Review Digital Signature
 
-```powershell
+```
 Get-AuthenticodeSignature `
     -FilePath "<SCRIPT_PATH>"
 ```
@@ -828,7 +828,7 @@ An unsigned script is not automatically malicious, but the signature adds contex
 
 ## Review Alternate Data Streams
 
-```powershell
+```
 Get-Item `
     -Path "<SCRIPT_PATH>" `
     -Stream *
@@ -842,7 +842,7 @@ A `Zone.Identifier` stream may indicate internet origin.
 
 Use a text viewer.
 
-```powershell
+```
 Get-Content `
     -Path "<SCRIPT_PATH>" `
     -Raw
@@ -878,7 +878,7 @@ Search by script path or filename.
 
 ### Sysmon
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Microsoft-Windows-Sysmon/Operational"
@@ -896,7 +896,7 @@ Where-Object {
 
 ## Search Sysmon Network Events
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Microsoft-Windows-Sysmon/Operational"
@@ -910,7 +910,7 @@ Where-Object {
 
 Record:
 
-```text
+```
 Source address:
 Source port:
 Destination address:
@@ -926,7 +926,7 @@ User:
 
 ## Search DNS Queries
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Microsoft-Windows-Sysmon/Operational"
@@ -944,7 +944,7 @@ Where-Object {
 
 When the process is still running:
 
-```powershell
+```
 Get-NetTCPConnection `
     -OwningProcess <PROCESS_ID> `
     -ErrorAction SilentlyContinue
@@ -975,7 +975,7 @@ Do not access or browse an unknown destination during triage.
 
 Using Sysmon:
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Microsoft-Windows-Sysmon/Operational"
@@ -1021,7 +1021,7 @@ Many of these tools are legitimate administrative utilities. Context is required
 
 Record:
 
-```text
+```
 Child executable:
 Child command line:
 Child process ID:
@@ -1043,7 +1043,7 @@ Files created:
 
 Search for task creation:
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -1057,7 +1057,7 @@ Where-Object {
 
 Review current tasks:
 
-```powershell
+```
 Get-ScheduledTask |
     Where-Object {
         $_.Actions.Execute -match "powershell|pwsh"
@@ -1071,7 +1071,7 @@ Get-ScheduledTask |
 
 Search for service installation:
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "System"
@@ -1085,7 +1085,7 @@ Where-Object {
 
 Review services:
 
-```powershell
+```
 Get-CimInstance Win32_Service |
     Where-Object {
         $_.PathName -match "powershell|pwsh|<SCRIPT_NAME>"
@@ -1105,7 +1105,7 @@ Select-Object `
 
 Review Sysmon Event ID `13`:
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Microsoft-Windows-Sysmon/Operational"
@@ -1123,7 +1123,7 @@ Where-Object {
 
 Review:
 
-```powershell
+```
 Get-ChildItem `
     -Path `
         "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup",
@@ -1137,7 +1137,7 @@ Get-ChildItem `
 
 Review profile locations:
 
-```powershell
+```
 $PROFILE | Format-List *
 ```
 
@@ -1151,7 +1151,7 @@ Do not alter profile files before preserving them.
 
 ## Review Microsoft Defender Events
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Microsoft-Windows-Windows Defender/Operational"
@@ -1169,7 +1169,7 @@ Select-Object `
 
 ## Review Defender Status
 
-```powershell
+```
 Get-MpComputerStatus |
     Select-Object `
         AntivirusEnabled,
@@ -1186,7 +1186,7 @@ Get-MpComputerStatus |
 
 Run as an authorized administrator:
 
-```powershell
+```
 Get-MpPreference |
     Select-Object `
         DisableRealtimeMonitoring,
@@ -1222,7 +1222,7 @@ Increase severity when PowerShell:
 
 Search for:
 
-```text
+```
 powershell.exe
 pwsh.exe
 ```
@@ -1231,7 +1231,7 @@ pwsh.exe
 
 ## Search by User
 
-```text
+```
 <USER_ACCOUNT>
 ```
 
@@ -1239,7 +1239,7 @@ pwsh.exe
 
 ## Search by Host
 
-```text
+```
 <WINDOWS_ENDPOINT>
 ```
 
@@ -1249,7 +1249,7 @@ pwsh.exe
 
 Review:
 
-```text
+```
 4103
 4104
 4688
@@ -1272,7 +1272,7 @@ Review:
 
 Record:
 
-```text
+```
 Agent:
 Rule ID:
 Rule description:
@@ -1570,7 +1570,7 @@ index=windows earliest=-24h
 
 # Investigation Decision Tree
 
-```text
+```
 Suspicious PowerShell Alert
              |
              v
@@ -1799,7 +1799,7 @@ Document why containment was unnecessary.
 
 When authorized and evidence is preserved:
 
-```powershell
+```
 Stop-Process `
     -Id <PROCESS_ID> `
     -Force
@@ -1920,7 +1920,7 @@ Confirm:
 
 ## Confirm PowerShell Activity Stopped
 
-```powershell
+```
 Get-CimInstance Win32_Process |
     Where-Object {
         $_.Name -match "powershell|pwsh"
@@ -1952,7 +1952,7 @@ Review:
 
 ## Confirm Defender Health
 
-```powershell
+```
 Get-MpComputerStatus |
     Select-Object `
         AntivirusEnabled,
@@ -1967,7 +1967,7 @@ Get-MpComputerStatus |
 
 ## Confirm Logging Health
 
-```powershell
+```
 Get-WinEvent `
     -ListLog "Microsoft-Windows-PowerShell/Operational" |
 Select-Object `
@@ -1984,7 +1984,7 @@ Confirm Script Block Logging and process telemetry continue to generate events.
 
 After recovery, run an approved harmless command:
 
-```powershell
+```
 Get-Date
 ```
 
@@ -2023,7 +2023,7 @@ Escalate immediately when:
 
 Provide:
 
-```text
+```
 Incident summary:
 Severity:
 First observed:
@@ -2081,7 +2081,7 @@ Preserve:
 
 ## Export PowerShell Operational Events
 
-```powershell
+```
 wevtutil epl `
     "Microsoft-Windows-PowerShell/Operational" `
     "<EVIDENCE_PATH>\PowerShell-Operational.evtx"
@@ -2091,7 +2091,7 @@ wevtutil epl `
 
 ## Export Sysmon Events
 
-```powershell
+```
 wevtutil epl `
     "Microsoft-Windows-Sysmon/Operational" `
     "<EVIDENCE_PATH>\Sysmon-Operational.evtx"
@@ -2101,7 +2101,7 @@ wevtutil epl `
 
 ## Export Security Events
 
-```powershell
+```
 wevtutil epl `
     Security `
     "<EVIDENCE_PATH>\Security.evtx"
@@ -2115,7 +2115,7 @@ Store them privately.
 
 ## Export a Narrow PowerShell Summary
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Microsoft-Windows-PowerShell/Operational"
@@ -2139,7 +2139,7 @@ Export-Csv `
 
 Copy it to the private evidence location without executing it:
 
-```powershell
+```
 Copy-Item `
     -Path "<SCRIPT_PATH>" `
     -Destination "<EVIDENCE_PATH>\quarantine-copy" `
@@ -2154,7 +2154,7 @@ Access to preserved suspicious files should be restricted.
 
 Windows:
 
-```powershell
+```
 Get-FileHash `
     -Path "<EVIDENCE_FILE>" `
     -Algorithm SHA256
@@ -2162,7 +2162,7 @@ Get-FileHash `
 
 Linux:
 
-```bash
+```
 sha256sum <EVIDENCE_FILE>
 ```
 
@@ -2170,7 +2170,7 @@ sha256sum <EVIDENCE_FILE>
 
 ## Evidence Record
 
-```text
+```
 Runbook: RB-05
 Incident or case:
 Evidence file:
@@ -2269,7 +2269,7 @@ Potential improvements include:
 
 Suspicious PowerShell activity may relate to:
 
-```text
+```
 T1059.001 – Command and Scripting Interpreter: PowerShell
 ```
 
@@ -2294,7 +2294,7 @@ Apply mappings only when the associated behavior is observed.
 
 ## Investigation Summary
 
-```text
+```
 Alert:
 Host:
 User:
@@ -2330,7 +2330,7 @@ Detection gaps:
 
 Select one:
 
-```text
+```
 Approved administrative command
 Approved automation
 Approved software deployment
@@ -2378,7 +2378,7 @@ The case may be closed when:
 
 ## Closure Statement
 
-```text
+```
 The PowerShell activity was investigated using PowerShell Operational, process, Sysmon, Defender, Wazuh, and Splunk telemetry. The user, parent process, command line, script content, privilege context, network activity, file changes, child processes, and persistence indicators were reviewed. The activity was classified as <CLASSIFICATION>. Required containment, eradication, and recovery actions were completed, monitoring confirmed the intended endpoint state, and the case was closed.
 ```
 
@@ -2408,7 +2408,7 @@ Remove or replace:
 
 Use placeholders such as:
 
-```text
+```
 <USER_ACCOUNT>
 <WINDOWS_ENDPOINT>
 <PARENT_PROCESS>
@@ -2579,7 +2579,7 @@ Before publishing:
 
 ## Primary PowerShell Event Search
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Microsoft-Windows-PowerShell/Operational"
@@ -2590,7 +2590,7 @@ Get-WinEvent `
 
 ## Primary Process Search
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Microsoft-Windows-Sysmon/Operational"
@@ -2628,7 +2628,7 @@ index=windows earliest=-1h
 
 ## Immediate Escalation Indicators
 
-```text
+```
 Office or browser parent process
 Encoded or heavily obfuscated command
 Remote payload retrieval
