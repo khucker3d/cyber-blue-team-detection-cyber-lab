@@ -34,7 +34,7 @@ The runbook helps the analyst determine:
 
 ## Runbook ID
 
-```text
+```
 RB-09
 ```
 
@@ -42,7 +42,7 @@ RB-09
 
 ## Related Exercise
 
-```text
+```
 EX-09 – Network Reconnaissance Detection
 ```
 
@@ -152,7 +152,7 @@ The investigation may begin from:
 
 Record:
 
-```text
+```
 Alert time:
 Alert source:
 Alert name:
@@ -278,7 +278,7 @@ Record the exact timestamp and timezone from:
 
 Use absolute timestamps.
 
-```text
+```
 YYYY-MM-DD HH:MM:SS Timezone
 ```
 
@@ -299,25 +299,25 @@ Confirm:
 
 ### Windows
 
-```powershell
+```
 hostname
 ```
 
-```powershell
+```
 Get-NetIPConfiguration
 ```
 
 ### Linux
 
-```bash
+```
 hostname
 ```
 
-```bash
+```
 ip address
 ```
 
-```bash
+```
 ip route
 ```
 
@@ -329,7 +329,7 @@ Do not rely on an IP address alone when DHCP, snapshots, or cloned VMs may be in
 
 On the Windows target, run from an authorized administrator session:
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -345,7 +345,7 @@ Select-Object `
 
 Filter for the suspected source address:
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -373,7 +373,7 @@ If no matching events exist, review:
 
 Determine the configured log path:
 
-```powershell
+```
 Get-NetFirewallProfile |
     Select-Object `
         Name,
@@ -386,13 +386,13 @@ Get-NetFirewallProfile |
 
 A common default path is:
 
-```text
+```
 C:\Windows\System32\LogFiles\Firewall\pfirewall.log
 ```
 
 Review recent entries:
 
-```powershell
+```
 Get-Content `
     -Path "C:\Windows\System32\LogFiles\Firewall\pfirewall.log" `
     -Tail 200
@@ -400,7 +400,7 @@ Get-Content `
 
 Search for the source address:
 
-```powershell
+```
 Select-String `
     -Path "C:\Windows\System32\LogFiles\Firewall\pfirewall.log" `
     -Pattern "<SOURCE_IP>"
@@ -414,7 +414,7 @@ Firewall text logs may not provide process attribution.
 
 Record:
 
-```text
+```
 First observed:
 Last observed:
 Source system:
@@ -440,7 +440,7 @@ This pattern may indicate a vertical port scan.
 
 Example:
 
-```text
+```
 One source address
 One destination address
 Many destination ports
@@ -463,7 +463,7 @@ This pattern may indicate horizontal host or service discovery.
 
 Example:
 
-```text
+```
 One source address
 Many destination addresses
 Same destination port
@@ -498,7 +498,7 @@ Possible explanations include:
 
 A sequence such as:
 
-```text
+```
 20
 21
 22
@@ -548,28 +548,28 @@ A port number alone does not prove the exact service.
 
 ### Windows Source
 
-```powershell
+```
 quser
 ```
 
-```powershell
+```
 Get-CimInstance Win32_ComputerSystem |
     Select-Object Name, Domain, UserName
 ```
 
 ### Linux Source
 
-```bash
+```
 who
 ```
 
-```bash
+```
 w
 ```
 
 Record:
 
-```text
+```
 Logged-on user:
 Account privilege:
 Session type:
@@ -583,7 +583,7 @@ Source system owner:
 
 ### Windows
 
-```powershell
+```
 Get-CimInstance Win32_Process |
     Select-Object `
         ProcessId,
@@ -596,7 +596,7 @@ Get-CimInstance Win32_Process |
 
 ### Linux
 
-```bash
+```
 ps auxww
 ```
 
@@ -618,13 +618,13 @@ Look for:
 
 ### Linux
 
-```bash
+```
 ps auxww | grep -i nmap
 ```
 
 Review shell history only when authorized:
 
-```bash
+```
 history | grep -i nmap
 ```
 
@@ -632,7 +632,7 @@ Shell history may be incomplete, modified, or unavailable.
 
 ### Windows
 
-```powershell
+```
 Get-CimInstance Win32_Process |
     Where-Object {
         $_.CommandLine -match "nmap"
@@ -651,7 +651,7 @@ Select-Object `
 
 ### Sysmon on Windows
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Microsoft-Windows-Sysmon/Operational"
@@ -665,7 +665,7 @@ Where-Object {
 
 ### Windows Security
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -681,7 +681,7 @@ Where-Object {
 
 ## Record Source Process Context
 
-```text
+```
 Process:
 Executable path:
 Command line:
@@ -701,14 +701,14 @@ Signature:
 
 ### Windows
 
-```powershell
+```
 Get-NetTCPConnection |
     Sort-Object RemoteAddress, RemotePort
 ```
 
 Filter by process:
 
-```powershell
+```
 Get-NetTCPConnection `
     -OwningProcess <PROCESS_ID> `
     -ErrorAction SilentlyContinue
@@ -716,7 +716,7 @@ Get-NetTCPConnection `
 
 ### Linux
 
-```bash
+```
 sudo ss -tunap
 ```
 
@@ -730,7 +730,7 @@ Historical connections may require Sysmon, packet capture, firewall logs, or SIE
 
 Run on the target:
 
-```powershell
+```
 Get-NetTCPConnection -State Listen |
     Sort-Object LocalPort |
     Select-Object `
@@ -741,13 +741,13 @@ Get-NetTCPConnection -State Listen |
 
 Map the process:
 
-```powershell
+```
 Get-Process -Id <PROCESS_ID>
 ```
 
 Alternative:
 
-```powershell
+```
 Get-NetTCPConnection -State Listen |
 ForEach-Object {
     [PSCustomObject]@{
@@ -769,7 +769,7 @@ ForEach-Object {
 
 Record:
 
-```text
+```
 Port:
 Protocol:
 Service:
@@ -790,7 +790,7 @@ A closed port may still generate a reconnaissance signal.
 
 Search by port:
 
-```powershell
+```
 Get-NetFirewallPortFilter |
     Where-Object {
         $_.LocalPort -eq "<PORT>"
@@ -799,7 +799,7 @@ Get-NetFirewallPortFilter |
 
 Review enabled inbound rules:
 
-```powershell
+```
 Get-NetFirewallRule `
     -Enabled True `
     -Direction Inbound |
@@ -818,7 +818,7 @@ Do not publish the complete operational firewall rule set.
 
 Search Event ID `5156` when enabled:
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -859,7 +859,7 @@ Review:
 
 Run only within the authorized CyberLab:
 
-```bash
+```
 sudo tcpdump \
     -i <INTERFACE> \
     -nn \
@@ -877,25 +877,25 @@ Stop the capture after the required window.
 
 Traffic from the suspected source:
 
-```text
+```
 ip.src == <SOURCE_IP>
 ```
 
 Traffic between source and target:
 
-```text
+```
 ip.addr == <SOURCE_IP> && ip.addr == <TARGET_IP>
 ```
 
 TCP SYN packets without ACK:
 
-```text
+```
 tcp.flags.syn == 1 && tcp.flags.ack == 0
 ```
 
 Specific destination port:
 
-```text
+```
 tcp.dstport == <PORT>
 ```
 
@@ -939,7 +939,7 @@ Packet behavior should be correlated with endpoint logs.
 
 On Windows targets:
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -955,7 +955,7 @@ Where-Object {
 
 ## Search Successful Logons
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -971,7 +971,7 @@ Where-Object {
 
 ## Search Explicit Credential Use
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -1047,13 +1047,13 @@ Review:
 
 Review Linux authentication logs:
 
-```bash
+```
 sudo journalctl -u ssh
 ```
 
 Or where applicable:
 
-```bash
+```
 sudo grep -i ssh /var/log/auth.log
 ```
 
@@ -1089,7 +1089,7 @@ Simple port scanning may produce only a TCP connection without an HTTP request.
 
 Search for:
 
-```text
+```
 <SOURCE_IP>
 ```
 
@@ -1099,7 +1099,7 @@ Search for:
 
 Search for:
 
-```text
+```
 <TARGET_IP>
 <TARGET_HOST>
 ```
@@ -1110,7 +1110,7 @@ Search for:
 
 Search for:
 
-```text
+```
 <DESTINATION_PORT>
 ```
 
@@ -1120,7 +1120,7 @@ Search for:
 
 Search for:
 
-```text
+```
 nmap
 masscan
 powershell
@@ -1133,7 +1133,7 @@ python
 
 Record:
 
-```text
+```
 Agent:
 Rule ID:
 Rule description:
@@ -1173,7 +1173,7 @@ MITRE mapping:
 
 ## Basic Firewall Search
 
-```spl
+```
 index=windows earliest=-24h
 (
     EventCode=5152 OR
@@ -1203,7 +1203,7 @@ Field names depend on the Windows add-on and source configuration.
 
 ## One Source Scanning Many Ports
 
-```spl
+```
 index=windows earliest=-15m
 (
     EventCode=5152 OR
@@ -1231,7 +1231,7 @@ index=windows earliest=-15m
 
 ## One Source Scanning Many Hosts
 
-```spl
+```
 index=windows earliest=-15m
 (
     EventCode=5152 OR
@@ -1256,7 +1256,7 @@ index=windows earliest=-15m
 
 ## One Source Scanning One Port Across Many Hosts
 
-```spl
+```
 index=windows earliest=-15m
 (
     EventCode=5152 OR
@@ -1280,7 +1280,7 @@ index=windows earliest=-15m
 
 ## Mixed Allowed and Blocked Connections
 
-```spl
+```
 index=windows earliest=-15m
 (
     EventCode=5152 OR
@@ -1310,7 +1310,7 @@ index=windows earliest=-15m
 
 ## Correlate Reconnaissance with Authentication
 
-```spl
+```
 index=windows earliest=-30m
 (
     EventCode=5152 OR
@@ -1349,7 +1349,7 @@ index=windows earliest=-30m
 
 ## Correlate Source Process and Network Activity
 
-```spl
+```
 index=windows earliest=-30m
 (
     EventCode=1 OR
@@ -1381,7 +1381,7 @@ index=windows earliest=-30m
 
 ## Build a Reconnaissance Timeline
 
-```spl
+```
 index=windows earliest=-30m
 (
     EventCode=1 OR
@@ -1431,7 +1431,7 @@ index=windows earliest=-30m
 
 # Investigation Decision Tree
 
-```text
+```
 Network Reconnaissance Alert
             |
             v
@@ -1671,7 +1671,7 @@ Preserve volatile evidence before terminating the process when possible.
 
 ### Windows
 
-```powershell
+```
 Stop-Process `
     -Id <PROCESS_ID> `
     -Force
@@ -1679,19 +1679,19 @@ Stop-Process `
 
 ### Linux
 
-```bash
+```
 sudo kill <PROCESS_ID>
 ```
 
 Use forceful termination only when necessary:
 
-```bash
+```
 sudo kill -9 <PROCESS_ID>
 ```
 
 Record:
 
-```text
+```
 Process:
 Process ID:
 Stop time:
@@ -1780,7 +1780,7 @@ Do not create broad deny rules without reviewing operational impact.
 
 ### Windows Firewall Events
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -1794,7 +1794,7 @@ Where-Object {
 
 ### Splunk
 
-```spl
+```
 index=windows earliest=-30m
 (
     EventCode=5152 OR
@@ -1812,7 +1812,7 @@ index=windows earliest=-30m
 
 ### Windows
 
-```powershell
+```
 Get-CimInstance Win32_Process |
     Where-Object {
         $_.ProcessId -eq <PROCESS_ID>
@@ -1821,7 +1821,7 @@ Get-CimInstance Win32_Process |
 
 ### Linux
 
-```bash
+```
 ps -p <PROCESS_ID>
 ```
 
@@ -1831,7 +1831,7 @@ ps -p <PROCESS_ID>
 
 Review expected listening services:
 
-```powershell
+```
 Get-NetTCPConnection -State Listen |
     Sort-Object LocalPort
 ```
@@ -1898,7 +1898,7 @@ Escalate immediately when:
 
 Provide:
 
-```text
+```
 Incident summary:
 Severity:
 First observed:
@@ -1952,7 +1952,7 @@ Preserve:
 
 ## Export Windows Security Events
 
-```powershell
+```
 wevtutil epl `
     Security `
     "<EVIDENCE_PATH>\Security.evtx"
@@ -1962,7 +1962,7 @@ wevtutil epl `
 
 ## Export Sysmon Events
 
-```powershell
+```
 wevtutil epl `
     "Microsoft-Windows-Sysmon/Operational" `
     "<EVIDENCE_PATH>\Sysmon-Operational.evtx"
@@ -1972,7 +1972,7 @@ wevtutil epl `
 
 ## Preserve Firewall Log
 
-```powershell
+```
 Copy-Item `
     -Path "C:\Windows\System32\LogFiles\Firewall\pfirewall.log" `
     -Destination "<EVIDENCE_PATH>\pfirewall.log" `
@@ -1983,7 +1983,7 @@ Copy-Item `
 
 ## Export Narrow Firewall Events
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -2010,7 +2010,7 @@ Export-Csv `
 
 Record:
 
-```text
+```
 Capture file:
 Interface:
 Capture start:
@@ -2028,7 +2028,7 @@ Packet captures may contain sensitive internal traffic and must remain private.
 
 ### Windows
 
-```powershell
+```
 Get-FileHash `
     -LiteralPath "<EVIDENCE_FILE>" `
     -Algorithm SHA256
@@ -2036,7 +2036,7 @@ Get-FileHash `
 
 ### Linux
 
-```bash
+```
 sha256sum <EVIDENCE_FILE>
 ```
 
@@ -2044,7 +2044,7 @@ sha256sum <EVIDENCE_FILE>
 
 ## Evidence Record
 
-```text
+```
 Runbook: RB-09
 Incident or case:
 Evidence file:
@@ -2143,7 +2143,7 @@ Potential improvements include:
 
 Network reconnaissance may relate to:
 
-```text
+```
 T1046 – Network Service Discovery
 ```
 
@@ -2165,7 +2165,7 @@ A single connection attempt does not establish reconnaissance.
 
 ## Investigation Summary
 
-```text
+```
 Alert:
 Source system:
 Source address:
@@ -2201,7 +2201,7 @@ Detection gaps:
 
 Select one:
 
-```text
+```
 Approved CyberLab exercise
 Approved vulnerability scan
 Approved asset inventory
@@ -2244,7 +2244,7 @@ The case may be closed when:
 
 ## Closure Statement
 
-```text
+```
 The suspected network reconnaissance was investigated using endpoint firewall, Sysmon, packet capture, Wazuh, Splunk, process, service, and authentication telemetry. The source, target scope, ports, connection results, responsible process, authorization context, and follow-on activity were reviewed. The activity was classified as <CLASSIFICATION>. Required containment, corrective, and recovery actions were completed, monitoring confirmed that the unauthorized or unexpected activity stopped, and the case was closed.
 ```
 
@@ -2272,7 +2272,7 @@ Remove or replace:
 
 Use placeholders such as:
 
-```text
+```
 <SOURCE_SYSTEM>
 <SOURCE_IP>
 <SOURCE_USER>
@@ -2423,7 +2423,7 @@ Before publishing:
 
 ## Primary Firewall Event Search
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -2437,7 +2437,7 @@ Where-Object {
 
 ## Primary Source Process Search
 
-```powershell
+```
 Get-CimInstance Win32_Process |
     Where-Object {
         $_.CommandLine -match "nmap|masscan|powershell|python"
@@ -2453,7 +2453,7 @@ Select-Object `
 
 ## Primary Splunk Search
 
-```spl
+```
 index=windows earliest=-15m
 (
     EventCode=5152 OR
@@ -2475,7 +2475,7 @@ index=windows earliest=-15m
 
 ## Immediate Escalation Indicators
 
-```text
+```
 Unauthorized source
 User workstation performing broad scan
 Administrative ports targeted
