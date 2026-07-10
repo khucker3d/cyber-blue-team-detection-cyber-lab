@@ -831,7 +831,7 @@ Alert present: No
 Decoder result:
 Matching rule:
 Missing context:
-Recommended custom rule:
+ed custom rule:
 ```
 
 Do not treat missing default alerting as proof of ingestion failure.
@@ -1172,7 +1172,7 @@ The exercise activity is authorized and does not establish malicious intent.
 
 # Evidence Collection
 
-## Recommended Evidence
+## Evidence
 
 Preserve:
 
@@ -1428,7 +1428,7 @@ Document whether the platforms lacked:
 
 ---
 
-## Recommended Improvements
+## Improvements
 
 Potential improvements include:
 
