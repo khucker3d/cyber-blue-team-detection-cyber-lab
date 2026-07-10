@@ -1412,7 +1412,7 @@ Severity should reflect group sensitivity, actor legitimacy, and subsequent acti
 
 # Evidence Collection
 
-## Recommended Evidence
+## Evidence
 
 Preserve:
 
@@ -1731,7 +1731,7 @@ Document whether the platforms lacked:
 
 ---
 
-## Recommended Improvements
+## Improvements
 
 Potential improvements include:
 
