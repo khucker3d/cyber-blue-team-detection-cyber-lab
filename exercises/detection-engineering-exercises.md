@@ -31,7 +31,7 @@ The exercises use harmless, authorized actions performed only against CyberLab s
 
 This document should be stored as:
 
-```text
+```
 exercises/detection-engineering-exercises.md
 ```
 
@@ -39,7 +39,7 @@ It serves as the central index for the individual exercise files.
 
 Recommended structure:
 
-```text
+```
 exercises/
 ├── detection-engineering-exercises.md
 ├── 01-failed-logon-investigation.md
@@ -84,7 +84,7 @@ The exercises are not intended to demonstrate how many offensive techniques can 
 
 Their purpose is to validate the defensive lifecycle:
 
-```text
+```
 Authorized Activity
         |
         v
@@ -111,7 +111,7 @@ An exercise is incomplete if it generates activity but does not validate the res
 
 The public exercise documentation uses sanitized values such as:
 
-```text
+```
 Domain controller: DC01
 Windows endpoint: WIN11TARGET
 Wazuh server: WAZUH-SERVER
@@ -251,7 +251,7 @@ Save evidence, hashes, findings, and lessons learned.
 
 Each individual exercise should include:
 
-```text
+```
 Title:
 
 Exercise ID:
@@ -331,13 +331,13 @@ Evidence should be sanitized before publication.
 
 Recommended format:
 
-```text
+```
 <DATE>-<EXERCISE-ID>-<SOURCE>-<EVIDENCE-TYPE>
 ```
 
 Examples:
 
-```text
+```
 YYYY-MM-DD-EX01-WIN11TARGET-event-log.evtx
 YYYY-MM-DD-EX01-WAZUH-alert.png
 YYYY-MM-DD-EX01-SPLUNK-search.csv
@@ -353,7 +353,7 @@ Do not include passwords, operational IP addresses, or personal usernames in fil
 
 Windows:
 
-```powershell
+```
 Get-FileHash `
     -Path "<EVIDENCE_FILE>" `
     -Algorithm SHA256
@@ -361,13 +361,13 @@ Get-FileHash `
 
 Linux:
 
-```bash
+```
 sha256sum <EVIDENCE_FILE>
 ```
 
 Recommended record:
 
-```text
+```
 File:
 Exercise:
 Source system:
@@ -469,7 +469,7 @@ Potential evidence includes:
 
 Detailed file:
 
-```text
+```
 01-failed-logon-investigation.md
 ```
 
@@ -532,7 +532,7 @@ Potential evidence includes:
 
 Detailed file:
 
-```text
+```
 02-account-lockout-investigation.md
 ```
 
@@ -589,7 +589,7 @@ Potential evidence includes:
 
 Detailed file:
 
-```text
+```
 03-user-account-creation.md
 ```
 
@@ -647,7 +647,7 @@ Potential evidence includes:
 
 Detailed file:
 
-```text
+```
 04-privileged-group-change.md
 ```
 
@@ -669,7 +669,7 @@ Generate a harmless PowerShell event and validate process, command-line, and scr
 
 ## Safe Test Command
 
-```powershell
+```
 Get-Service |
     Sort-Object Status |
     Select-Object -First 10
@@ -677,7 +677,7 @@ Get-Service |
 
 An additional benign process test may use:
 
-```powershell
+```
 Start-Process notepad.exe
 ```
 
@@ -714,7 +714,7 @@ Potential evidence includes:
 
 Detailed file:
 
-```text
+```
 05-suspicious-powershell.md
 ```
 
@@ -736,7 +736,7 @@ Create, modify, and delete a file inside an approved test directory and validate
 
 ## Approved Test Path
 
-```text
+```
 C:\CyberLab-Test\Files
 ```
 
@@ -744,7 +744,7 @@ C:\CyberLab-Test\Files
 
 Create a file:
 
-```powershell
+```
 New-Item `
     -Path "C:\CyberLab-Test\Files\fim-test.txt" `
     -ItemType File `
@@ -753,7 +753,7 @@ New-Item `
 
 Add content:
 
-```powershell
+```
 Set-Content `
     -Path "C:\CyberLab-Test\Files\fim-test.txt" `
     -Value "Authorized file integrity exercise."
@@ -761,7 +761,7 @@ Set-Content `
 
 Modify the file:
 
-```powershell
+```
 Add-Content `
     -Path "C:\CyberLab-Test\Files\fim-test.txt" `
     -Value "Controlled modification."
@@ -769,7 +769,7 @@ Add-Content `
 
 Delete it after validation:
 
-```powershell
+```
 Remove-Item `
     -Path "C:\CyberLab-Test\Files\fim-test.txt"
 ```
@@ -808,7 +808,7 @@ Potential evidence includes:
 
 Detailed file:
 
-```text
+```
 06-file-integrity-change.md
 ```
 
@@ -869,7 +869,7 @@ Potential evidence includes:
 
 Detailed file:
 
-```text
+```
 07-defender-alert-validation.md
 ```
 
@@ -901,7 +901,7 @@ Generate a controlled connection to an approved blocked port and validate firewa
 
 From Kali:
 
-```bash
+```
 nc -vz <AUTHORIZED_TARGET> <APPROVED_BLOCKED_PORT>
 ```
 
@@ -937,7 +937,7 @@ Potential evidence includes:
 
 Detailed file:
 
-```text
+```
 08-firewall-block-investigation.md
 ```
 
@@ -960,7 +960,7 @@ Generate a limited authorized port scan and determine which defensive controls o
 
 ## Authorized Test
 
-```bash
+```
 nmap -sT \
     -p <APPROVED_PORT_LIST> \
     <AUTHORIZED_TARGET>
@@ -1014,7 +1014,7 @@ A lack of alerting may indicate the need for:
 
 Detailed file:
 
-```text
+```
 09-network-reconnaissance-detection.md
 ```
 
@@ -1038,13 +1038,13 @@ Generate a harmless known event and verify the complete collection path from sou
 
 Use a simple benign event, such as:
 
-```powershell
+```
 Get-Date
 ```
 
 or:
 
-```powershell
+```
 Start-Process notepad.exe
 ```
 
@@ -1052,7 +1052,7 @@ The selected event must correspond to an enabled audit or collection source.
 
 ## Validation Path
 
-```text
+```
 Action
   |
   v
@@ -1091,7 +1091,7 @@ Search and Comparison
 
 Detailed file:
 
-```text
+```
 10-ingestion-health-validation.md
 ```
 
@@ -1118,7 +1118,7 @@ The exercise should confirm:
 
 ## Detection Documentation Template
 
-```text
+```
 Detection name:
 
 Detection objective:
@@ -1344,7 +1344,7 @@ A standard investigation should include:
 
 Suggested outcomes:
 
-```text
+```
 Authorized test activity
 Benign administrative activity
 Expected user activity
@@ -1362,13 +1362,13 @@ For this exercise library, most events should conclude as authorized test activi
 
 ## Timeline Template
 
-```text
+```
 Time | System | Source | Event | Account | Analyst Note
 ```
 
 Example:
 
-```text
+```
 10:00:00 | KALI-TEST | Nmap | Scan started | student.user | Authorized exercise
 10:00:02 | WIN11TARGET | Firewall | Connection blocked | N/A | Expected target telemetry
 10:00:05 | WAZUH-SERVER | Wazuh | Alert indexed | N/A | Rule reviewed
@@ -1404,7 +1404,7 @@ This table should be updated as each exercise is completed.
 
 Recommended values:
 
-```text
+```
 Planned
 Prepared
 In Progress
@@ -1490,7 +1490,7 @@ Snapshots should be created before exercises that change:
 
 Recommended snapshot names:
 
-```text
+```
 PRE-EX01-Failed-Logon
 PRE-EX02-Account-Lockout
 PRE-EX04-Group-Change
@@ -1658,7 +1658,7 @@ Remove or replace:
 
 Use placeholders such as:
 
-```text
+```
 <DOMAIN_CONTROLLER>
 <WINDOWS_ENDPOINT>
 <WAZUH_SERVER>
