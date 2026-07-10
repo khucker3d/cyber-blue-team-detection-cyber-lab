@@ -57,7 +57,7 @@ Using both platforms provides experience with different SIEM architectures and a
 
 The public documentation uses placeholder values such as:
 
-```text
+```
 Server hostname: SPLUNK-SERVER
 Internal address: 192.0.2.40
 Internal network: 192.0.2.0/24
@@ -77,7 +77,7 @@ Splunk communicates with the Acer host and monitored systems through the VMware 
 
 A VMware NAT adapter may provide controlled outbound access for installation, updates, or add-on downloads.
 
-```text
+```
                               Internet
                                  |
                           VMware NAT Network
@@ -176,7 +176,7 @@ A dedicated Splunk virtual machine is recommended when host resources permit.
 
 Suggested public VM name:
 
-```text
+```
 SPLUNK-SERVER
 ```
 
@@ -229,7 +229,7 @@ A typical Splunk VM may use two adapters.
 
 ### Host-Only Adapter
 
-```text
+```
 Purpose: Internal CyberLab communication
 Addressing: Static
 Default gateway: none
@@ -237,7 +237,7 @@ Default gateway: none
 
 ### NAT Adapter
 
-```text
+```
 Purpose: Software installation and updates
 Addressing: VMware DHCP
 Default gateway: VMware NAT gateway
@@ -249,7 +249,7 @@ Only the NAT adapter should normally provide the default route.
 
 ## Internal Traffic Flow
 
-```text
+```
 WIN11TARGET
      |
      | Windows events or forwarder traffic
@@ -288,15 +288,15 @@ Before installing Splunk:
 
 ## Verify the Operating System
 
-```bash
+```
 hostnamectl
 ```
 
-```bash
+```
 cat /etc/os-release
 ```
 
-```bash
+```
 uname -a
 ```
 
@@ -316,19 +316,19 @@ Command output may contain operational identifiers and should be sanitized befor
 
 Example:
 
-```bash
+```
 sudo hostnamectl set-hostname SPLUNK-SERVER
 ```
 
 Review `/etc/hosts`:
 
-```bash
+```
 sudo nano /etc/hosts
 ```
 
 Example:
 
-```text
+```
 127.0.0.1       localhost
 127.0.1.1       SPLUNK-SERVER
 ```
@@ -339,15 +339,15 @@ Restart or open a new login session after changing the hostname.
 
 ## Verify Network Configuration
 
-```bash
+```
 ip address
 ```
 
-```bash
+```
 ip route
 ```
 
-```bash
+```
 resolvectl status
 ```
 
@@ -365,13 +365,13 @@ Confirm:
 
 Test the Acer host or another internal lab system:
 
-```bash
+```
 ping -c 4 <INTERNAL_LAB_SYSTEM>
 ```
 
 Test external HTTPS connectivity:
 
-```bash
+```
 curl -I https://example.com
 ```
 
@@ -381,7 +381,7 @@ A failed ping may indicate ICMP filtering rather than complete loss of connectiv
 
 ## Confirm System Time
 
-```bash
+```
 timedatectl
 ```
 
@@ -400,17 +400,17 @@ Splunk events from multiple systems become difficult to analyze when timestamps 
 
 ## Update Ubuntu
 
-```bash
+```
 sudo apt update
 ```
 
-```bash
+```
 sudo apt upgrade
 ```
 
 Restart when required:
 
-```bash
+```
 sudo reboot
 ```
 
@@ -424,13 +424,13 @@ Download the supported Splunk Enterprise Linux `.deb` package from the official 
 
 Example sanitized filename:
 
-```text
+```
 splunk-<VERSION>-linux-amd64.deb
 ```
 
 Record privately:
 
-```text
+```
 Splunk version:
 Package filename:
 Download date:
@@ -460,7 +460,7 @@ In the operational CyberLab, the package was downloaded to a Windows downloads d
 
 Public documentation should replace personal Windows paths with a placeholder such as:
 
-```text
+```
 <WINDOWS_DOWNLOAD_DIRECTORY>
 ```
 
@@ -486,13 +486,13 @@ Do not publish a path containing a personal Windows username.
 
 From the Linux VM:
 
-```bash
+```
 ls -lh <SPLUNK_PACKAGE>.deb
 ```
 
 Calculate a SHA-256 hash:
 
-```bash
+```
 sha256sum <SPLUNK_PACKAGE>.deb
 ```
 
@@ -504,13 +504,13 @@ Compare it with the vendor-published checksum when one is available.
 
 Review package metadata:
 
-```bash
+```
 dpkg-deb --info <SPLUNK_PACKAGE>.deb
 ```
 
 List package contents:
 
-```bash
+```
 dpkg-deb --contents <SPLUNK_PACKAGE>.deb
 ```
 
@@ -522,13 +522,13 @@ These commands do not install the package.
 
 Move into the directory containing the package:
 
-```bash
+```
 cd <INSTALLER_DIRECTORY>
 ```
 
 Install the package:
 
-```bash
+```
 sudo dpkg -i <SPLUNK_PACKAGE>.deb
 ```
 
@@ -536,7 +536,7 @@ Administrator privileges are required.
 
 The standard package installs Splunk under:
 
-```text
+```
 /opt/splunk
 ```
 
@@ -546,13 +546,13 @@ The standard package installs Splunk under:
 
 If `dpkg` reports missing dependencies:
 
-```bash
+```
 sudo apt --fix-broken install
 ```
 
 Then repeat the installation if required:
 
-```bash
+```
 sudo dpkg -i <SPLUNK_PACKAGE>.deb
 ```
 
@@ -562,13 +562,13 @@ Review all package-manager output before proceeding.
 
 ## Verify the Installation Directory
 
-```bash
+```
 ls -la /opt/splunk
 ```
 
 Typical directories include:
 
-```text
+```
 /opt/splunk/bin
 /opt/splunk/etc
 /opt/splunk/var
@@ -597,7 +597,7 @@ Files under authentication and configuration directories may contain sensitive i
 
 Start Splunk from its installation directory:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk start
 ```
 
@@ -617,7 +617,7 @@ On the first launch:
 
 A lab installation may use:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk start --accept-license
 ```
 
@@ -650,7 +650,7 @@ During installation validation, Splunk required an elevated startup command in t
 
 The working command was:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk start --run-as-root
 ```
 
@@ -711,7 +711,7 @@ For a long-term hardened deployment, Splunk should normally run under a dedicate
 
 A dedicated account may be created:
 
-```bash
+```
 sudo useradd \
     --system \
     --create-home \
@@ -736,11 +736,11 @@ Before changing ownership:
 
 ## Review Current Ownership
 
-```bash
+```
 sudo ls -ld /opt/splunk
 ```
 
-```bash
+```
 sudo find /opt/splunk \
     -maxdepth 2 \
     -printf '%u:%g %p\n' |
@@ -755,7 +755,7 @@ Do not recursively change ownership without confirming how Splunk was installed 
 
 A typical dedicated-user installation may require:
 
-```bash
+```
 sudo chown -R splunk:splunk /opt/splunk
 ```
 
@@ -775,7 +775,7 @@ Use it only after:
 
 Example:
 
-```bash
+```
 sudo -u splunk /opt/splunk/bin/splunk start
 ```
 
@@ -794,13 +794,13 @@ Do not repeatedly alternate between root and service-user startup without correc
 
 ## Verify Splunk Status
 
-```bash
+```
 sudo /opt/splunk/bin/splunk status
 ```
 
 When using a dedicated service account:
 
-```bash
+```
 sudo -u splunk /opt/splunk/bin/splunk status
 ```
 
@@ -810,14 +810,14 @@ Expected output should indicate that `splunkd` is running.
 
 ## Review Splunk Processes
 
-```bash
+```
 ps aux |
     grep -i splunk
 ```
 
 Or:
 
-```bash
+```
 pgrep -a splunk
 ```
 
@@ -831,14 +831,14 @@ Splunk Web commonly listens on TCP port `8000`.
 
 Review listeners:
 
-```bash
+```
 sudo ss -tulpn |
     grep 8000
 ```
 
 Review all Splunk-related listeners:
 
-```bash
+```
 sudo ss -tulpn |
     grep -i splunk
 ```
@@ -851,7 +851,7 @@ The output may not display process names without elevated privileges.
 
 From the Acer host, access the internal web interface:
 
-```text
+```
 http://<SPLUNK_SERVER>:8000
 ```
 
@@ -888,14 +888,14 @@ Splunk Web may listen on:
 
 Review:
 
-```bash
+```
 sudo ss -tulpn |
     grep 8000
 ```
 
 A listener such as:
 
-```text
+```
 0.0.0.0:8000
 ```
 
@@ -909,13 +909,13 @@ A local firewall should restrict access to the trusted CyberLab network.
 
 Review Ubuntu firewall status:
 
-```bash
+```
 sudo ufw status verbose
 ```
 
 A narrow rule can permit Splunk Web from only the host-only subnet:
 
-```bash
+```
 sudo ufw allow \
     from 192.0.2.0/24 \
     to any port 8000 \
@@ -932,7 +932,7 @@ Do not copy it into the operational environment.
 
 Before enabling a default-deny firewall, allow SSH from the trusted internal network:
 
-```bash
+```
 sudo ufw allow \
     from 192.0.2.0/24 \
     to any port 22 \
@@ -947,11 +947,11 @@ Keep VMware console access available in case a firewall rule blocks remote admin
 
 A controlled configuration may use:
 
-```bash
+```
 sudo ufw default deny incoming
 ```
 
-```bash
+```
 sudo ufw default allow outgoing
 ```
 
@@ -959,7 +959,7 @@ Then enable only required internal services.
 
 Enable UFW:
 
-```bash
+```
 sudo ufw enable
 ```
 
@@ -988,7 +988,7 @@ Splunk can configure automatic startup.
 
 When Splunk is currently operating as root:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk enable boot-start
 ```
 
@@ -1002,7 +1002,7 @@ Review the command output carefully.
 
 A hardened configuration may use:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk enable boot-start \
     -user splunk
 ```
@@ -1011,7 +1011,7 @@ Some versions support systemd-specific options.
 
 Always review the command supported by the installed release:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk help enable
 ```
 
@@ -1019,14 +1019,14 @@ sudo /opt/splunk/bin/splunk help enable
 
 ## Review the Boot Service
 
-```bash
+```
 systemctl list-unit-files |
     grep -i splunk
 ```
 
 Review status:
 
-```bash
+```
 sudo systemctl status Splunkd
 ```
 
@@ -1038,25 +1038,25 @@ The service name may vary according to the generated boot configuration.
 
 Start:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk start --run-as-root
 ```
 
 Stop:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk stop
 ```
 
 Restart:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk restart --run-as-root
 ```
 
 Status:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk status
 ```
 
@@ -1081,7 +1081,7 @@ When Splunk is not configured for automatic boot:
 
 Current lab command:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk start --run-as-root
 ```
 
@@ -1102,7 +1102,7 @@ sudo /opt/splunk/bin/splunk start --run-as-root
 
 Stop Splunk:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk stop
 ```
 
@@ -1127,13 +1127,13 @@ Always stop Splunk and shut down the operating system cleanly when possible.
 
 Splunk stores internal logs under:
 
-```text
+```
 /opt/splunk/var/log/splunk
 ```
 
 Important examples may include:
 
-```text
+```
 splunkd.log
 web_service.log
 scheduler.log
@@ -1147,14 +1147,14 @@ The exact logs depend on installed features and version.
 
 ## Review `splunkd.log`
 
-```bash
+```
 sudo tail -n 100 \
     /opt/splunk/var/log/splunk/splunkd.log
 ```
 
 Follow in real time:
 
-```bash
+```
 sudo tail -f \
     /opt/splunk/var/log/splunk/splunkd.log
 ```
@@ -1206,7 +1206,7 @@ Splunk configuration files commonly use `.conf` files.
 
 Configuration may exist under:
 
-```text
+```
 /opt/splunk/etc/system/default
 /opt/splunk/etc/system/local
 /opt/splunk/etc/apps/<APP>/default
@@ -1241,7 +1241,7 @@ Operational configuration files may contain sensitive values.
 
 Example:
 
-```bash
+```
 sudo cp \
     /opt/splunk/etc/system/local/<FILE>.conf \
     /opt/splunk/etc/system/local/<FILE>.conf.bak
@@ -1249,7 +1249,7 @@ sudo cp \
 
 Record:
 
-```text
+```
 Date:
 Configuration file:
 Reason:
@@ -1267,19 +1267,19 @@ Splunk includes `btool` for reviewing merged configuration.
 
 Example:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk btool inputs list --debug
 ```
 
 Review web settings:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk btool web list --debug
 ```
 
 Review index settings:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk btool indexes list --debug
 ```
 
@@ -1307,7 +1307,7 @@ The safest initial validation method is a small, known test file.
 
 ## Ingestion Pipeline
 
-```text
+```
 Data Source
     |
     | Collection or upload
@@ -1333,7 +1333,7 @@ An index is a logical storage location for data.
 
 Splunk includes internal indexes such as:
 
-```text
+```
 _internal
 _audit
 _introspection
@@ -1347,7 +1347,7 @@ User-created lab data should be stored in a dedicated index rather than mixed un
 
 A public example index name:
 
-```text
+```
 cyberlab
 ```
 
@@ -1366,7 +1366,7 @@ Use a name that communicates the data purpose.
 
 Good examples:
 
-```text
+```
 windows
 linux
 cyberlab
@@ -1376,7 +1376,7 @@ network
 
 Avoid vague names such as:
 
-```text
+```
 test
 newindex
 data2
@@ -1419,7 +1419,7 @@ Do not upload files containing real credentials or personal data.
 
 A harmless test file may contain:
 
-```text
+```
 2026-01-01T10:00:00Z host=WIN11TARGET action=login status=success user=test.user
 2026-01-01T10:01:00Z host=WIN11TARGET action=login status=failure user=test.user
 2026-01-01T10:02:00Z host=WIN11TARGET action=file_change status=authorized file=sample.txt
@@ -1509,7 +1509,7 @@ Potential sources include:
 
 ## Forwarder Architecture
 
-```text
+```
 WIN11TARGET
      |
      | Splunk Universal Forwarder
@@ -1564,14 +1564,14 @@ Do not expose the receiver to untrusted networks.
 
 On Linux:
 
-```bash
+```
 sudo ss -tulpn |
     grep <RECEIVER_PORT>
 ```
 
 From Windows:
 
-```powershell
+```
 Test-NetConnection <SPLUNK_SERVER> -Port <RECEIVER_PORT>
 ```
 
@@ -1599,7 +1599,7 @@ Do not publish installer commands containing passwords.
 
 On `WIN11TARGET`:
 
-```powershell
+```
 Get-Service |
     Where-Object DisplayName -Match "Splunk"
 ```
@@ -1616,7 +1616,7 @@ A Windows Universal Forwarder commonly stores configuration under its installati
 
 Relevant files may include:
 
-```text
+```
 inputs.conf
 outputs.conf
 server.conf
@@ -1664,7 +1664,7 @@ The exact syntax and supported channels should be validated against the installe
 
 After configuration changes:
 
-```powershell
+```
 Restart-Service <SPLUNK_FORWARDER_SERVICE>
 ```
 
@@ -2005,7 +2005,7 @@ A detection search should include:
 
 Example documentation:
 
-```text
+```
 Detection:
 Data source:
 SPL:
@@ -2163,19 +2163,19 @@ Before changing retention:
 
 Linux filesystem:
 
-```bash
+```
 df -h
 ```
 
 Splunk directory:
 
-```bash
+```
 sudo du -sh /opt/splunk
 ```
 
 Index storage:
 
-```bash
+```
 sudo du -sh /opt/splunk/var/lib/splunk/*
 ```
 
@@ -2225,7 +2225,7 @@ Stop Splunk before a consistent full configuration backup when practical.
 
 Example:
 
-```bash
+```
 sudo tar -czf \
     <BACKUP_PATH>/splunk-config-<DATE>.tar.gz \
     /opt/splunk/etc
@@ -2248,7 +2248,7 @@ Store it securely and do not upload it directly to GitHub.
 
 Public templates may include:
 
-```text
+```
 inputs.conf.example
 outputs.conf.example
 indexes.conf.example
@@ -2257,7 +2257,7 @@ web.conf.example
 
 Replace sensitive values with placeholders:
 
-```text
+```
 <SPLUNK_SERVER>
 <RECEIVER_PORT>
 <INDEX_NAME>
@@ -2271,7 +2271,7 @@ Replace sensitive values with placeholders:
 
 Recommended milestones:
 
-```text
+```
 01-SPLUNK-Ubuntu-Clean-Install
 02-SPLUNK-Ubuntu-Patched
 03-SPLUNK-Network-Configured
@@ -2422,7 +2422,7 @@ A simple end-to-end test should verify:
 
 Run a harmless command on the endpoint:
 
-```powershell
+```
 Get-Service |
     Sort-Object Status |
     Select-Object -First 10
@@ -2465,13 +2465,13 @@ Delete or disable the temporary account after the exercise.
 
 Symptom:
 
-```text
+```
 splunk: command not found
 ```
 
 Use the full path:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk status
 ```
 
@@ -2493,18 +2493,18 @@ Symptoms may include:
 
 Review ownership:
 
-```bash
+```
 sudo ls -ld /opt/splunk
 ```
 
-```bash
+```
 sudo ls -l /opt/splunk/var/log/splunk |
     head
 ```
 
 Review the running account:
 
-```bash
+```
 ps aux |
     grep -i splunk
 ```
@@ -2517,7 +2517,7 @@ A common cause is switching between root and a dedicated Splunk account without 
 
 The lab installation successfully started with:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk start --run-as-root
 ```
 
@@ -2564,16 +2564,16 @@ Check:
 
 Commands:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk status
 ```
 
-```bash
+```
 sudo ss -tulpn |
     grep 8000
 ```
 
-```bash
+```
 sudo tail -n 100 \
     /opt/splunk/var/log/splunk/web_service.log
 ```
@@ -2597,13 +2597,13 @@ If the browser appears to load indefinitely or displays no page:
 
 From Windows:
 
-```powershell
+```
 Test-NetConnection <SPLUNK_SERVER> -Port 8000
 ```
 
 From Linux:
 
-```bash
+```
 curl -I http://127.0.0.1:8000
 ```
 
@@ -2613,20 +2613,20 @@ curl -I http://127.0.0.1:8000
 
 Check status:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk status
 ```
 
 Review logs:
 
-```bash
+```
 sudo tail -n 200 \
     /opt/splunk/var/log/splunk/splunkd.log
 ```
 
 Review web configuration:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk btool web list --debug
 ```
 
@@ -2646,14 +2646,14 @@ Possible causes include:
 
 Identify the process using port `8000`:
 
-```bash
+```
 sudo ss -tulpn |
     grep 8000
 ```
 
 Or:
 
-```bash
+```
 sudo lsof -iTCP:8000 -sTCP:LISTEN
 ```
 
@@ -2673,15 +2673,15 @@ If the Splunk Web port is changed, update:
 
 Review:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk status
 ```
 
-```bash
+```
 sudo /opt/splunk/bin/splunk start --run-as-root
 ```
 
-```bash
+```
 sudo tail -n 200 \
     /opt/splunk/var/log/splunk/splunkd.log
 ```
@@ -2732,13 +2732,13 @@ Use broad searches only temporarily for troubleshooting.
 
 On Windows:
 
-```powershell
+```
 Test-NetConnection <SPLUNK_SERVER> -Port <RECEIVER_PORT>
 ```
 
 Review the forwarder service:
 
-```powershell
+```
 Get-Service |
     Where-Object DisplayName -Match "Splunk"
 ```
@@ -2809,13 +2809,13 @@ Then add filters one at a time.
 
 Review Linux storage:
 
-```bash
+```
 df -h
 ```
 
 Review Splunk storage:
 
-```bash
+```
 sudo du -sh /opt/splunk/var/lib/splunk/*
 ```
 
@@ -2838,15 +2838,15 @@ Do not delete index directories manually.
 
 Review:
 
-```bash
+```
 free -h
 ```
 
-```bash
+```
 top
 ```
 
-```bash
+```
 ps aux \
     --sort=-%mem |
     head
@@ -2928,7 +2928,7 @@ Document significant Splunk changes, including:
 
 Example:
 
-```text
+```
 Date:
 Change:
 Reason:
@@ -2987,7 +2987,7 @@ Remove or replace:
 
 Use placeholders such as:
 
-```text
+```
 <SPLUNK_SERVER>
 <SPLUNK_SERVER_IP>
 <SPLUNK_ADMIN>
