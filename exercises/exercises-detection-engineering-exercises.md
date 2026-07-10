@@ -1,4 +1,4 @@
-# Detection Engineering
+# Detection Engineering Exercises
 
 ## Overview
 
@@ -42,7 +42,7 @@ Recommended structure:
 ```
 exercises/
 ├── detection-engineering-exercises.md
-├── 01-failed-logon-investigation.md
+├── 01-failed-login-investigation.md
 ├── 02-account-lockout-investigation.md
 ├── 03-user-account-creation.md
 ├── 04-privileged-group-change.md
