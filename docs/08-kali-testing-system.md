@@ -65,7 +65,7 @@ It should not contain:
 
 The public documentation uses placeholder values such as:
 
-```text
+```
 Hostname: KALI-TEST
 Internal address: 192.0.2.50
 Internal network: 192.0.2.0/24
@@ -85,7 +85,7 @@ These values do not represent the operational CyberLab.
 
 Kali connects primarily to the VMware host-only CyberLab network.
 
-```text
+```
                          Acer Windows Host
                                  |
                          VMware Workstation
@@ -140,7 +140,7 @@ Every exercise should have a defined scope.
 
 Before testing, document:
 
-```text
+```
 Exercise:
 Purpose:
 Authorized systems:
@@ -204,7 +204,7 @@ Create a dedicated Kali Linux virtual machine.
 
 Suggested public VM name:
 
-```text
+```
 KALI-TEST
 ```
 
@@ -279,7 +279,7 @@ The recommended configuration uses two adapters.
 
 ### Host-Only Adapter
 
-```text
+```
 Purpose: Authorized CyberLab testing
 Addressing: Static or VMware DHCP
 Default gateway: none
@@ -287,7 +287,7 @@ Default gateway: none
 
 ### NAT Adapter
 
-```text
+```
 Purpose: Updates and package downloads
 Addressing: VMware DHCP
 Default gateway: VMware NAT gateway
@@ -353,7 +353,7 @@ Modern Kali installations support a normal user with `sudo` privileges.
 
 Public placeholder:
 
-```text
+```
 <STUDENT_USER>
 ```
 
@@ -388,13 +388,13 @@ Avoid opening a persistent root shell for routine work.
 
 Prefer:
 
-```bash
+```
 sudo <COMMAND>
 ```
 
 over:
 
-```bash
+```
 sudo su
 ```
 
@@ -406,26 +406,26 @@ or prolonged direct root sessions.
 
 Example:
 
-```bash
+```
 sudo hostnamectl set-hostname KALI-TEST
 ```
 
 Review `/etc/hosts`:
 
-```bash
+```
 sudo nano /etc/hosts
 ```
 
 Example:
 
-```text
+```
 127.0.0.1       localhost
 127.0.1.1       KALI-TEST
 ```
 
 Verify:
 
-```bash
+```
 hostnamectl
 ```
 
@@ -437,19 +437,19 @@ Kali generally uses `open-vm-tools`.
 
 Update package information:
 
-```bash
+```
 sudo apt update
 ```
 
 Install the guest tools:
 
-```bash
+```
 sudo apt install open-vm-tools open-vm-tools-desktop
 ```
 
 Restart:
 
-```bash
+```
 sudo reboot
 ```
 
@@ -509,7 +509,7 @@ Use a dedicated transfer directory.
 
 Example public placeholder:
 
-```text
+```
 <HOST_TRANSFER_DIRECTORY>
 ```
 
@@ -519,15 +519,15 @@ Configure it as read-only when possible.
 
 ## Verify Network Interfaces
 
-```bash
+```
 ip address
 ```
 
-```bash
+```
 ip link
 ```
 
-```bash
+```
 ip route
 ```
 
@@ -541,7 +541,7 @@ Identify:
 
 Interface names may resemble:
 
-```text
+```
 eth0
 eth1
 ens33
@@ -554,7 +554,7 @@ The actual names depend on the VM configuration.
 
 ## Example Network Design
 
-```text
+```
 Host-only interface:
 Address: 192.0.2.50/24
 Gateway: none
@@ -574,19 +574,19 @@ Kali commonly uses NetworkManager.
 
 Review devices:
 
-```bash
+```
 nmcli device status
 ```
 
 Review connections:
 
-```bash
+```
 nmcli connection show
 ```
 
 Review current settings:
 
-```bash
+```
 nmcli device show
 ```
 
@@ -598,7 +598,7 @@ Administrative privileges are normally required to modify system network connect
 
 Example:
 
-```bash
+```
 sudo nmcli connection modify "<HOST_ONLY_CONNECTION>" \
     ipv4.method manual \
     ipv4.addresses "192.0.2.50/24" \
@@ -608,14 +608,14 @@ sudo nmcli connection modify "<HOST_ONLY_CONNECTION>" \
 
 Restart the connection:
 
-```bash
+```
 sudo nmcli connection down "<HOST_ONLY_CONNECTION>"
 sudo nmcli connection up "<HOST_ONLY_CONNECTION>"
 ```
 
 Verify:
 
-```bash
+```
 ip address
 ip route
 ```
@@ -630,7 +630,7 @@ Kali may use the domain controller for internal name resolution during Active Di
 
 Example:
 
-```text
+```
 Internal DNS: 192.0.2.10
 Internal domain: cyberlab.example
 ```
@@ -645,25 +645,25 @@ External package resolution may use NAT-provided DNS when the NAT adapter is ena
 
 Query the domain controller:
 
-```bash
+```
 dig @192.0.2.10 cyberlab.example
 ```
 
 Query DC01:
 
-```bash
+```
 dig @192.0.2.10 DC01.cyberlab.example
 ```
 
 Query Active Directory service records:
 
-```bash
+```
 dig @192.0.2.10 _ldap._tcp.dc._msdcs.cyberlab.example SRV
 ```
 
 Alternative:
 
-```bash
+```
 nslookup DC01.cyberlab.example 192.0.2.10
 ```
 
@@ -673,19 +673,19 @@ nslookup DC01.cyberlab.example 192.0.2.10
 
 Test the Windows endpoint:
 
-```bash
+```
 ping -c 4 192.0.2.20
 ```
 
 Test the domain controller:
 
-```bash
+```
 ping -c 4 192.0.2.10
 ```
 
 Test a specific service:
 
-```bash
+```
 nc -vz 192.0.2.20 <PORT>
 ```
 
@@ -697,19 +697,19 @@ A failed ping does not prove that a service is unavailable because ICMP may be b
 
 With the NAT adapter enabled:
 
-```bash
+```
 ping -c 4 1.1.1.1
 ```
 
 Test DNS:
 
-```bash
+```
 dig example.com
 ```
 
 Test HTTPS:
 
-```bash
+```
 curl -I https://example.com
 ```
 
@@ -721,31 +721,31 @@ After updates or package installation, disconnect the NAT adapter when external 
 
 Update package metadata:
 
-```bash
+```
 sudo apt update
 ```
 
 Review available upgrades:
 
-```bash
+```
 apt list --upgradable
 ```
 
 Apply the standard rolling-distribution upgrade:
 
-```bash
+```
 sudo apt full-upgrade
 ```
 
 Remove unneeded packages when appropriate:
 
-```bash
+```
 sudo apt autoremove
 ```
 
 Restart if required:
 
-```bash
+```
 sudo reboot
 ```
 
@@ -759,7 +759,7 @@ Kali tools are organized into metapackages.
 
 Common examples include:
 
-```text
+```
 kali-linux-core
 kali-tools-top10
 kali-linux-default
@@ -803,7 +803,7 @@ Install tools according to exercise requirements rather than installing everythi
 
 Useful nonintrusive tools may include:
 
-```text
+```
 ip
 ss
 ping
@@ -830,27 +830,27 @@ Each tool should be used only within the approved exercise scope.
 
 Check a tool version:
 
-```bash
+```
 nmap --version
 ```
 
-```bash
+```
 wireshark --version
 ```
 
-```bash
+```
 tcpdump --version
 ```
 
 Locate a command:
 
-```bash
+```
 which nmap
 ```
 
 Review package information:
 
-```bash
+```
 apt show nmap
 ```
 
@@ -860,13 +860,13 @@ apt show nmap
 
 Before using a tool:
 
-```bash
+```
 man <COMMAND>
 ```
 
 Or:
 
-```bash
+```
 <COMMAND> --help
 ```
 
@@ -890,15 +890,15 @@ Before every active test, verify the target address.
 
 Example:
 
-```bash
+```
 ip neigh
 ```
 
-```bash
+```
 arp -n
 ```
 
-```bash
+```
 dig <TARGET_HOSTNAME>
 ```
 
@@ -914,7 +914,7 @@ A simple private target file can reduce mistakes.
 
 Example:
 
-```text
+```
 # Authorized CyberLab targets
 192.0.2.10    DC01
 192.0.2.20    WIN11TARGET
@@ -959,13 +959,13 @@ Prefer a specific authorized target rather than scanning the entire subnet.
 
 Example:
 
-```bash
+```
 ping -c 4 <AUTHORIZED_TARGET>
 ```
 
 Or:
 
-```bash
+```
 nmap -sn <AUTHORIZED_TARGET>
 ```
 
@@ -979,7 +979,7 @@ A limited scan can determine whether a specific service is reachable.
 
 Example:
 
-```bash
+```
 nmap -sT -p <APPROVED_PORTS> <AUTHORIZED_TARGET>
 ```
 
@@ -995,7 +995,7 @@ Some scan types require root privileges because they use raw packets.
 
 Example:
 
-```bash
+```
 sudo nmap <AUTHORIZED_OPTIONS> <AUTHORIZED_TARGET>
 ```
 
@@ -1041,15 +1041,15 @@ Service inspection may include:
 
 Examples:
 
-```bash
+```
 nc -vz <AUTHORIZED_TARGET> <PORT>
 ```
 
-```bash
+```
 curl -I http://<AUTHORIZED_TARGET>:<PORT>
 ```
 
-```bash
+```
 openssl s_client \
     -connect <AUTHORIZED_TARGET>:<TLS_PORT>
 ```
@@ -1062,7 +1062,7 @@ Do not authenticate with real personal or production credentials.
 
 For a lab web service, begin with passive or low-impact checks:
 
-```bash
+```
 curl -I http://<AUTHORIZED_TARGET>:<PORT>
 ```
 
@@ -1086,7 +1086,7 @@ Do not perform destructive web testing against services that are not specificall
 
 Check whether Splunk Web is reachable:
 
-```bash
+```
 curl -I http://<SPLUNK_SERVER>:8000
 ```
 
@@ -1106,7 +1106,7 @@ It does not authorize:
 
 Use the intended internal dashboard address.
 
-```bash
+```
 curl -k -I https://<WAZUH_SERVER>
 ```
 
@@ -1199,13 +1199,13 @@ Use interactive prompts or secure credential storage where possible.
 
 Review recent commands:
 
-```bash
+```
 history
 ```
 
 Search for potentially sensitive terms:
 
-```bash
+```
 history |
     grep -Ei 'password|token|key|secret'
 ```
@@ -1214,7 +1214,7 @@ The shell history file may contain commands from previous sessions.
 
 Its path commonly resembles:
 
-```text
+```
 ~/.bash_history
 ```
 
@@ -1254,13 +1254,13 @@ Capture only the traffic required for the exercise.
 
 ## Identify the Capture Interface
 
-```bash
+```
 ip link
 ```
 
 List interfaces visible to `tcpdump`:
 
-```bash
+```
 sudo tcpdump -D
 ```
 
@@ -1272,7 +1272,7 @@ Select the host-only interface rather than the NAT interface when investigating 
 
 Capture traffic to or from one authorized target:
 
-```bash
+```
 sudo tcpdump \
     -i <HOST_ONLY_INTERFACE> \
     host <AUTHORIZED_TARGET>
@@ -1280,7 +1280,7 @@ sudo tcpdump \
 
 Limit by port:
 
-```bash
+```
 sudo tcpdump \
     -i <HOST_ONLY_INTERFACE> \
     host <AUTHORIZED_TARGET> \
@@ -1293,7 +1293,7 @@ Stop the capture as soon as the required evidence is collected.
 
 ## Save a Packet Capture
 
-```bash
+```
 sudo tcpdump \
     -i <HOST_ONLY_INTERFACE> \
     host <AUTHORIZED_TARGET> \
@@ -1341,7 +1341,7 @@ Wireshark can be used to inspect:
 
 Example display filters:
 
-```text
+```
 arp
 dns
 icmp
@@ -1374,13 +1374,13 @@ Protocol visibility depends on encryption, capture location, and configuration.
 
 ## Calculate a Capture Hash
 
-```bash
+```
 sha256sum <CAPTURE_FILE>.pcap
 ```
 
 Record:
 
-```text
+```
 File:
 Source system:
 Interface:
@@ -1398,21 +1398,21 @@ Do not rename or modify the original after hashing without creating a new hash r
 
 Useful DNS validation commands include:
 
-```bash
+```
 dig <HOSTNAME>
 ```
 
-```bash
+```
 dig @<DNS_SERVER> <HOSTNAME>
 ```
 
-```bash
+```
 nslookup <HOSTNAME> <DNS_SERVER>
 ```
 
 For Active Directory:
 
-```bash
+```
 dig @<DOMAIN_CONTROLLER> \
     _ldap._tcp.dc._msdcs.<LAB_DOMAIN> \
     SRV
@@ -1450,7 +1450,7 @@ Use predictable tests with clear expected results.
 
 A complete defensive validation exercise should follow this path:
 
-```text
+```
 KALI-TEST
     |
     | Authorized activity
@@ -1472,7 +1472,7 @@ The activity is successful only when the telemetry and investigation outcome are
 
 ## Exercise Documentation Template
 
-```text
+```
 Title:
 
 Objective:
@@ -1520,7 +1520,7 @@ Confirm that a known service is reachable and determine what telemetry is create
 3. Start monitoring or packet capture.
 4. Run:
 
-```bash
+```
 nc -vz <AUTHORIZED_TARGET> <APPROVED_PORT>
 ```
 
@@ -1546,7 +1546,7 @@ Determine whether a short list of approved services is visible and whether the s
 3. Confirm Wazuh and Splunk are active.
 4. Run:
 
-```bash
+```
 nmap -sT \
     -p <APPROVED_PORT_LIST> \
     <AUTHORIZED_TARGET>
@@ -1565,7 +1565,7 @@ nmap -sT \
 
 Normal output:
 
-```bash
+```
 nmap \
     -sT \
     -p <APPROVED_PORT_LIST> \
@@ -1575,7 +1575,7 @@ nmap \
 
 XML output:
 
-```bash
+```
 nmap \
     -sT \
     -p <APPROVED_PORT_LIST> \
@@ -1593,7 +1593,7 @@ Do not publish output containing operational addresses or MAC identifiers withou
 
 Confirm internal DNS behavior and inspect related network traffic.
 
-```bash
+```
 dig @<DOMAIN_CONTROLLER> \
     <WINDOWS_ENDPOINT>.<LAB_DOMAIN>
 ```
@@ -1616,7 +1616,7 @@ Review:
 
 Confirm a lab web interface is reachable and identify what telemetry is produced.
 
-```bash
+```
 curl -I http://<AUTHORIZED_TARGET>:<PORT>
 ```
 
@@ -1680,7 +1680,7 @@ Record exact start and stop times.
 
 Example:
 
-```text
+```
 Exercise start: YYYY-MM-DD HH:MM:SS TZ
 Exercise stop: YYYY-MM-DD HH:MM:SS TZ
 ```
@@ -1700,13 +1700,13 @@ Accurate timestamps make it easier to:
 
 Review:
 
-```bash
+```
 timedatectl
 ```
 
 Check synchronization:
 
-```bash
+```
 timedatectl status
 ```
 
@@ -1735,13 +1735,13 @@ Kali may use firewall technologies such as:
 
 Review nftables:
 
-```bash
+```
 sudo nft list ruleset
 ```
 
 Review listening services:
 
-```bash
+```
 sudo ss -tulpn
 ```
 
@@ -1753,7 +1753,7 @@ Kali should not expose unnecessary services to the CyberLab.
 
 Review active services:
 
-```bash
+```
 systemctl --type=service --state=running
 ```
 
@@ -1769,7 +1769,7 @@ Before disabling a service:
 
 Example:
 
-```bash
+```
 sudo systemctl stop <SERVICE>
 sudo systemctl disable <SERVICE>
 ```
@@ -1782,13 +1782,13 @@ Kali does not need to expose SSH unless remote administration is required.
 
 Check:
 
-```bash
+```
 sudo systemctl status ssh
 ```
 
 If not needed:
 
-```bash
+```
 sudo systemctl disable --now ssh
 ```
 
@@ -1851,23 +1851,23 @@ A security tool can itself be malicious or compromised.
 
 Before running a downloaded script:
 
-```bash
+```
 git status
 ```
 
-```bash
+```
 git log --oneline -5
 ```
 
 Review the source:
 
-```bash
+```
 less <SCRIPT_FILE>
 ```
 
 Calculate a hash when preserving evidence:
 
-```bash
+```
 sha256sum <SCRIPT_FILE>
 ```
 
@@ -1888,13 +1888,13 @@ Use:
 
 Example:
 
-```bash
+```
 python3 -m venv <VENV_DIRECTORY>
 ```
 
 Activate:
 
-```bash
+```
 source <VENV_DIRECTORY>/bin/activate
 ```
 
@@ -2004,13 +2004,13 @@ The default CyberLab goal is telemetry validation, not service disruption.
 
 Create a dedicated location:
 
-```bash
+```
 mkdir -p ~/CyberLab-Evidence
 ```
 
 Suggested structure:
 
-```text
+```
 ~/CyberLab-Evidence/
 ├── Commands/
 ├── Captures/
@@ -2028,13 +2028,13 @@ The operational username and path should be removed from public screenshots.
 
 Recommended format:
 
-```text
+```
 <DATE>-<EXERCISE>-<SOURCE>-<TYPE>
 ```
 
 Examples:
 
-```text
+```
 YYYY-MM-DD-port-validation-kali-nmap.txt
 YYYY-MM-DD-dns-test-kali-packet-capture.pcap
 YYYY-MM-DD-authentication-test-kali-notes.md
@@ -2050,7 +2050,7 @@ Record the exact authorized command used during an exercise.
 
 A private exercise record should include:
 
-```text
+```
 Command:
 Source:
 Target:
@@ -2072,13 +2072,13 @@ A terminal session may be recorded using tools such as `script`.
 
 Example:
 
-```bash
+```
 script <SESSION_LOG>.txt
 ```
 
 Exit the recording:
 
-```bash
+```
 exit
 ```
 
@@ -2118,7 +2118,7 @@ Before taking Kali screenshots:
 
 Recommended milestones:
 
-```text
+```
 01-KALI-Clean-Install
 02-KALI-Patched-Baseline
 03-KALI-VMware-Tools
@@ -2314,7 +2314,7 @@ Check:
 
 Commands:
 
-```bash
+```
 ip address
 ip route
 nmcli device status
@@ -2322,7 +2322,7 @@ nmcli device status
 
 Test:
 
-```bash
+```
 ping -c 4 <AUTHORIZED_TARGET>
 ```
 
@@ -2343,7 +2343,7 @@ Check:
 
 Commands:
 
-```bash
+```
 ip address
 ip route
 resolvectl status
@@ -2351,11 +2351,11 @@ resolvectl status
 
 Test separately:
 
-```bash
+```
 ping -c 4 1.1.1.1
 ```
 
-```bash
+```
 dig example.com
 ```
 
@@ -2367,17 +2367,17 @@ Do not add a gateway to the host-only adapter.
 
 Review:
 
-```bash
+```
 resolvectl status
 ```
 
-```bash
+```
 cat /etc/resolv.conf
 ```
 
 Test the internal server directly:
 
-```bash
+```
 dig @<DOMAIN_CONTROLLER> <LAB_DOMAIN>
 ```
 
@@ -2407,11 +2407,11 @@ Possible explanations include:
 
 Validate the target with:
 
-```bash
+```
 ip neigh
 ```
 
-```bash
+```
 nc -vz <AUTHORIZED_TARGET> <KNOWN_PORT>
 ```
 
@@ -2425,7 +2425,7 @@ Some tools require raw-socket or capture privileges.
 
 Confirm the reason before using:
 
-```bash
+```
 sudo <COMMAND>
 ```
 
@@ -2449,13 +2449,13 @@ Check:
 
 List interfaces:
 
-```bash
+```
 sudo tcpdump -D
 ```
 
 Test without a restrictive filter briefly:
 
-```bash
+```
 sudo tcpdump -i <HOST_ONLY_INTERFACE> -c 20
 ```
 
@@ -2579,7 +2579,7 @@ Remove or replace:
 
 Use placeholders such as:
 
-```text
+```
 <KALI_SYSTEM>
 <AUTHORIZED_TARGET>
 <WINDOWS_ENDPOINT>
