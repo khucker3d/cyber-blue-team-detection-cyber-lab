@@ -1,4 +1,4 @@
-# Detection Engineering Exercises
+# Detection Engineering Exercises Overview
 
 ## Overview
 
