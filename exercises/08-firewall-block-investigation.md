@@ -531,7 +531,7 @@ Get-NetFirewallProfile |
         LogMaxSizeKilobytes
 ```
 
-The recommended exercise state is:
+The exercise state is:
 
 ```
 LogBlocked: True
@@ -1353,7 +1353,7 @@ Process ID present:
 Rule:
 Rule level:
 Missing fields:
-Recommended improvement:
+Improvement:
 ```
 
 A blocked connection is not automatically malicious.
@@ -2155,7 +2155,7 @@ Severity should reflect source, destination, process, frequency, privilege, and 
 
 # Evidence Collection
 
-## Recommended Evidence
+## Evidence
 
 Preserve:
 
@@ -2544,7 +2544,7 @@ Document whether the platforms lacked:
 
 ---
 
-## Recommended Improvements
+## Improvements
 
 Potential improvements include:
 
