@@ -49,7 +49,7 @@ The endpoint is not intended to contain personal files, production credentials, 
 
 The public documentation uses the following placeholders:
 
-```text
+```
 Hostname: WIN11TARGET
 Domain: cyberlab.example
 NetBIOS domain: CYBERLAB
@@ -70,7 +70,7 @@ These values do not represent the operational CyberLab.
 
 The endpoint communicates with the domain controller and monitoring systems through the VMware host-only network.
 
-```text
+```
                          Acer Windows Host
                                  |
                          VMware Workstation
@@ -132,7 +132,7 @@ Create a dedicated Windows 11 virtual machine.
 
 Suggested public VM name:
 
-```text
+```
 WIN11TARGET
 ```
 
@@ -184,7 +184,7 @@ The endpoint should initially use one host-only adapter.
 
 Recommended VMware settings:
 
-```text
+```
 Network Adapter 1
 Type: Custom
 VMnet: designated host-only network
@@ -226,7 +226,7 @@ The endpoint should retain a known local administrator account for recovery and 
 
 Public example:
 
-```text
+```
 .\localadmin
 ```
 
@@ -311,14 +311,14 @@ Use an edition such as:
 
 Review the edition:
 
-```powershell
+```
 Get-ComputerInfo |
     Select-Object WindowsProductName, WindowsVersion, OsBuildNumber
 ```
 
 Or:
 
-```powershell
+```
 winver
 ```
 
@@ -328,13 +328,13 @@ winver
 
 Public example hostname:
 
-```text
+```
 WIN11TARGET
 ```
 
 Run PowerShell as Administrator:
 
-```powershell
+```
 Rename-Computer `
     -NewName "WIN11TARGET" `
     -Restart
@@ -348,20 +348,20 @@ Administrator privileges are required.
 
 After restart:
 
-```powershell
+```
 hostname
 ```
 
 Or:
 
-```powershell
+```
 Get-ComputerInfo |
     Select-Object CsName, WindowsProductName, WindowsVersion
 ```
 
 Expected public example:
 
-```text
+```
 WIN11TARGET
 ```
 
@@ -371,13 +371,13 @@ WIN11TARGET
 
 Review adapters:
 
-```powershell
+```
 Get-NetAdapter
 ```
 
 Review IP configuration:
 
-```powershell
+```
 Get-NetIPConfiguration
 ```
 
@@ -393,7 +393,7 @@ A descriptive name reduces confusion.
 
 Example:
 
-```powershell
+```
 Rename-NetAdapter `
     -Name "<CURRENT_ADAPTER_NAME>" `
     -NewName "CyberLab-Internal"
@@ -403,7 +403,7 @@ Administrator privileges are required.
 
 Verify:
 
-```powershell
+```
 Get-NetAdapter
 ```
 
@@ -415,7 +415,7 @@ Run PowerShell as Administrator.
 
 Example:
 
-```powershell
+```
 New-NetIPAddress `
     -InterfaceAlias "CyberLab-Internal" `
     -IPAddress "192.0.2.20" `
@@ -430,7 +430,7 @@ Do not add a default gateway to the isolated host-only adapter unless routing is
 
 The endpoint must use the domain controller as its DNS server.
 
-```powershell
+```
 Set-DnsClientServerAddress `
     -InterfaceAlias "CyberLab-Internal" `
     -ServerAddresses "192.0.2.10"
@@ -444,16 +444,16 @@ Do not configure a public resolver as the primary DNS server on a domain-joined 
 
 ## Review Network Configuration
 
-```powershell
+```
 ipconfig /all
 ```
 
-```powershell
+```
 Get-NetIPConfiguration `
     -InterfaceAlias "CyberLab-Internal"
 ```
 
-```powershell
+```
 Get-DnsClientServerAddress `
     -InterfaceAlias "CyberLab-Internal"
 ```
@@ -472,7 +472,7 @@ Confirm:
 
 Review existing IPv4 addresses:
 
-```powershell
+```
 Get-NetIPAddress `
     -InterfaceAlias "CyberLab-Internal" `
     -AddressFamily IPv4
@@ -480,7 +480,7 @@ Get-NetIPAddress `
 
 Remove only the incorrect address:
 
-```powershell
+```
 Remove-NetIPAddress `
     -InterfaceAlias "CyberLab-Internal" `
     -IPAddress "<INCORRECT_ADDRESS>" `
@@ -495,19 +495,19 @@ Administrator privileges are required.
 
 Test the domain controller by address:
 
-```powershell
+```
 ping 192.0.2.10
 ```
 
 Test the DNS service port:
 
-```powershell
+```
 Test-NetConnection 192.0.2.10 -Port 53
 ```
 
 Test the domain controller by hostname:
 
-```powershell
+```
 ping DC01
 ```
 
@@ -521,13 +521,13 @@ Service-port testing is more meaningful for domain validation.
 
 Resolve the domain controller:
 
-```powershell
+```
 Resolve-DnsName DC01.cyberlab.example
 ```
 
 Resolve Active Directory service records:
 
-```powershell
+```
 Resolve-DnsName `
     "_ldap._tcp.dc._msdcs.cyberlab.example" `
     -Type SRV
@@ -535,7 +535,7 @@ Resolve-DnsName `
 
 Resolve Kerberos service records:
 
-```powershell
+```
 Resolve-DnsName `
     "_kerberos._tcp.cyberlab.example" `
     -Type SRV
@@ -549,7 +549,7 @@ The results should reference DC01 and its host-only address.
 
 Use `nltest`:
 
-```powershell
+```
 nltest /dsgetdc:cyberlab.example
 ```
 
@@ -569,13 +569,13 @@ The output should not reference a NAT address.
 
 Review the endpoint clock:
 
-```powershell
+```
 Get-Date
 ```
 
 Review Windows Time status:
 
-```powershell
+```
 w32tm /query /status
 ```
 
@@ -616,7 +616,7 @@ The temporary NAT adapter should use VMware DHCP.
 
 Recommended design:
 
-```text
+```
 Host-only adapter:
 - Static internal address
 - DNS set to DC01
@@ -638,7 +638,7 @@ A temporary NAT adapter should not register its address in internal DNS.
 
 PowerShell:
 
-```powershell
+```
 Set-DnsClient `
     -InterfaceAlias "<NAT_ADAPTER>" `
     -RegisterThisConnectionsAddress $false
@@ -652,7 +652,7 @@ Also review the adapter’s DNS settings so it does not become the preferred res
 
 ## Disable the NAT Adapter When Finished
 
-```powershell
+```
 Disable-NetAdapter `
     -Name "<NAT_ADAPTER>" `
     -Confirm:$false
@@ -660,7 +660,7 @@ Disable-NetAdapter `
 
 Re-enable when required:
 
-```powershell
+```
 Enable-NetAdapter `
     -Name "<NAT_ADAPTER>" `
     -Confirm:$false
@@ -689,7 +689,7 @@ Before joining the domain:
 
 Example:
 
-```text
+```
 01-WIN11TARGET-Pre-Domain-Join
 ```
 
@@ -715,7 +715,7 @@ Before joining the domain, confirm:
 
 Run PowerShell as Administrator:
 
-```powershell
+```
 Add-Computer `
     -DomainName "cyberlab.example" `
     -Credential "CYBERLAB\<DOMAIN_JOIN_ACCOUNT>" `
@@ -751,19 +751,19 @@ After restart, sign in with a domain user.
 
 Public example:
 
-```text
+```
 CYBERLAB\validation.user
 ```
 
 Or:
 
-```text
+```
 validation.user@cyberlab.example
 ```
 
 To sign in with the local recovery account:
 
-```text
+```
 .\localadmin
 ```
 
@@ -773,21 +773,21 @@ Confirm the correct account context before entering credentials.
 
 ## Verify Domain Membership
 
-```powershell
+```
 Get-ComputerInfo |
     Select-Object CsName, CsDomain, CsDomainRole
 ```
 
 Or:
 
-```powershell
+```
 systeminfo |
     findstr /B /C:"Domain"
 ```
 
 Expected public example:
 
-```text
+```
 Domain: cyberlab.example
 ```
 
@@ -795,19 +795,19 @@ Domain: cyberlab.example
 
 ## Verify the Logged-In Identity
 
-```powershell
+```
 whoami
 ```
 
 Expected public example:
 
-```text
+```
 cyberlab\validation.user
 ```
 
 Review group memberships:
 
-```powershell
+```
 whoami /groups
 ```
 
@@ -819,7 +819,7 @@ The output may contain security identifiers and should be sanitized before publi
 
 On DC01:
 
-```powershell
+```
 Get-ADComputer `
     -Identity "WIN11TARGET" `
     -Properties Enabled, DistinguishedName, LastLogonDate
@@ -842,7 +842,7 @@ Move the endpoint into the dedicated Workstations OU.
 
 On DC01:
 
-```powershell
+```
 Get-ADComputer "WIN11TARGET" |
     Move-ADObject `
         -TargetPath "OU=Workstations,OU=CyberLab,DC=cyberlab,DC=example"
@@ -852,7 +852,7 @@ Appropriate domain permissions are required.
 
 Verify:
 
-```powershell
+```
 Get-ADComputer `
     -Identity "WIN11TARGET" `
     -Properties DistinguishedName
@@ -864,19 +864,19 @@ Get-ADComputer `
 
 On the endpoint:
 
-```powershell
+```
 gpupdate /force
 ```
 
 Review applied policies:
 
-```powershell
+```
 gpresult /r
 ```
 
 Generate an HTML report:
 
-```powershell
+```
 gpresult /h "C:\Temp\gpresult.html"
 ```
 
@@ -903,7 +903,7 @@ Confirm that intended policies apply, such as:
 
 Review Group Policy operational logs:
 
-```text
+```
 Event Viewer
 └── Applications and Services Logs
     └── Microsoft
@@ -916,13 +916,13 @@ Event Viewer
 
 ## Verify Domain Secure Channel
 
-```powershell
+```
 Test-ComputerSecureChannel -Verbose
 ```
 
 Expected result:
 
-```text
+```
 True
 ```
 
@@ -940,7 +940,7 @@ A false result may indicate:
 
 When appropriate:
 
-```powershell
+```
 Test-ComputerSecureChannel `
     -Repair `
     -Credential "CYBERLAB\<AUTHORIZED_ADMIN>"
@@ -958,13 +958,13 @@ Windows Defender Firewall should remain enabled.
 
 Review profiles:
 
-```powershell
+```
 Get-NetFirewallProfile
 ```
 
 Review the current network profile:
 
-```powershell
+```
 Get-NetConnectionProfile
 ```
 
@@ -976,7 +976,7 @@ After domain join, the host-only network should normally use the DomainAuthentic
 
 Expected example:
 
-```text
+```
 NetworkCategory: DomainAuthenticated
 ```
 
@@ -1001,7 +1001,7 @@ Microsoft Defender Antivirus should remain enabled unless a specific controlled 
 
 Review status:
 
-```powershell
+```
 Get-MpComputerStatus
 ```
 
@@ -1022,7 +1022,7 @@ The command may require elevation for complete information.
 
 Run PowerShell as Administrator:
 
-```powershell
+```
 Update-MpSignature
 ```
 
@@ -1030,7 +1030,7 @@ Internet access may be required.
 
 After updating, review:
 
-```powershell
+```
 Get-MpComputerStatus |
     Select-Object AntivirusSignatureLastUpdated, AntivirusSignatureVersion
 ```
@@ -1066,7 +1066,7 @@ When an exclusion is required for a controlled test:
 
 Review local administrators:
 
-```powershell
+```
 Get-LocalGroupMember `
     -Group "Administrators"
 ```
@@ -1087,7 +1087,7 @@ The output may reveal real usernames and should be sanitized.
 
 Example:
 
-```powershell
+```
 Add-LocalGroupMember `
     -Group "Administrators" `
     -Member "CYBERLAB\GG-CyberLab-Admins"
@@ -1142,7 +1142,7 @@ Use neutral lab content.
 
 Create a dedicated test directory:
 
-```powershell
+```
 New-Item `
     -ItemType Directory `
     -Path "C:\CyberLab-Test" `
@@ -1151,7 +1151,7 @@ New-Item `
 
 Possible subdirectories:
 
-```text
+```
 C:\CyberLab-Test\
 ├── Files\
 ├── Scripts\
@@ -1210,7 +1210,7 @@ The endpoint provides logs for:
 
 Primary logs include:
 
-```text
+```
 Windows Logs
 ├── Application
 ├── Security
@@ -1225,7 +1225,7 @@ Windows Logs
 
 PowerShell:
 
-```powershell
+```
 Get-WinEvent `
     -LogName Security `
     -MaxEvents 20
@@ -1235,7 +1235,7 @@ Administrator privileges may be required to read the Security log.
 
 Filter recent events:
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -1249,7 +1249,7 @@ Get-WinEvent `
 
 Review effective audit policy:
 
-```powershell
+```
 auditpol /get /category:*
 ```
 
@@ -1273,7 +1273,7 @@ Process creation events are commonly used for detection engineering.
 
 Validate the audit subcategory:
 
-```powershell
+```
 auditpol /get /subcategory:"Process Creation"
 ```
 
@@ -1287,7 +1287,7 @@ A common process creation event is recorded in the Security log when the require
 
 Important PowerShell logs include:
 
-```text
+```
 Applications and Services Logs
 └── Microsoft
     └── Windows
@@ -1297,13 +1297,13 @@ Applications and Services Logs
 
 Legacy Windows PowerShell events may also appear under:
 
-```text
+```
 Windows PowerShell
 ```
 
 Review recent PowerShell operational events:
 
-```powershell
+```
 Get-WinEvent `
     -LogName "Microsoft-Windows-PowerShell/Operational" `
     -MaxEvents 20
@@ -1315,7 +1315,7 @@ Get-WinEvent `
 
 Execute a harmless command:
 
-```powershell
+```
 Get-Process |
     Select-Object -First 5
 ```
@@ -1334,7 +1334,7 @@ PowerShell history can contain sensitive commands.
 
 Review the history path:
 
-```powershell
+```
 (Get-PSReadLineOption).HistorySavePath
 ```
 
@@ -1342,7 +1342,7 @@ Do not enter passwords, tokens, or API keys directly into command lines.
 
 Before taking screenshots, review:
 
-```powershell
+```
 Get-History
 ```
 
@@ -1354,7 +1354,7 @@ This does not necessarily display all history stored by PSReadLine.
 
 Defender events are available under:
 
-```text
+```
 Applications and Services Logs
 └── Microsoft
     └── Windows
@@ -1364,7 +1364,7 @@ Applications and Services Logs
 
 Review recent events:
 
-```powershell
+```
 Get-WinEvent `
     -LogName "Microsoft-Windows-Windows Defender/Operational" `
     -MaxEvents 20
@@ -1378,13 +1378,13 @@ Firewall logging can help investigate blocked or allowed connections.
 
 The log is commonly stored at:
 
-```text
+```
 %SystemRoot%\System32\LogFiles\Firewall\pfirewall.log
 ```
 
 Review profile logging settings:
 
-```powershell
+```
 Get-NetFirewallProfile |
     Select-Object Name, LogAllowed, LogBlocked, LogFileName
 ```
@@ -1397,7 +1397,7 @@ Administrator privileges are required to change these settings.
 
 Example:
 
-```powershell
+```
 Set-NetFirewallProfile `
     -Profile Domain,Private,Public `
     -LogBlocked True
@@ -1415,14 +1415,14 @@ Monitoring exercises can generate more events than default log sizes retain.
 
 Review the Security log:
 
-```powershell
+```
 Get-WinEvent -ListLog Security |
     Select-Object LogName, MaximumSizeInBytes, RecordCount
 ```
 
 Review PowerShell:
 
-```powershell
+```
 Get-WinEvent `
     -ListLog "Microsoft-Windows-PowerShell/Operational" |
     Select-Object LogName, MaximumSizeInBytes, RecordCount
@@ -1507,7 +1507,7 @@ The endpoint baseline should be stable before Sysmon is added.
 
 Recommended endpoint milestones:
 
-```text
+```
 01-WIN11TARGET-Clean-Install
 02-WIN11TARGET-Patched-Baseline
 03-WIN11TARGET-Static-Network
@@ -1736,7 +1736,7 @@ Use only a dedicated test account.
 
 Run a benign command:
 
-```powershell
+```
 Get-Service |
     Sort-Object Status |
     Select-Object -First 10
@@ -1760,7 +1760,7 @@ Do not use encoded, obfuscated, or credential-access commands unless a later aut
 
 Create a test file:
 
-```powershell
+```
 New-Item `
     -Path "C:\CyberLab-Test\Files\sample.txt" `
     -ItemType File `
@@ -1769,7 +1769,7 @@ New-Item `
 
 Add content:
 
-```powershell
+```
 Set-Content `
     -Path "C:\CyberLab-Test\Files\sample.txt" `
     -Value "CyberLab file integrity validation."
@@ -1777,7 +1777,7 @@ Set-Content `
 
 Modify it:
 
-```powershell
+```
 Add-Content `
     -Path "C:\CyberLab-Test\Files\sample.txt" `
     -Value "Authorized modification."
@@ -1785,7 +1785,7 @@ Add-Content `
 
 Delete it after the monitoring result is confirmed:
 
-```powershell
+```
 Remove-Item `
     -Path "C:\CyberLab-Test\Files\sample.txt"
 ```
@@ -1836,7 +1836,7 @@ Evidence should be copied to a controlled location before reverting a snapshot.
 
 Run PowerShell or Command Prompt as Administrator:
 
-```powershell
+```
 wevtutil epl Security "<EVIDENCE_PATH>\Security.evtx"
 ```
 
@@ -1857,7 +1857,7 @@ Do not publish the raw file without sanitization and review.
 
 ## Calculate an Evidence Hash
 
-```powershell
+```
 Get-FileHash `
     -Path "<EVIDENCE_FILE>" `
     -Algorithm SHA256
@@ -1865,7 +1865,7 @@ Get-FileHash `
 
 Record:
 
-```text
+```
 File:
 Collection date:
 Source system:
@@ -1894,7 +1894,7 @@ Possible causes include:
 
 Check:
 
-```powershell
+```
 ipconfig /all
 Resolve-DnsName cyberlab.example
 Resolve-DnsName "_ldap._tcp.dc._msdcs.cyberlab.example" -Type SRV
@@ -1908,7 +1908,7 @@ w32tm /query /status
 
 Check the configured DNS servers:
 
-```powershell
+```
 Get-DnsClientServerAddress
 ```
 
@@ -1916,13 +1916,13 @@ The host-only adapter should point to DC01.
 
 Clear the cache:
 
-```powershell
+```
 ipconfig /flushdns
 ```
 
 Retest:
 
-```powershell
+```
 Resolve-DnsName cyberlab.example
 ```
 
@@ -1945,7 +1945,7 @@ Check:
 
 Use the local recovery account if domain authentication is unavailable:
 
-```text
+```
 .\localadmin
 ```
 
@@ -1955,13 +1955,13 @@ Use the local recovery account if domain authentication is unavailable:
 
 Review:
 
-```powershell
+```
 Get-NetConnectionProfile
 ```
 
 Check:
 
-```powershell
+```
 Resolve-DnsName DC01.cyberlab.example
 Test-ComputerSecureChannel -Verbose
 Get-Service NlaSvc, Netlogon
@@ -1983,13 +1983,13 @@ Restarting the endpoint after DC01 is fully available may resolve startup timing
 
 Run:
 
-```powershell
+```
 gpupdate /force
 ```
 
 Review:
 
-```powershell
+```
 gpresult /r
 ```
 
@@ -2013,7 +2013,7 @@ Review the Group Policy Operational log.
 
 Test:
 
-```powershell
+```
 Test-ComputerSecureChannel -Verbose
 ```
 
@@ -2028,7 +2028,7 @@ Potential causes include:
 
 Repair when appropriate:
 
-```powershell
+```
 Test-ComputerSecureChannel `
     -Repair `
     -Credential "CYBERLAB\<AUTHORIZED_ADMIN>"
@@ -2050,7 +2050,7 @@ Check:
 * A host VPN is not blocking VMware traffic.
 * DNS works for external names.
 
-```powershell
+```
 Get-NetIPConfiguration
 Get-NetRoute
 Test-NetConnection 1.1.1.1 -Port 443
@@ -2073,7 +2073,7 @@ Possible causes include:
 
 Review:
 
-```powershell
+```
 Get-DnsClientServerAddress
 Get-NetIPInterface |
     Sort-Object InterfaceMetric
@@ -2098,14 +2098,14 @@ Check:
 
 Review services:
 
-```powershell
+```
 Get-Service |
     Where-Object DisplayName -Match "Wazuh"
 ```
 
 Test the required server port:
 
-```powershell
+```
 Test-NetConnection <WAZUH_SERVER> -Port <AGENT_PORT>
 ```
 
@@ -2128,7 +2128,7 @@ Check:
 
 Review services:
 
-```powershell
+```
 Get-Service |
     Where-Object DisplayName -Match "Splunk"
 ```
@@ -2151,7 +2151,7 @@ Check:
 * SIEM ingestion delay
 * Timestamp alignment
 
-```powershell
+```
 auditpol /get /category:*
 Get-WinEvent -ListLog Security
 gpresult /r
@@ -2178,13 +2178,13 @@ Possible causes include:
 
 Review:
 
-```powershell
+```
 Get-Process |
     Sort-Object CPU -Descending |
     Select-Object -First 10
 ```
 
-```powershell
+```
 Get-Counter '\Memory\Available MBytes'
 ```
 
@@ -2219,7 +2219,7 @@ Remove or replace:
 
 Use placeholders such as:
 
-```text
+```
 <WINDOWS_ENDPOINT>
 <DOMAIN_NAME>
 <DOMAIN_CONTROLLER>
