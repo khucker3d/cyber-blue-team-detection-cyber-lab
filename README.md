@@ -343,50 +343,6 @@ Runbooks are intentionally shorter than the main documentation and focus on:
 
 ---
 
-## Repository Structure
-
-```
-Blue-Team-CyberLab/
-├── README.md
-├── docs/
-│   ├── 01-project-overview.md
-│   ├── 02-architecture.md
-│   ├── 03-host-configuration.md
-│   ├── 04-vmware-network-design.md
-│   ├── 05-domain-controller-setup.md
-│   ├── 06-windows-endpoint-setup.md
-│   ├── 07-wazuh-siem-setup.md
-│   ├── 08-splunk-setup.md
-│   ├── 09-kali-testing-system.md
-│   ├── 10-log-ingestion-and-validation.md
-│   ├── 11-snapshot-and-recovery-strategy.md
-│   ├── 12-troubleshooting.md
-│   ├── 13-security-and-sanitization.md
-│   └── 14-lessons-learned.md
-├── exercises/
-│   ├── detection-engineering-exercises.md
-│   ├── 01-failed-logon-investigation.md
-│   ├── 02-account-lockout-investigation.md
-│   ├── 03-user-account-creation.md
-│   ├── 04-privileged-group-change.md
-│   ├── 05-suspicious-powershell.md
-│   ├── 06-file-integrity-change.md
-│   ├── 07-defender-alert-validation.md
-│   ├── 08-firewall-block-investigation.md
-│   ├── 09-network-reconnaissance-detection.md
-│   └── 10-ingestion-health-validation.md
-├── runbooks/
-│   └── README.md
-├── images/
-├── templates/
-├── scripts/
-├── .gitignore
-├── LICENSE
-└── SECURITY.md
-```
-
----
-
 ## Project Gallery
 
 > Replace the image paths below with the final sanitized screenshots as they are added to the repository.
