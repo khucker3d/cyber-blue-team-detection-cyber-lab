@@ -490,7 +490,7 @@ Get-NetFirewallProfile |
         LogMaxSizeKilobytes
 ```
 
-Recommended for the exercise:
+Use for the exercise:
 
 ```
 LogBlocked: True
@@ -1147,7 +1147,7 @@ Application context present:
 Rule:
 Rule level:
 Missing fields:
-Recommended improvement:
+Improvement:
 ```
 
 Wazuh may collect individual firewall events without correlating them into a reconnaissance alert.
@@ -1788,7 +1788,7 @@ Severity should reflect scope, source, speed, target sensitivity, and subsequent
 
 # Evidence Collection
 
-## Recommended Evidence
+## Evidence
 
 Preserve:
 
@@ -2125,7 +2125,7 @@ Document whether the platforms lacked:
 
 ---
 
-## Recommended Improvements
+## Improvements
 
 Potential improvements include:
 
