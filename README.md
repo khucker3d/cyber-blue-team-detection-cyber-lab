@@ -82,7 +82,7 @@ The lab supports controlled activity generation, endpoint telemetry collection, 
 
 The CyberLab uses a host-only VMware network as its primary security boundary.
 
-```text
+```
                          Acer Windows Host
                                  |
                          VMware Workstation
@@ -187,7 +187,7 @@ The lab follows several core design principles:
 
 ## Data Flow
 
-```text
+```
 Authorized Activity
         |
         v
@@ -220,7 +220,7 @@ Each detection exercise validates the full path rather than checking only whethe
 
 The project uses a repeatable detection-development lifecycle:
 
-```text
+```
 Define Behavior
       |
       v
@@ -270,20 +270,19 @@ The project documentation is organized as a structured deployment and operations
 
 | Document                                                                         | Purpose                                                        |
 | -------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| [01 – Project Overview](docs/01-project-overview.md)                             | Project purpose, goals, scope, and learning objectives         |
-| [02 – Architecture](docs/02-architecture.md)                                     | Logical design, systems, dependencies, and traffic flow        |
-| [03 – Host Configuration](docs/03-host-configuration.md)                         | Acer host preparation and virtualization requirements          |
-| [04 – VMware Network Design](docs/04-vmware-network-design.md)                   | Host-only and NAT network architecture                         |
-| [05 – Domain Controller Setup](docs/05-domain-controller-setup.md)               | Windows Server, AD DS, DNS, users, groups, and policy          |
-| [06 – Windows Endpoint Setup](docs/06-windows-endpoint-setup.md)                 | Windows 11 deployment, domain join, auditing, and monitoring   |
-| [07 – Wazuh SIEM Setup](docs/07-wazuh-siem-setup.md)                             | Wazuh deployment, agent enrollment, and event validation       |
-| [08 – Splunk Setup](docs/08-splunk-setup.md)                                     | Splunk installation, service startup, forwarding, and searches |
-| [09 – Kali Testing System](docs/09-kali-testing-system.md)                       | Authorized activity-generation and testing workstation         |
-| [10 – Log Ingestion and Validation](docs/10-log-ingestion-and-validation.md)     | End-to-end telemetry and data-quality validation               |
-| [11 – Snapshot and Recovery Strategy](docs/11-snapshot-and-recovery-strategy.md) | Snapshots, backups, restoration, and recovery testing          |
-| [12 – Troubleshooting](docs/12-troubleshooting.md)                               | Layered diagnostic and repair framework                        |
-| [13 – Security and Sanitization](docs/13-security-and-sanitization.md)           | Isolation, credential protection, and public-release controls  |
-| [14 – Lessons Learned](docs/14-lessons-learned.md)                               | Technical findings, improvements, and project assessment       |
+| [01 – Architecture](docs/02-architecture.md)                                     | Logical design, systems, dependencies, and traffic flow        |
+| [02 – Host Configuration](docs/03-host-configuration.md)                         | Acer host preparation and virtualization requirements          |
+| [03 – VMware Network Design](docs/04-vmware-network-design.md)                   | Host-only and NAT network architecture                         |
+| [04 – Domain Controller Setup](docs/05-domain-controller-setup.md)               | Windows Server, AD DS, DNS, users, groups, and policy          |
+| [05 – Windows Endpoint Setup](docs/06-windows-endpoint-setup.md)                 | Windows 11 deployment, domain join, auditing, and monitoring   |
+| [06 – Wazuh SIEM Setup](docs/07-wazuh-siem-setup.md)                             | Wazuh deployment, agent enrollment, and event validation       |
+| [07 – Splunk Setup](docs/08-splunk-setup.md)                                     | Splunk installation, service startup, forwarding, and searches |
+| [08 – Kali Testing System](docs/09-kali-testing-system.md)                       | Authorized activity-generation and testing workstation         |
+| [09 – Log Ingestion and Validation](docs/10-log-ingestion-and-validation.md)     | End-to-end telemetry and data-quality validation               |
+| [10 – Snapshot and Recovery Strategy](docs/11-snapshot-and-recovery-strategy.md) | Snapshots, backups, restoration, and recovery testing          |
+| [11 – Troubleshooting](docs/12-troubleshooting.md)                               | Layered diagnostic and repair framework                        |
+| [12 – Security and Sanitization](docs/13-security-and-sanitization.md)           | Isolation, credential protection, and public-release controls  |
+| [13 – Lessons Learned](docs/14-lessons-learned.md)                               | Technical findings, improvements, and project assessment       |
 
 ---
 
@@ -313,7 +312,7 @@ Exercise statuses will be updated as validation work is completed.
 
 Short operational runbooks are planned for repeatable administration and incident handling.
 
-```text
+```
 runbooks/
 ├── README.md
 ├── start-cyberlab.md
@@ -346,7 +345,7 @@ Runbooks are intentionally shorter than the main documentation and focus on:
 
 ## Repository Structure
 
-```text
+```
 Blue-Team-CyberLab/
 ├── README.md
 ├── docs/
@@ -426,7 +425,7 @@ The project uses known test events to verify:
 
 Example validation chain:
 
-```text
+```
 Harmless Test Action
         |
         v
@@ -486,7 +485,7 @@ This repository intentionally excludes or replaces:
 
 Documentation-safe examples use reserved values such as:
 
-```text
+```
 Documentation network: 192.0.2.0/24
 Example domain: cyberlab.example
 Example endpoint: WIN11TARGET
