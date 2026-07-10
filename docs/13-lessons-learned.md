@@ -76,7 +76,7 @@ The architecture diagram became a troubleshooting and recovery reference, not ju
 
 The lab has a clear dependency chain.
 
-```text
+```
 VMware Networking
         |
         v
@@ -156,7 +156,7 @@ Carries greater risk because it connects the VM directly to the physical network
 
 The safest standard configuration was:
 
-```text
+```
 Host-only for lab traffic
 NAT only when internet access is required
 No bridged networking by default
@@ -266,13 +266,13 @@ A failed ping does not prove an application is unavailable.
 
 More useful tests included:
 
-```powershell
+```
 Test-NetConnection <SERVER> -Port <PORT>
 ```
 
 and:
 
-```bash
+```
 nc -vz <SERVER> <PORT>
 ```
 
@@ -284,7 +284,7 @@ Service-specific testing provides more accurate evidence than relying only on IC
 
 A reliable troubleshooting order was:
 
-```text
+```
 VM state
 Network adapter
 IP address
@@ -662,7 +662,7 @@ Monitoring entire drives or noisy directories creates excessive events.
 
 A dedicated test path made validation easier:
 
-```text
+```
 C:\CyberLab-Test\Files
 ```
 
@@ -710,7 +710,7 @@ Each step validated a different layer.
 
 Using:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk status
 ```
 
@@ -724,7 +724,7 @@ Explicit commands are also clearer for documentation.
 
 The working lab startup command was:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk start --run-as-root
 ```
 
@@ -932,7 +932,7 @@ Validation should include:
 
 The pipeline should be checked in order:
 
-```text
+```
 Action
 Source log
 Agent or input
@@ -1062,13 +1062,13 @@ Specific symptoms lead to better tests.
 
 Better:
 
-```text
+```
 Splunk Web does not respond on the internal interface.
 ```
 
 Worse:
 
-```text
+```
 Splunk is broken.
 ```
 
