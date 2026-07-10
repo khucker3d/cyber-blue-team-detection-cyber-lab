@@ -1,1 +1,2407 @@
+# Defender Alert Validation
+
+## Exercise Overview
+
+This exercise validates Microsoft Defender Antivirus detection, alert generation, remediation, and SIEM visibility using an officially recognized harmless antivirus test artifact.
+
+The exercise confirms whether:
+
+* Microsoft Defender is active
+* Real-time protection is enabled
+* Security intelligence is current
+* The harmless test artifact is detected
+* The artifact is blocked, quarantined, or removed
+* Microsoft Defender Operational events are generated
+* Wazuh receives the event
+* Splunk receives the event when the Defender log is collected
+* The endpoint returns to a healthy state
+* Evidence is preserved without publishing the test artifact
+
+The exercise must not use real malware.
+
+---
+
+## Exercise ID
+
+```
+EX-07
+```
+
+---
+
+## Difficulty
+
+```
+Intermediate
+```
+
+---
+
+## Primary Skills
+
+* Microsoft Defender validation
+* Endpoint-protection monitoring
+* Windows security-event analysis
+* Antivirus remediation review
+* Wazuh event validation
+* Splunk SPL development
+* Alert timeline reconstruction
+* Evidence handling
+* Security-control verification
+* Cleanup confirmation
+
+---
+
+## Authorization Boundary
+
+This exercise must use:
+
+* WIN11TARGET
+* Microsoft Defender Antivirus
+* An officially documented harmless antivirus test method
+* A dedicated CyberLab test directory
+* Wazuh and Splunk monitoring
+* The VMware host-only network
+* Synthetic evidence and screenshots
+
+Do not use:
+
+* Real malware
+* Unknown binaries
+* Weaponized scripts
+* Malicious documents
+* Credential-stealing tools
+* Remote payload downloads
+* Personal systems
+* School or employer systems
+* Household endpoints outside the CyberLab
+* Public file-sharing services
+
+---
+
+## Public Example Environment
+
+```
+Windows endpoint: WIN11TARGET
+Wazuh server: WAZUH-SERVER
+Splunk server: SPLUNK-SERVER
+Test account: defender.test
+Test directory: C:\CyberLab-Test\Defender
+Documentation subnet: 192.0.2.0/24
+```
+
+These values are sanitized examples.
+
+---
+
+## Learning Objectives
+
+By the end of the exercise, the student should be able to:
+
+* Confirm Microsoft Defender health
+* Review security-intelligence status
+* Verify real-time protection
+* Generate a harmless test detection
+* Identify the Defender detection event
+* Review remediation status
+* Confirm whether the artifact was quarantined or removed
+* Locate the event in Wazuh
+* Locate the event in Splunk
+* Build a detection and remediation timeline
+* Confirm the endpoint returned to a healthy state
+* Document telemetry and detection gaps
+
+---
+
+## Required Systems
+
+* WIN11TARGET
+* WAZUH-SERVER
+* SPLUNK-SERVER
+* Wazuh agent on WIN11TARGET
+* Splunk Universal Forwarder where configured
+
+Optional:
+
+* Sysmon
+* Windows Security Center logs
+* Microsoft Defender for Endpoint, if separately available
+
+DC01 and KALI-TEST are not required for the standard exercise.
+
+---
+
+## Required Account
+
+Use a standard CyberLab test account when creating the test artifact:
+
+```
+defender.test
+```
+
+Administrator access may be required to:
+
+* Review Defender configuration
+* Update security intelligence
+* Review protected event logs
+* Access Protection History
+* Remove residual artifacts
+
+The test account should not be used to disable or weaken Defender.
+
+---
+
+## Required Monitoring
+
+Before starting, confirm:
+
+* Microsoft Defender Antivirus is active
+* Real-time protection is enabled
+* Security intelligence is current
+* Cloud-delivered protection is configured according to the lab policy
+* Microsoft Defender Operational logging is enabled
+* Wazuh agent is active
+* Wazuh collects the relevant Defender event channel
+* Splunk collects the relevant Defender event channel where configured
+* System time is synchronized
+* A stable snapshot exists
+
+---
+
+## Safety Notes
+
+* Use only an official harmless antivirus test artifact.
+* Do not reproduce the test artifact inside this public document.
+* Do not upload the test artifact to GitHub.
+* Do not email or message the artifact.
+* Do not place it on a shared household drive.
+* Do not disable Microsoft Defender.
+* Do not add a Defender exclusion.
+* Do not disable real-time protection.
+* Do not introduce real malware.
+* Stop the exercise after the expected detection is confirmed.
+* Confirm remediation before completing cleanup.
+
+---
+
+## Expected Event Flow
+
+```
+Harmless Test Artifact Created
+             |
+             v
+Microsoft Defender Inspects File
+             |
+             v
+Detection Generated
+             |
+             v
+Artifact Blocked, Quarantined, or Removed
+             |
+             v
+Defender Operational Event Recorded
+             |
+             v
+Wazuh and Splunk Ingest Event
+             |
+             v
+Student Reviews Detection and Remediation
+             |
+             v
+Endpoint Health Confirmed
+```
+
+---
+
+## Expected Defender Outcomes
+
+The exact result can vary by:
+
+* Defender version
+* Security-intelligence version
+* Browser or editor behavior
+* Real-time protection state
+* File creation method
+* Cloud protection
+* Existing endpoint policy
+
+Possible outcomes include:
+
+* File creation blocked immediately
+* File created and then removed
+* File quarantined
+* Threat remediated automatically
+* User notification displayed
+* Protection History entry created
+* Defender Operational event generated
+
+The exercise succeeds when Defender detects and handles the harmless test artifact safely.
+
+---
+
+## Relevant Defender Event IDs
+
+Microsoft Defender Operational events commonly include:
+
+| Event ID | General Description                               |
+| -------: | ------------------------------------------------- |
+|     1000 | Scan started                                      |
+|     1001 | Scan completed                                    |
+|     1006 | Malware or potentially unwanted software detected |
+|     1007 | Action taken to protect the system                |
+|     1008 | Action failed                                     |
+|     1009 | Quarantine restoration activity                   |
+|     1010 | Quarantine restoration failed                     |
+|     1011 | Item deleted from quarantine                      |
+|     1116 | Malware or potentially unwanted software detected |
+|     1117 | Action taken to protect the system                |
+|     1118 | Action failed                                     |
+|     1119 | Critical error during action                      |
+|     1121 | Controlled Folder Access blocked an action        |
+|     2000 | Security intelligence updated                     |
+|     2001 | Security intelligence update failed               |
+|     5001 | Real-time protection disabled                     |
+|     5004 | Defender configuration changed                    |
+|     5007 | Defender configuration changed                    |
+
+The exact events generated depend on the Windows and Defender build.
+
+---
+
+## Important Event Fields
+
+Review:
+
+* Threat name
+* Threat identifier
+* Severity
+* Category
+* File path
+* Detection origin
+* Detection source
+* Process name
+* User
+* Action
+* Action status
+* Remediation state
+* Security-intelligence version
+* Timestamp
+* Reporting host
+
+---
+
+## Investigation Questions
+
+The final report should answer:
+
+* Was Microsoft Defender active before the test?
+* Was real-time protection enabled?
+* Was security intelligence current?
+* Which harmless test method was used?
+* Was the artifact creation blocked or permitted briefly?
+* What detection name was recorded?
+* Which file path was affected?
+* What action did Defender take?
+* Was the action successful?
+* Was a Protection History entry created?
+* Which Defender event IDs appeared?
+* Did Wazuh receive the event?
+* Did Splunk receive the event?
+* Were timestamps aligned?
+* Was the artifact completely removed?
+* Did Defender remain healthy?
+* What telemetry was missing?
+* Was the alert severity appropriate?
+
+---
+
+# Preparation
+
+## Review the Current Snapshot State
+
+Confirm stable snapshots exist for:
+
+* WIN11TARGET
+* WAZUH-SERVER
+* SPLUNK-SERVER
+
+Suggested pre-exercise snapshot:
+
+```
+PRE-EX07-Defender-Alert-Validation
+```
+
+A snapshot provides rollback protection but does not replace evidence preservation.
+
+---
+
+## Confirm System Time
+
+On WIN11TARGET:
+
+```
+Get-Date
+```
+
+```
+w32tm /query /status
+```
+
+```
+w32tm /query /source
+```
+
+On Wazuh and Splunk:
+
+```
+timedatectl
+```
+
+Record any time difference before testing.
+
+---
+
+## Confirm Defender Health
+
+Run from PowerShell:
+
+```
+Get-MpComputerStatus
+```
+
+Review key fields:
+
+```
+Get-MpComputerStatus |
+    Select-Object `
+        AMServiceEnabled,
+        AntivirusEnabled,
+        AntispywareEnabled,
+        BehaviorMonitorEnabled,
+        IoavProtectionEnabled,
+        NISEnabled,
+        OnAccessProtectionEnabled,
+        RealTimeProtectionEnabled,
+        AntivirusSignatureVersion,
+        AntivirusSignatureLastUpdated,
+        QuickScanAge,
+        FullScanAge
+```
+
+Expected baseline:
+
+* Antivirus enabled
+* Antispyware enabled
+* Real-time protection enabled
+* Behavior monitoring enabled
+* On-access protection enabled
+* Security intelligence reasonably current
+
+---
+
+## Review Defender Preferences
+
+Run as an administrator:
+
+```
+Get-MpPreference |
+    Select-Object `
+        DisableRealtimeMonitoring,
+        DisableBehaviorMonitoring,
+        DisableIOAVProtection,
+        DisableScriptScanning,
+        MAPSReporting,
+        SubmitSamplesConsent,
+        ExclusionPath,
+        ExclusionProcess,
+        ExclusionExtension
+```
+
+Do not publish operational exclusion details.
+
+Confirm the test directory is not excluded.
+
+---
+
+## Update Security Intelligence
+
+Run as an administrator when an update is required:
+
+```
+Update-MpSignature
+```
+
+Then confirm:
+
+```
+Get-MpComputerStatus |
+    Select-Object `
+        AntivirusSignatureVersion,
+        AntivirusSignatureLastUpdated
+```
+
+Internet access may require the temporary VMware NAT adapter.
+
+Remove temporary NAT access after the update when it is no longer required.
+
+---
+
+## Confirm Defender Service Status
+
+```
+Get-Service WinDefend
+```
+
+Expected:
+
+```
+Running
+```
+
+Also review:
+
+```
+Get-Service SecurityHealthService
+```
+
+Service availability can vary by Windows version and policy.
+
+---
+
+## Confirm Defender Operational Log
+
+```
+Get-WinEvent `
+    -ListLog "Microsoft-Windows-Windows Defender/Operational" |
+Select-Object `
+    LogName,
+    IsEnabled,
+    RecordCount,
+    LogMode,
+    MaximumSizeInBytes
+```
+
+Expected:
+
+```
+IsEnabled: True
+```
+
+---
+
+## Confirm Wazuh Agent Status
+
+```
+Get-Service |
+    Where-Object DisplayName -Match "Wazuh"
+```
+
+Confirm WIN11TARGET is active in the Wazuh dashboard.
+
+---
+
+## Confirm Splunk Forwarder Status
+
+```
+Get-Service |
+    Where-Object DisplayName -Match "Splunk"
+```
+
+Confirm recent endpoint telemetry:
+
+```spl
+index=windows host=WIN11TARGET earliest=-15m
+| head 20
+```
+
+---
+
+## Confirm Defender Events Are Collected
+
+For Wazuh, confirm the agent configuration collects:
+
+```
+Microsoft-Windows-Windows Defender/Operational
+```
+
+For Splunk, confirm an input exists for the same channel when Defender telemetry is expected there.
+
+Do not modify both platforms simultaneously unless the change is documented.
+
+---
+
+## Create the Test Directory
+
+```
+New-Item `
+    -Path "C:\CyberLab-Test\Defender" `
+    -ItemType Directory `
+    -Force
+```
+
+Confirm:
+
+```
+Get-Item "C:\CyberLab-Test\Defender"
+```
+
+---
+
+## Start the Exercise Record
+
+```
+Exercise ID: EX-07
+Test account: defender.test
+Endpoint: WIN11TARGET
+Test directory: C:\CyberLab-Test\Defender
+Start time:
+Defender active:
+Real-time protection:
+Security-intelligence version:
+Security-intelligence update time:
+Wazuh agent status:
+Splunk forwarder status:
+Expected Defender result:
+```
+
+---
+
+# Exercise Procedure
+
+## Obtain the Official Test Instructions
+
+Use the officially documented harmless antivirus test method from its authoritative source.
+
+Do not copy the test string into:
+
+* This repository
+* Markdown files
+* Commit history
+* Issue comments
+* Screenshots
+* Chat logs intended for publication
+
+The artifact itself is not required for the public report.
+
+---
+
+## Create the Harmless Test Artifact
+
+Using the official instructions, create the test artifact only inside:
+
+```
+C:\CyberLab-Test\Defender
+```
+
+Record:
+
+```
+Creation time:
+Creation method:
+Filename:
+User:
+Observed Defender notification:
+```
+
+Do not retry repeatedly if Defender blocks the first attempt.
+
+---
+
+## Stop After Detection
+
+Once Defender reports the test artifact:
+
+1. Stop creating or modifying the artifact.
+2. Record the exact detection time.
+3. Capture the notification if safe.
+4. Review Protection History.
+5. Review the Defender Operational log.
+6. Confirm the remediation result.
+7. Preserve evidence.
+8. Do not restore the artifact from quarantine.
+
+---
+
+## Confirm Whether the File Remains
+
+Use:
+
+```
+Test-Path `
+    -Path "C:\CyberLab-Test\Defender\<TEST_FILENAME>"
+```
+
+Possible result:
+
+```
+False
+```
+
+A `False` result may indicate the file was blocked or removed.
+
+When the file remains, do not open or execute it. Continue reviewing the Defender remediation state.
+
+---
+
+# Local Defender Validation
+
+## Review Current Threats
+
+```
+Get-MpThreat
+```
+
+Review active detections:
+
+```
+Get-MpThreatDetection
+```
+
+Select relevant fields:
+
+```
+Get-MpThreatDetection |
+    Select-Object `
+        InitialDetectionTime,
+        LastThreatStatusChangeTime,
+        ThreatID,
+        ThreatStatusID,
+        ActionSuccess,
+        CurrentThreatExecutionStatusID,
+        Resources
+```
+
+Field availability can vary.
+
+---
+
+## Review Protection History
+
+Open:
+
+```
+Windows Security
+└── Virus & threat protection
+    └── Protection history
+```
+
+Review:
+
+* Detection name
+* Severity
+* Status
+* Affected item
+* Detection time
+* Action taken
+* Remediation result
+
+Do not restore the test artifact.
+
+---
+
+## Search Defender Operational Events
+
+```
+Get-WinEvent `
+    -FilterHashtable @{
+        LogName = "Microsoft-Windows-Windows Defender/Operational"
+        StartTime = (Get-Date).AddMinutes(-30)
+    } |
+Select-Object `
+    TimeCreated,
+    Id,
+    LevelDisplayName,
+    Message
+```
+
+---
+
+## Search for Detection Events
+
+```
+Get-WinEvent `
+    -FilterHashtable @{
+        LogName = "Microsoft-Windows-Windows Defender/Operational"
+        Id = 1006, 1116
+        StartTime = (Get-Date).AddMinutes(-30)
+    } |
+Select-Object `
+    TimeCreated,
+    Id,
+    LevelDisplayName,
+    Message
+```
+
+---
+
+## Search for Remediation Events
+
+```
+Get-WinEvent `
+    -FilterHashtable @{
+        LogName = "Microsoft-Windows-Windows Defender/Operational"
+        Id = 1007, 1117
+        StartTime = (Get-Date).AddMinutes(-30)
+    } |
+Select-Object `
+    TimeCreated,
+    Id,
+    LevelDisplayName,
+    Message
+```
+
+---
+
+## Search for Failed Actions
+
+```
+Get-WinEvent `
+    -FilterHashtable @{
+        LogName = "Microsoft-Windows-Windows Defender/Operational"
+        Id = 1008, 1118, 1119
+        StartTime = (Get-Date).AddMinutes(-30)
+    } |
+Select-Object `
+    TimeCreated,
+    Id,
+    LevelDisplayName,
+    Message
+```
+
+No failed remediation event should appear during a successful exercise.
+
+---
+
+## Event Viewer Procedure
+
+1. Open **Event Viewer**.
+2. Navigate to **Applications and Services Logs**.
+3. Expand **Microsoft**.
+4. Expand **Windows**.
+5. Select **Windows Defender**.
+6. Open **Operational**.
+7. Filter to the exercise time range.
+8. Review detection and remediation events.
+9. Record the important fields.
+10. Save sanitized screenshots if required.
+
+---
+
+## Record Local Findings
+
+```
+Detection time:
+Detection event ID:
+Threat name:
+Threat severity:
+Threat category:
+Affected path:
+Detection source:
+Detection origin:
+User:
+Process:
+Action:
+Action status:
+Remediation time:
+Remediation event ID:
+Action successful:
+Artifact remains:
+```
+
+---
+
+# Optional Scan Validation
+
+A quick scan is not always required after successful automatic remediation.
+
+When desired, run:
+
+```
+Start-MpScan -ScanType QuickScan
+```
+
+Review status:
+
+```
+Get-MpComputerStatus |
+    Select-Object `
+        QuickScanStartTime,
+        QuickScanEndTime,
+        QuickScanAge
+```
+
+Do not use repeated full scans unless there is a specific investigation need.
+
+---
+
+# Wazuh Validation
+
+## Confirm Agent Health
+
+In the Wazuh dashboard, confirm:
+
+* WIN11TARGET is active
+* Last keepalive is recent
+* The selected time range includes the exercise
+* The endpoint identity is correct
+
+---
+
+## Search by Defender Provider
+
+Search for:
+
+```
+Microsoft-Windows-Windows Defender
+```
+
+Also search for:
+
+```
+Windows Defender
+```
+
+---
+
+## Search by Event ID
+
+Review:
+
+```
+1006
+1007
+1116
+1117
+```
+
+Also review failed-action events if present:
+
+```
+1008
+1118
+1119
+```
+
+---
+
+## Search by Test Path
+
+Search for:
+
+```
+C:\CyberLab-Test\Defender
+```
+
+Use a narrow time range.
+
+---
+
+## Review Wazuh Fields
+
+Record:
+
+* Agent
+* Event provider
+* Event channel
+* Event ID
+* Rule ID
+* Rule description
+* Rule level
+* Threat name
+* Threat severity
+* Affected path
+* Action
+* Action status
+* User
+* Process
+* Timestamp
+* MITRE ATT&CK mapping
+* Compliance mappings
+
+---
+
+## Wazuh Validation Questions
+
+* Did Wazuh collect the Defender detection event?
+* Did Wazuh collect the remediation event?
+* Was the threat name parsed?
+* Was the affected path visible?
+* Was the action status visible?
+* Was the endpoint identified correctly?
+* Was the rule severity appropriate?
+* Did the event arrive promptly?
+* Were detection and remediation correlated?
+* Did a successful harmless test produce excessive severity?
+
+---
+
+## Wazuh Detection Gap Record
+
+```
+Detection event present:
+Remediation event present:
+Threat name parsed:
+Affected path parsed:
+Action parsed:
+Action status parsed:
+User present:
+Process present:
+Rule:
+Rule level:
+Missing fields:
+Recommended improvement:
+```
+
+---
+
+# Splunk Validation
+
+## Search for Defender Events
+
+```spl
+index=windows earliest=-30m
+source="*Windows Defender*"
+| table
+    _time
+    host
+    source
+    sourcetype
+    EventCode
+    Level
+    Message
+| sort _time
+```
+
+Adjust the source and sourcetype for the actual deployment.
+
+---
+
+## Search by Provider Name
+
+```spl
+index=windows earliest=-30m
+ProviderName="Microsoft-Windows-Windows Defender"
+| table
+    _time
+    host
+    EventCode
+    Level
+    Message
+| sort _time
+```
+
+---
+
+## Search for Detection Events
+
+```spl
+index=windows earliest=-30m
+(
+    EventCode=1006 OR
+    EventCode=1116
+)
+| table
+    _time
+    host
+    EventCode
+    ThreatName
+    SeverityName
+    CategoryName
+    Path
+    DetectionSource
+    User
+    ProcessName
+    Message
+| sort _time
+```
+
+Field names depend on the sourcetype and field extraction.
+
+---
+
+## Search for Remediation Events
+
+```spl
+index=windows earliest=-30m
+(
+    EventCode=1007 OR
+    EventCode=1117
+)
+| table
+    _time
+    host
+    EventCode
+    ThreatName
+    ActionName
+    ActionSuccess
+    Path
+    Message
+| sort _time
+```
+
+---
+
+## Search for Failed Remediation
+
+```spl
+index=windows earliest=-30m
+(
+    EventCode=1008 OR
+    EventCode=1118 OR
+    EventCode=1119
+)
+| table
+    _time
+    host
+    EventCode
+    ThreatName
+    ErrorCode
+    ErrorDescription
+    Path
+    Message
+| sort _time
+```
+
+Any matching failed-action event should be investigated.
+
+---
+
+## Search by Test Directory
+
+```spl
+index=windows earliest=-30m
+"C:\\CyberLab-Test\\Defender"
+| table
+    _time
+    host
+    EventCode
+    ThreatName
+    ActionName
+    Path
+    Message
+| sort _time
+```
+
+---
+
+## Build a Defender Timeline
+
+```spl
+index=windows earliest=-30m
+(
+    EventCode=1006 OR
+    EventCode=1007 OR
+    EventCode=1008 OR
+    EventCode=1116 OR
+    EventCode=1117 OR
+    EventCode=1118 OR
+    EventCode=1119
+)
+| eval activity=case(
+    EventCode=1006 OR EventCode=1116, "Threat detected",
+    EventCode=1007 OR EventCode=1117, "Remediation action",
+    EventCode=1008 OR EventCode=1118 OR EventCode=1119, "Remediation failure",
+    true(), "Related Defender event"
+)
+| table
+    _time
+    host
+    EventCode
+    activity
+    ThreatName
+    SeverityName
+    ActionName
+    ActionSuccess
+    Path
+    Message
+| sort _time
+```
+
+---
+
+## Measure Detection-to-Remediation Time
+
+```spl
+index=windows earliest=-30m
+(
+    EventCode=1006 OR
+    EventCode=1007 OR
+    EventCode=1116 OR
+    EventCode=1117
+)
+| eval event_type=case(
+    EventCode=1006 OR EventCode=1116, "detection",
+    EventCode=1007 OR EventCode=1117, "remediation"
+)
+| stats
+    min(eval(if(event_type="detection", _time, null()))) as detection_time
+    max(eval(if(event_type="remediation", _time, null()))) as remediation_time
+    values(ThreatName) as threat_names
+    values(ActionName) as actions
+    by host
+| eval remediation_delay_seconds=remediation_time-detection_time
+| convert ctime(detection_time) ctime(remediation_time)
+```
+
+Review results manually when multiple Defender events exist in the same window.
+
+---
+
+## Measure Ingestion Delay
+
+```spl
+index=windows earliest=-30m
+(
+    EventCode=1006 OR
+    EventCode=1007 OR
+    EventCode=1116 OR
+    EventCode=1117
+)
+| eval ingestion_delay_seconds=_indextime-_time
+| table
+    _time
+    _indextime
+    ingestion_delay_seconds
+    host
+    EventCode
+    ThreatName
+| sort _time
+```
+
+---
+
+## Splunk Validation Questions
+
+* Which source and sourcetype contained Defender events?
+* Was the detection event present?
+* Was the remediation event present?
+* Was the threat name extracted?
+* Was the path extracted?
+* Was the action extracted?
+* Was action success visible?
+* Was ingestion timely?
+* Did the event appear more than once?
+* Could detection and remediation be correlated reliably?
+* Were failed-action events absent?
+
+---
+
+# Optional Sysmon Validation
+
+Sysmon does not replace Defender telemetry.
+
+It may provide additional context about:
+
+* Process creating the file
+* File creation
+* Parent process
+* User
+* Command line
+* Hashes
+
+---
+
+## Search for File Creation
+
+```
+Get-WinEvent `
+    -FilterHashtable @{
+        LogName = "Microsoft-Windows-Sysmon/Operational"
+        Id = 11
+        StartTime = (Get-Date).AddMinutes(-30)
+    } |
+Where-Object {
+    $_.Message -match "CyberLab-Test\\Defender"
+}
+```
+
+---
+
+## Search in Splunk
+
+```spl
+index=windows EventCode=11 source="*Sysmon*" earliest=-30m
+| search TargetFilename="*\\CyberLab-Test\\Defender\\*"
+| table
+    _time
+    host
+    User
+    Image
+    ParentImage
+    TargetFilename
+| sort _time
+```
+
+The file may be removed before all file telemetry is recorded.
+
+---
+
+# Investigation
+
+## Build the Timeline
+
+| Time     | System             | Event                  | Result     | Analyst Note                        |
+| -------- | ------------------ | ---------------------- | ---------- | ----------------------------------- |
+| `<TIME>` | WIN11TARGET        | Test artifact created  | Attempted  | Official harmless test              |
+| `<TIME>` | Microsoft Defender | Detection event        | Detected   | Threat identified                   |
+| `<TIME>` | Microsoft Defender | Remediation event      | Successful | Artifact blocked or removed         |
+| `<TIME>` | Wazuh              | Defender event         | Received   | Detection telemetry ingested        |
+| `<TIME>` | Splunk             | Defender event         | Indexed    | Event searchable                    |
+| `<TIME>` | WIN11TARGET        | Post-test health check | Healthy    | Real-time protection remains active |
+
+---
+
+## Root Cause
+
+For this controlled exercise:
+
+```
+Authorized creation of an officially recognized harmless antivirus test artifact during CyberLab Exercise EX-07.
+```
+
+---
+
+## Why Defender Alerts Matter
+
+Defender alerts may represent:
+
+* Harmless validation activity
+* Potentially unwanted applications
+* Suspicious scripts
+* Malicious documents
+* Trojan activity
+* Ransomware
+* Credential theft
+* Exploit behavior
+* Security-control tampering
+
+The detection name alone is not enough to determine the full impact.
+
+---
+
+## Benign Indicators
+
+Indicators supporting an authorized test conclusion include:
+
+* Approved test window
+* Official harmless test method
+* Known test account
+* Approved test directory
+* Immediate Defender detection
+* Successful automatic remediation
+* No execution attempt
+* No persistence
+* No network connection
+* No additional suspicious events
+* Documentation matching the activity
+
+---
+
+## Suspicious Indicators
+
+Concern would increase when:
+
+* The artifact is not a known harmless test
+* Execution occurs
+* The source is unknown
+* The file appears in a startup location
+* The file arrives from an external connection
+* Defender remediation fails
+* The same threat reappears
+* Defender is disabled afterward
+* Exclusions are created
+* Multiple endpoints detect the same artifact
+* Credential or persistence activity follows
+
+---
+
+## Detection Versus Prevention
+
+The investigation should distinguish:
+
+* The file was detected
+* The file was blocked
+* The file was quarantined
+* The file was removed
+* The file executed
+* Remediation succeeded
+* Remediation failed
+
+An alert without successful remediation may require additional response.
+
+---
+
+## False-Positive Analysis
+
+Legitimate activities that may generate Defender alerts include:
+
+* Security testing
+* Antivirus validation
+* Administrative tools
+* Penetration-testing utilities
+* Uncommon software
+* Custom scripts
+* Potentially unwanted applications
+* Compressed test archives
+* Software installers
+
+A legitimate business purpose does not mean the alert should be ignored.
+
+It should still be documented, scoped, and validated.
+
+---
+
+# Detection Development
+
+## Basic Defender Detection Search
+
+```spl
+index=windows earliest=-24h
+(
+    EventCode=1006 OR
+    EventCode=1116
+)
+| table
+    _time
+    host
+    ThreatName
+    SeverityName
+    CategoryName
+    Path
+    DetectionSource
+    User
+| sort - _time
+```
+
+---
+
+## Defender Detection Without Successful Remediation
+
+```spl
+index=windows earliest=-24h
+(
+    EventCode=1006 OR
+    EventCode=1007 OR
+    EventCode=1008 OR
+    EventCode=1116 OR
+    EventCode=1117 OR
+    EventCode=1118 OR
+    EventCode=1119
+)
+| eval detection=if(EventCode=1006 OR EventCode=1116, 1, 0)
+| eval successful_action=if(EventCode=1007 OR EventCode=1117, 1, 0)
+| eval failed_action=if(
+    EventCode=1008 OR
+    EventCode=1118 OR
+    EventCode=1119,
+    1,
+    0
+)
+| stats
+    max(detection) as detected
+    max(successful_action) as remediated
+    max(failed_action) as remediation_failed
+    values(ThreatName) as threat_names
+    values(Path) as affected_paths
+    by host
+| where detected=1 AND (remediated=0 OR remediation_failed=1)
+```
+
+This search requires careful time-window and threat-instance correlation.
+
+---
+
+## Defender Configuration Change Search
+
+```spl
+index=windows earliest=-24h
+(
+    EventCode=5001 OR
+    EventCode=5004 OR
+    EventCode=5007
+)
+| table
+    _time
+    host
+    EventCode
+    user
+    Message
+| sort - _time
+```
+
+A configuration change following malware detection deserves additional review.
+
+---
+
+## Detection Followed by Defender Disablement
+
+```spl
+index=windows earliest=-30m
+(
+    EventCode=1006 OR
+    EventCode=1116 OR
+    EventCode=5001
+)
+| stats
+    values(EventCode) as event_codes
+    min(_time) as first_seen
+    max(_time) as last_seen
+    values(ThreatName) as threat_names
+    by host
+| where mvfind(event_codes, "5001") >= 0
+    AND (
+        mvfind(event_codes, "1006") >= 0
+        OR mvfind(event_codes, "1116") >= 0
+    )
+| convert ctime(first_seen) ctime(last_seen)
+```
+
+This is a higher-priority investigation pattern.
+
+---
+
+## Repeated Detection on One Host
+
+```spl
+index=windows earliest=-24h
+(
+    EventCode=1006 OR
+    EventCode=1116
+)
+| stats
+    count as detections
+    dc(ThreatName) as unique_threats
+    values(ThreatName) as threat_names
+    values(Path) as paths
+    by host
+| where detections >= <DETECTION_THRESHOLD>
+```
+
+Thresholds should reflect normal testing and software behavior.
+
+---
+
+## Wazuh Rule Concept: Defender Detection
+
+```xml
+<group name="windows,defender,malware_detection,">
+  <rule id="<CUSTOM_RULE_ID>" level="10">
+    <field name="win.system.providerName">Microsoft-Windows-Windows Defender</field>
+    <field name="win.system.eventID">1006|1116</field>
+    <description>Microsoft Defender detected malware or potentially unwanted software</description>
+  </rule>
+</group>
+```
+
+Validate field names against the actual decoded event.
+
+---
+
+## Wazuh Rule Concept: Failed Defender Remediation
+
+```xml
+<group name="windows,defender,remediation_failure,">
+  <rule id="<CUSTOM_RULE_ID>" level="12">
+    <field name="win.system.providerName">Microsoft-Windows-Windows Defender</field>
+    <field name="win.system.eventID">1008|1118|1119</field>
+    <description>Microsoft Defender remediation action failed</description>
+  </rule>
+</group>
+```
+
+A failed remediation event should generally receive higher priority than a successfully remediated test detection.
+
+---
+
+## MITRE ATT&CK Context
+
+The Defender detection event itself does not map automatically to one ATT&CK technique.
+
+ATT&CK mapping should be based on the associated behavior, such as:
+
+* T1204 — User Execution
+* T1059 — Command and Scripting Interpreter
+* T1105 — Ingress Tool Transfer
+* T1562.001 — Impair Defenses
+* T1547 — Boot or Logon Autostart Execution
+* T1486 — Data Encrypted for Impact
+
+The harmless test artifact in this exercise should be labeled as authorized validation activity.
+
+---
+
+## Detection Severity Guidance
+
+| Pattern                                        | Suggested Context                        |
+| ---------------------------------------------- | ---------------------------------------- |
+| Official harmless test detected and remediated | Informational or Low in test environment |
+| Potentially unwanted application blocked       | Low or Medium                            |
+| Malware detected and successfully quarantined  | Medium or High                           |
+| Malware detected after execution               | High                                     |
+| Remediation failed                             | High                                     |
+| Threat repeatedly reappears                    | High                                     |
+| Detection followed by Defender disablement     | Critical review                          |
+| Same threat detected on multiple endpoints     | High or Critical                         |
+| Ransomware or credential theft behavior        | Critical                                 |
+
+Severity should reflect threat type, execution state, spread, and remediation result.
+
+---
+
+# Evidence Collection
+
+## Recommended Evidence
+
+Preserve:
+
+* Defender health baseline
+* Security-intelligence version
+* Real-time protection status
+* Test start time
+* Defender notification
+* Protection History result
+* Detection event
+* Remediation event
+* Threat details
+* Affected path
+* Wazuh event
+* Splunk timeline
+* Optional Sysmon context
+* Post-remediation health
+* Cleanup confirmation
+
+---
+
+## Export Defender Operational Events
+
+```
+wevtutil epl `
+    "Microsoft-Windows-Windows Defender/Operational" `
+    "<EVIDENCE_PATH>\WIN11TARGET-Defender-Operational.evtx"
+```
+
+Raw event logs should remain private.
+
+---
+
+## Export a Narrow Event View
+
+PowerShell can export a limited text or CSV summary separately from the raw `.evtx`.
+
+Example:
+
+```
+Get-WinEvent `
+    -FilterHashtable @{
+        LogName = "Microsoft-Windows-Windows Defender/Operational"
+        StartTime = (Get-Date).AddMinutes(-30)
+    } |
+Select-Object `
+    TimeCreated,
+    Id,
+    LevelDisplayName,
+    Message |
+Export-Csv `
+    -Path "<EVIDENCE_PATH>\defender-ex07-summary.csv" `
+    -NoTypeInformation
+```
+
+Review the export before publication.
+
+---
+
+## Export Splunk Results
+
+Export the narrow Defender timeline as:
+
+* CSV
+* JSON
+* Raw events
+
+Sanitize:
+
+* Hostnames
+* Usernames
+* Internal paths
+* Internal addresses
+* Security identifiers
+* Operational metadata
+
+---
+
+## Hash Evidence
+
+Windows:
+
+```
+Get-FileHash `
+    -Path "<EVIDENCE_FILE>" `
+    -Algorithm SHA256
+```
+
+Linux:
+
+```
+sha256sum <EVIDENCE_FILE>
+```
+
+---
+
+## Evidence Record
+
+```
+Exercise: EX-07
+File:
+Source:
+Collection time:
+Description:
+SHA-256:
+Student analyst:
+Storage location:
+```
+
+---
+
+# Cleanup and Recovery
+
+## Preserve Evidence Before Cleanup
+
+Before removing the test directory:
+
+1. Capture Defender health.
+2. Capture Protection History.
+3. Export the detection event.
+4. Export the remediation event.
+5. Save Wazuh evidence.
+6. Save Splunk evidence.
+7. Confirm whether the artifact remains.
+8. Confirm no failed remediation event exists.
+
+---
+
+## Confirm the Artifact Is Absent
+
+```
+Get-ChildItem `
+    -Path "C:\CyberLab-Test\Defender" `
+    -Force `
+    -ErrorAction SilentlyContinue
+```
+
+The test artifact should not remain available.
+
+Do not restore it from quarantine.
+
+---
+
+## Review Active Threats
+
+```
+Get-MpThreat
+```
+
+```
+Get-MpThreatDetection
+```
+
+Confirm no unresolved active threat remains.
+
+Interpret historical detection records separately from active threats.
+
+---
+
+## Confirm Defender Remains Enabled
+
+```
+Get-MpComputerStatus |
+    Select-Object `
+        AMServiceEnabled,
+        AntivirusEnabled,
+        BehaviorMonitorEnabled,
+        OnAccessProtectionEnabled,
+        RealTimeProtectionEnabled,
+        AntivirusSignatureVersion,
+        AntivirusSignatureLastUpdated
+```
+
+Expected:
+
+* Defender active
+* Real-time protection active
+* Security intelligence present
+* No control disabled during the exercise
+
+---
+
+## Confirm No New Exclusion Exists
+
+Run as an administrator:
+
+```
+Get-MpPreference |
+    Select-Object `
+        ExclusionPath,
+        ExclusionProcess,
+        ExclusionExtension
+```
+
+Confirm the exercise did not introduce a new exclusion.
+
+Do not publish existing operational exclusions.
+
+---
+
+## Optional Quick Scan
+
+When required:
+
+```
+Start-MpScan -ScanType QuickScan
+```
+
+Wait for completion and record the result.
+
+---
+
+## Remove the Empty Test Directory
+
+When the directory is empty:
+
+```
+Remove-Item `
+    -Path "C:\CyberLab-Test\Defender" `
+    -Force `
+    -ErrorAction SilentlyContinue
+```
+
+Retain it only when it is an approved reusable exercise directory.
+
+---
+
+## Confirm Monitoring Health
+
+Wazuh:
+
+```
+Get-Service |
+    Where-Object DisplayName -Match "Wazuh"
+```
+
+Splunk:
+
+```
+Get-Service |
+    Where-Object DisplayName -Match "Splunk"
+```
+
+Confirm both platforms remain operational.
+
+---
+
+## Final State Record
+
+```
+Defender active:
+Real-time protection active:
+Security intelligence current:
+Detection event confirmed:
+Remediation event confirmed:
+Remediation successful:
+Artifact absent:
+No failed remediation event:
+No new exclusion:
+Quick scan completed or not required:
+Wazuh healthy:
+Splunk healthy:
+Evidence preserved:
+Cleanup complete:
+```
+
+---
+
+# Detection Validation
+
+## Validation Criteria
+
+The exercise is successfully validated when:
+
+* Microsoft Defender was healthy before testing.
+* Real-time protection was enabled.
+* Security intelligence was reviewed.
+* An official harmless test method was used.
+* The test remained inside the approved directory.
+* Defender generated a detection.
+* The affected path was identified.
+* A remediation action occurred.
+* The remediation result was reviewed.
+* No failed action remained unresolved.
+* Wazuh was reviewed.
+* Splunk was reviewed.
+* Detection and remediation were correlated.
+* The artifact was absent after remediation.
+* Defender remained enabled.
+* Evidence was preserved.
+* Detection gaps were documented.
+
+---
+
+## Detection Quality Assessment
+
+| Category                    | Result                       |
+| --------------------------- | ---------------------------- |
+| Defender active before test | Pass / Fail                  |
+| Real-time protection active | Pass / Fail                  |
+| Harmless test detected      | Pass / Fail                  |
+| Detection event present     | Pass / Fail                  |
+| Threat name visible         | Pass / Partial / Fail        |
+| Affected path visible       | Pass / Partial / Fail        |
+| Remediation event present   | Pass / Fail                  |
+| Remediation successful      | Pass / Fail                  |
+| Wazuh ingestion             | Pass / Fail                  |
+| Wazuh alert quality         | Pass / Needs Tuning / Fail   |
+| Splunk ingestion            | Pass / Fail / Not Configured |
+| Splunk field quality        | Pass / Needs Tuning / Fail   |
+| Timestamp accuracy          | Pass / Needs Review / Fail   |
+| Artifact removed            | Pass / Fail                  |
+| Defender healthy after test | Pass / Fail                  |
+| Cleanup                     | Complete / Incomplete        |
+
+---
+
+## Possible Detection Gaps
+
+Document whether the platforms lacked:
+
+* Threat name
+* Threat identifier
+* Severity
+* Category
+* Affected path
+* User
+* Process
+* Detection source
+* Detection origin
+* Action
+* Action status
+* Remediation success
+* Correlation between detection and remediation
+* Clear distinction between test and real threat
+* Ingestion-delay visibility
+
+---
+
+## Recommended Improvements
+
+Potential improvements include:
+
+* Collect the Defender Operational channel in Wazuh
+* Collect the Defender Operational channel in Splunk
+* Normalize threat and remediation fields
+* Correlate detection and action events
+* Alert when remediation fails
+* Alert when Defender is disabled
+* Alert when exclusions are changed
+* Track repeated detections by host
+* Track the same threat across multiple endpoints
+* Build a Defender health dashboard
+* Create a Defender alert investigation runbook
+
+---
+
+# Troubleshooting
+
+## Defender Does Not Detect the Test Artifact
+
+Check:
+
+* Official test method used correctly
+* Real-time protection enabled
+* Security intelligence current
+* Test path not excluded
+* File was actually created
+* Third-party antivirus active
+* Defender passive mode
+* Endpoint policy
+* Browser or editor altered the content
+* Artifact already blocked before saving
+
+Review:
+
+```
+Get-MpComputerStatus
+```
+
+```
+Get-MpPreference
+```
+
+Do not disable security controls to force a detection.
+
+---
+
+## Defender Service Is Not Running
+
+Check:
+
+```
+Get-Service WinDefend
+```
+
+Possible causes include:
+
+* Third-party antivirus
+* Group Policy
+* Defender passive mode
+* Service failure
+* Windows edition or configuration
+* Security-control tampering
+
+Do not proceed until the endpoint-protection state is understood.
+
+---
+
+## Real-Time Protection Is Disabled
+
+Review:
+
+```
+Get-MpComputerStatus |
+    Select-Object RealTimeProtectionEnabled
+```
+
+Review related events:
+
+```
+Get-WinEvent `
+    -FilterHashtable @{
+        LogName = "Microsoft-Windows-Windows Defender/Operational"
+        Id = 5001, 5004, 5007
+        StartTime = (Get-Date).AddHours(-24)
+    }
+```
+
+Restore the approved lab policy before continuing.
+
+---
+
+## Security Intelligence Is Outdated
+
+Run:
+
+```
+Update-MpSignature
+```
+
+If the update fails, check:
+
+* Temporary NAT connectivity
+* DNS
+* Windows Update services
+* Proxy
+* Time
+* Disk space
+* Defender update events
+
+---
+
+## No Defender Event Appears
+
+Check:
+
+* Correct event channel
+* Event time range
+* Detection actually occurred
+* Event-log retention
+* Defender service
+* Windows build
+* Alternative event ID
+* Protection History
+
+Search the entire recent Defender Operational log rather than only one event ID.
+
+---
+
+## Protection History Shows Detection but No Remediation Event
+
+Check:
+
+* Event time range
+* Alternate Defender event ID
+* Action still pending
+* User action required
+* Remediation failure
+* Reboot requirement
+* Event-log collection delay
+
+Do not assume successful remediation without confirming the final state.
+
+---
+
+## Wazuh Does Not Show the Event
+
+Check:
+
+* WIN11TARGET agent status
+* Defender Operational channel collection
+* Agent configuration
+* Decoder
+* Rule level
+* Dashboard time range
+* Agent filter
+* Indexer health
+
+Confirm the event exists locally before changing Wazuh.
+
+---
+
+## Splunk Does Not Show the Event
+
+Check:
+
+* Universal Forwarder service
+* Defender Operational input
+* Receiver
+* Target index
+* Host
+* Source
+* Sourcetype
+* Time range
+* Forwarder logs
+
+Begin with:
+
+```spl
+index=windows host=WIN11TARGET earliest=-30m
+| stats count by source sourcetype EventCode
+```
+
+---
+
+## Threat Remains Active
+
+Stop the exercise.
+
+Then:
+
+1. Preserve evidence.
+2. Confirm the artifact path.
+3. Review Defender action status.
+4. Run an approved scan.
+5. Remove the artifact through Defender.
+6. Confirm no exclusion exists.
+7. Confirm the endpoint is healthy.
+8. Do not continue additional exercises until resolved.
+
+---
+
+## Remediation Failed
+
+Treat failed remediation as a higher-priority finding.
+
+Review:
+
+* Error code
+* File lock
+* Permissions
+* Process still running
+* Archive or container
+* Exclusion
+* Service health
+* Disk state
+* Reboot requirement
+
+Do not restore a snapshot until evidence is preserved.
+
+---
+
+## Test Artifact Appears in Git Status
+
+Stop before committing.
+
+Review:
+
+```
+git status
+```
+
+Remove the artifact from the repository working tree.
+
+Add appropriate ignore rules where needed.
+
+Confirm it was never committed.
+
+If it was committed, remove it from history and review repository exposure.
+
+---
+
+# Public Sanitization
+
+Remove or replace:
+
+* Operational usernames
+* Internal IP addresses
+* Real domain names
+* Full personal file paths
+* Wazuh agent identifiers
+* Splunk internal URLs
+* Security identifiers
+* Defender device identifiers
+* Raw event XML
+* Unrelated Protection History entries
+* Evidence storage paths
+* Existing Defender exclusions
+* Security-intelligence details when unnecessary
+* The harmless antivirus test artifact itself
+
+Use placeholders such as:
+
+```
+<TEST_ACCOUNT>
+<WINDOWS_ENDPOINT>
+<WAZUH_SERVER>
+<SPLUNK_SERVER>
+<TEST_DIRECTORY>
+<TEST_FILENAME>
+<THREAT_NAME>
+<ACTION>
+<INDEX_NAME>
+<EVIDENCE_PATH>
+<REDACTED_VALUE>
+```
+
+---
+
+## Screenshot Guidance
+
+Suitable sanitized screenshots include:
+
+* Defender health status
+* Defender notification
+* Protection History entry
+* Detection event
+* Remediation event
+* Wazuh Defender alert
+* Splunk Defender timeline
+* Post-remediation health
+* Detection-quality table
+
+Before publishing:
+
+1. Crop unrelated information.
+2. Remove real usernames.
+3. Remove operational addresses.
+4. Remove unrelated threat history.
+5. Remove device identifiers.
+6. Remove SIDs.
+7. Remove personal paths.
+8. Hide browser tabs and bookmarks.
+9. Permanently redact sensitive values.
+10. Reopen and inspect the final image.
+
+Do not publish the test artifact or its exact contents.
+
+---
+
+# Exercise Report Template
+
+## Executive Summary
+
+```
+An officially recognized harmless antivirus test artifact was created inside an approved CyberLab directory during Exercise EX-07. Microsoft Defender detected and remediated the artifact, and the resulting endpoint-protection telemetry was reviewed locally and correlated through Wazuh and Splunk. Defender remained active, the artifact was removed, and telemetry gaps were documented.
+```
+
+## Findings
+
+```
+Test account:
+
+Endpoint:
+
+Test directory:
+
+Defender status before test:
+
+Real-time protection:
+
+Security-intelligence version:
+
+Creation time:
+
+Detection time:
+
+Detection event ID:
+
+Threat name:
+
+Threat severity:
+
+Affected path:
+
+Remediation time:
+
+Remediation event ID:
+
+Action:
+
+Action successful:
+
+Artifact remains:
+
+Wazuh result:
+
+Splunk result:
+
+Ingestion delay:
+
+Detection gaps:
+
+False-positive considerations:
+```
+
+## Root Cause
+
+```
+Authorized use of an official harmless antivirus test artifact during CyberLab Exercise EX-07.
+```
+
+## Resolution
+
+```
+Microsoft Defender detected and remediated the harmless test artifact. The affected file was confirmed absent, Defender remained enabled, no new exclusions were introduced, monitoring systems remained healthy, and evidence was preserved.
+```
+
+## Recommendations
+
+```
+- Collect Defender Operational events in both SIEM platforms.
+- Correlate detection and remediation events.
+- Alert on failed remediation.
+- Alert on Defender disablement and exclusion changes.
+- Track repeated detections by endpoint and threat.
+- Create a Defender alert investigation runbook.
+```
+
+---
+
+# Completion Checklist
+
+## Preparation
+
+* Stable snapshot exists
+* WIN11TARGET healthy
+* Defender service active
+* Antivirus enabled
+* Real-time protection enabled
+* Security intelligence reviewed
+* Test path not excluded
+* Defender Operational log enabled
+* Wazuh healthy
+* Splunk healthy
+* System time validated
+* Test directory created
+* Start time recorded
+
+## Exercise
+
+* Official harmless test method used
+* Test confined to approved directory
+* Detection generated
+* Detection time recorded
+* No repeated unnecessary attempts
+* No real malware introduced
+* No security control disabled
+* No exclusion created
+
+## Investigation
+
+* Protection History reviewed
+* Detection event reviewed
+* Threat name recorded
+* Affected path recorded
+* Action recorded
+* Remediation event reviewed
+* Action success confirmed
+* Wazuh reviewed
+* Splunk reviewed
+* Timeline created
+* Ingestion delay reviewed
+* Failed-action events checked
+* False positives considered
+* Detection gaps documented
+
+## Cleanup
+
+* Evidence preserved
+* Artifact confirmed absent
+* Active threats reviewed
+* Defender health rechecked
+* Real-time protection confirmed
+* Exclusions reviewed
+* Quick scan completed or not required
+* Test directory removed or retained intentionally
+* Wazuh healthy
+* Splunk healthy
+* Final state documented
+
+---
+
+# Skills Demonstrated
+
+This exercise demonstrates:
+
+* Microsoft Defender administration
+* Endpoint-protection validation
+* Defender Operational log analysis
+* Detection and remediation correlation
+* Wazuh validation
+* Splunk SPL
+* SIEM ingestion validation
+* Protection History review
+* Security-control health assessment
+* Alert timeline reconstruction
+* Evidence preservation
+* Detection tuning
+* Cleanup verification
+* Public sanitization
+
+---
+
+# Lessons Learned
+
+* Antivirus validation should use an official harmless test artifact rather than real malware.
+* A detection event and a successful remediation event are separate pieces of evidence.
+* Protection History provides useful analyst context but should be correlated with raw events.
+* Defender health should be checked before and after the exercise.
+* Real-time protection and security-intelligence status directly affect test results.
+* Wazuh and Splunk may parse Defender events differently.
+* A visible alert does not prove the artifact was removed.
+* Failed remediation deserves higher priority than a successfully contained test.
+* Defender configuration changes near a detection require additional investigation.
+* Test artifacts should never be committed to GitHub or shared through normal communication tools.
+* The endpoint should return to a verified healthy state before the exercise is considered complete.
+
+---
+
+# Summary
+
+This exercise validates the CyberLab’s ability to observe and investigate a Microsoft Defender detection.
+
+A complete investigation should identify:
+
+* Defender health before the test
+* The harmless test activity
+* The detection event
+* The threat name
+* The affected path
+* The remediation action
+* The action result
+* The Wazuh result
+* The Splunk result
+* The event timeline
+* Any failed remediation
+* The final endpoint state
+* Missing telemetry
+* Appropriate severity
+
+The exercise is complete only after the artifact is confirmed absent, Defender remains active, remediation is validated, evidence is preserved, and detection improvements are documented.
 
