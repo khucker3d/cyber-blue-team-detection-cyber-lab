@@ -59,7 +59,7 @@ The troubleshooting process should:
 
 The public documentation uses values such as:
 
-```text
+```
 Acer host: CYBERLAB-HOST
 Domain controller: DC01
 Windows endpoint: WIN11TARGET
@@ -80,7 +80,7 @@ These values do not represent the operational CyberLab.
 
 Begin at the lowest relevant layer.
 
-```text
+```
 Power and VM State
         |
         v
@@ -145,7 +145,7 @@ Use this standard process:
 
 Avoid vague descriptions such as:
 
-```text
+```
 It does not work.
 The network is broken.
 Splunk is down.
@@ -154,7 +154,7 @@ The agent is bad.
 
 Use specific descriptions:
 
-```text
+```
 Splunk Web does not load from the Acer host.
 
 WIN11TARGET resolves DC01 to an unexpected address.
@@ -172,7 +172,7 @@ A specific symptom makes testing more efficient.
 
 ## Incident Notes Template
 
-```text
+```
 Date and time:
 
 Affected system:
@@ -312,7 +312,7 @@ Low host disk space can affect:
 
 PowerShell:
 
-```powershell
+```
 Get-Volume |
     Select-Object DriveLetter, FileSystemLabel, SizeRemaining, Size
 ```
@@ -331,14 +331,14 @@ Maintain free space for:
 
 Windows:
 
-```powershell
+```
 Get-Volume |
     Select-Object DriveLetter, SizeRemaining, Size
 ```
 
 Linux:
 
-```bash
+```
 df -h
 ```
 
@@ -357,7 +357,7 @@ Low guest disk space can cause:
 
 Windows:
 
-```powershell
+```
 Get-Date
 w32tm /query /status
 w32tm /query /source
@@ -365,7 +365,7 @@ w32tm /query /source
 
 Linux:
 
-```bash
+```
 date
 timedatectl
 ```
@@ -482,13 +482,13 @@ Windows:
 
 Linux:
 
-```bash
+```
 systemctl status open-vm-tools
 ```
 
 Install when missing:
 
-```bash
+```
 sudo apt install open-vm-tools open-vm-tools-desktop
 ```
 
@@ -547,7 +547,7 @@ A restored VM may boot successfully but still be operationally unhealthy.
 
 ## Windows Network Commands
 
-```powershell
+```
 Get-NetAdapter
 Get-NetIPConfiguration
 Get-NetIPAddress
@@ -562,7 +562,7 @@ arp -a
 
 ## Linux Network Commands
 
-```bash
+```
 ip link
 ip address
 ip route
@@ -594,13 +594,13 @@ In VMware:
 
 Linux:
 
-```bash
+```
 sudo ip link set <INTERFACE> up
 ```
 
 Windows:
 
-```powershell
+```
 Enable-NetAdapter `
     -Name "<ADAPTER_NAME>"
 ```
@@ -624,7 +624,7 @@ Check:
 
 Renew:
 
-```powershell
+```
 ipconfig /release
 ipconfig /renew
 ```
@@ -645,13 +645,13 @@ Symptoms:
 
 Windows:
 
-```powershell
+```
 arp -a
 ```
 
 Linux:
 
-```bash
+```
 ip neigh
 ```
 
@@ -674,7 +674,7 @@ Review:
 
 Example mismatch:
 
-```text
+```
 System A: 192.0.2.20/24
 System B: 192.0.3.30/24
 ```
@@ -691,14 +691,14 @@ A NAT-connected system requiring internet access should have a default route thr
 
 Windows:
 
-```powershell
+```
 Get-NetRoute |
     Where-Object DestinationPrefix -eq "0.0.0.0/0"
 ```
 
 Linux:
 
-```bash
+```
 ip route |
     grep default
 ```
@@ -735,13 +735,13 @@ Check:
 
 Test IP:
 
-```bash
+```
 ping -c 4 1.1.1.1
 ```
 
 Test DNS:
 
-```bash
+```
 dig example.com
 ```
 
@@ -798,7 +798,7 @@ Do not replace internal Active Directory DNS with a public resolver as a workaro
 
 ## Windows DNS Checks
 
-```powershell
+```
 Get-DnsClientServerAddress
 ipconfig /all
 Resolve-DnsName DC01.cyberlab.example
@@ -809,7 +809,7 @@ nslookup cyberlab.example
 
 ## Linux DNS Checks
 
-```bash
+```
 resolvectl status
 dig cyberlab.example
 dig @<DOMAIN_CONTROLLER> cyberlab.example
@@ -832,7 +832,7 @@ WIN11TARGET should use DC01 as its DNS server.
 
 Correct with administrator PowerShell:
 
-```powershell
+```
 Set-DnsClientServerAddress `
     -InterfaceAlias "CyberLab-Internal" `
     -ServerAddresses "<DOMAIN_CONTROLLER_IP>"
@@ -844,20 +844,20 @@ Set-DnsClientServerAddress `
 
 Check:
 
-```powershell
+```
 Get-DnsClientServerAddress
 ```
 
 Review interface metrics:
 
-```powershell
+```
 Get-NetIPInterface |
     Sort-Object InterfaceMetric
 ```
 
 Disable DNS registration on the NAT adapter:
 
-```powershell
+```
 Set-DnsClient `
     -InterfaceAlias "<NAT_ADAPTER>" `
     -RegisterThisConnectionsAddress $false
@@ -871,7 +871,7 @@ This may happen when a temporary NAT adapter registers itself in DNS.
 
 Check:
 
-```powershell
+```
 Resolve-DnsName DC01.cyberlab.example
 ```
 
@@ -891,13 +891,13 @@ Corrective process:
 
 ## Clear Windows DNS Cache
 
-```powershell
+```
 ipconfig /flushdns
 ```
 
 Register the local system:
 
-```powershell
+```
 ipconfig /registerdns
 ```
 
@@ -909,7 +909,7 @@ Administrator privileges may be required for complete registration behavior.
 
 Check:
 
-```powershell
+```
 Resolve-DnsName `
     "_ldap._tcp.dc._msdcs.cyberlab.example" `
     -Type SRV
@@ -917,13 +917,13 @@ Resolve-DnsName `
 
 Restart Netlogon on DC01:
 
-```powershell
+```
 Restart-Service Netlogon
 ```
 
 Then:
 
-```powershell
+```
 ipconfig /registerdns
 ```
 
@@ -951,7 +951,7 @@ Disabling the entire firewall can hide the real cause and reduce lab safety.
 
 ## Windows Firewall Review
 
-```powershell
+```
 Get-NetFirewallProfile
 Get-NetConnectionProfile
 Get-NetFirewallRule |
@@ -960,7 +960,7 @@ Get-NetFirewallRule |
 
 Test a port:
 
-```powershell
+```
 Test-NetConnection <TARGET> -Port <PORT>
 ```
 
@@ -970,19 +970,19 @@ Test-NetConnection <TARGET> -Port <PORT>
 
 UFW:
 
-```bash
+```
 sudo ufw status verbose
 ```
 
 nftables:
 
-```bash
+```
 sudo nft list ruleset
 ```
 
 Listeners:
 
-```bash
+```
 sudo ss -tulpn
 ```
 
@@ -1002,13 +1002,13 @@ Possible causes:
 
 Local Linux test:
 
-```bash
+```
 curl -I http://127.0.0.1:<PORT>
 ```
 
 Remote Windows test:
 
-```powershell
+```
 Test-NetConnection <SERVER> -Port <PORT>
 ```
 
@@ -1035,20 +1035,20 @@ Check:
 
 Commands:
 
-```powershell
+```
 Get-ComputerInfo |
     Select-Object WindowsProductName, CsName, CsDomain
 ```
 
-```powershell
+```
 Resolve-DnsName cyberlab.example
 ```
 
-```powershell
+```
 nltest /dsgetdc:cyberlab.example
 ```
 
-```powershell
+```
 w32tm /query /status
 ```
 
@@ -1058,19 +1058,19 @@ w32tm /query /status
 
 Symptom:
 
-```text
+```
 The trust relationship between this workstation and the primary domain failed.
 ```
 
 Test:
 
-```powershell
+```
 Test-ComputerSecureChannel -Verbose
 ```
 
 Repair:
 
-```powershell
+```
 Test-ComputerSecureChannel `
     -Repair `
     -Credential "CYBERLAB\<AUTHORIZED_ADMIN>"
@@ -1098,7 +1098,7 @@ Check:
 
 Use the local recovery account when required:
 
-```text
+```
 .\localadmin
 ```
 
@@ -1108,19 +1108,19 @@ Use the local recovery account when required:
 
 Run:
 
-```powershell
+```
 gpupdate /force
 ```
 
 Review:
 
-```powershell
+```
 gpresult /r
 ```
 
 Generate report:
 
-```powershell
+```
 gpresult /h "<REPORT_PATH>"
 ```
 
@@ -1141,13 +1141,13 @@ Check:
 
 Check:
 
-```powershell
+```
 Get-NetConnectionProfile
 ```
 
 Then:
 
-```powershell
+```
 Resolve-DnsName DC01.cyberlab.example
 Test-ComputerSecureChannel -Verbose
 Get-Service NlaSvc, Netlogon
@@ -1163,13 +1163,13 @@ Do not force it manually as a substitute for fixing domain detection.
 
 On DC01:
 
-```powershell
+```
 Search-ADAccount -LockedOut
 ```
 
 Unlock the intended test account:
 
-```powershell
+```
 Unlock-ADAccount `
     -Identity "<TEST_ACCOUNT>"
 ```
@@ -1182,19 +1182,19 @@ Investigate repeated failures before unlocking during a detection exercise.
 
 Check:
 
-```powershell
+```
 net share
 ```
 
 Review services:
 
-```powershell
+```
 Get-Service NTDS, Netlogon, DFSR
 ```
 
 Run:
 
-```powershell
+```
 dcdiag /v
 ```
 
@@ -1222,7 +1222,7 @@ Common causes:
 
 Check:
 
-```powershell
+```
 w32tm /query /status
 Resolve-DnsName DC01.cyberlab.example
 setspn -L DC01
@@ -1236,7 +1236,7 @@ setspn -L DC01
 
 Review:
 
-```powershell
+```
 Get-NetAdapter
 Get-NetIPConfiguration
 Get-NetRoute
@@ -1258,14 +1258,14 @@ Confirm:
 
 Check the temporary NAT adapter:
 
-```powershell
+```
 Get-NetIPConfiguration
 Get-NetRoute
 ```
 
 Test:
 
-```powershell
+```
 Test-NetConnection 1.1.1.1 -Port 443
 Resolve-DnsName example.com
 ```
@@ -1278,7 +1278,7 @@ Do not add a gateway to the host-only adapter.
 
 Review:
 
-```powershell
+```
 Get-MpComputerStatus
 ```
 
@@ -1293,7 +1293,7 @@ Check:
 
 Update signatures:
 
-```powershell
+```
 Update-MpSignature
 ```
 
@@ -1305,15 +1305,15 @@ Administrator privileges may be required.
 
 Check:
 
-```powershell
+```
 auditpol /get /category:*
 ```
 
-```powershell
+```
 Get-WinEvent -ListLog Security
 ```
 
-```powershell
+```
 gpresult /r
 ```
 
@@ -1325,7 +1325,7 @@ Confirm the test actually generated the expected event.
 
 Review:
 
-```powershell
+```
 Get-WinEvent `
     -ListLog "Microsoft-Windows-PowerShell/Operational"
 ```
@@ -1345,13 +1345,13 @@ Check:
 
 Review:
 
-```powershell
+```
 Get-Process |
     Sort-Object CPU -Descending |
     Select-Object -First 10
 ```
 
-```powershell
+```
 Get-Counter '\Memory\Available MBytes'
 ```
 
@@ -1375,32 +1375,32 @@ Potential causes:
 
 Check the VM:
 
-```bash
+```
 ip address
 ip route
 ```
 
 Check Docker:
 
-```bash
+```
 sudo systemctl status docker
 ```
 
 Check containers:
 
-```bash
+```
 docker compose ps
 ```
 
 Check listeners:
 
-```bash
+```
 sudo ss -tulpn
 ```
 
 Review logs:
 
-```bash
+```
 docker compose logs --tail 100
 ```
 
@@ -1410,7 +1410,7 @@ docker compose logs --tail 100
 
 Review:
 
-```bash
+```
 docker ps
 docker inspect <CONTAINER_NAME>
 docker logs --tail 200 <CONTAINER_NAME>
@@ -1460,14 +1460,14 @@ The indexer is often the most resource-intensive Wazuh component.
 
 On Windows:
 
-```powershell
+```
 Get-Service |
     Where-Object DisplayName -Match "Wazuh"
 ```
 
 Test connectivity:
 
-```powershell
+```
 Test-NetConnection <WAZUH_SERVER> -Port <WAZUH_AGENT_PORT>
 ```
 
@@ -1537,14 +1537,14 @@ Use a simple dedicated test file.
 
 ## Wazuh Disk Space Low
 
-```bash
+```
 df -h
 docker system df
 ```
 
 Inspect large directories:
 
-```bash
+```
 sudo du -xh /var/lib/docker |
     sort -h |
     tail
@@ -1560,7 +1560,7 @@ Do not delete Docker volumes or Wazuh index data without a recovery plan.
 
 Use the full path:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk status
 ```
 
@@ -1572,19 +1572,19 @@ The Splunk binary may not be in the shell `PATH`.
 
 Check:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk status
 ```
 
 Start using the documented current lab command:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk start --run-as-root
 ```
 
 Review:
 
-```bash
+```
 sudo tail -n 200 \
     /opt/splunk/var/log/splunk/splunkd.log
 ```
@@ -1606,7 +1606,7 @@ Possible causes:
 
 The current lab installation successfully starts with:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk start --run-as-root
 ```
 
@@ -1628,26 +1628,26 @@ Do not recursively change ownership without a backup and documented target accou
 
 Check:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk status
 ```
 
 Check port:
 
-```bash
+```
 sudo ss -tulpn |
     grep 8000
 ```
 
 Test locally:
 
-```bash
+```
 curl -I http://127.0.0.1:8000
 ```
 
 Test from Windows:
 
-```powershell
+```
 Test-NetConnection <SPLUNK_SERVER> -Port 8000
 ```
 
@@ -1665,14 +1665,14 @@ If local access works but remote access fails, investigate:
 
 Review:
 
-```bash
+```
 sudo tail -n 200 \
     /opt/splunk/var/log/splunk/splunkd.log
 ```
 
 Review effective web configuration:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk btool web list --debug
 ```
 
@@ -1691,18 +1691,18 @@ Possible causes:
 
 Review:
 
-```bash
+```
 sudo ls -ld /opt/splunk
 ```
 
-```bash
+```
 sudo ls -l /opt/splunk/var/log/splunk |
     head
 ```
 
 Review running account:
 
-```bash
+```
 ps aux |
     grep -i splunk
 ```
@@ -1745,14 +1745,14 @@ Check:
 
 On Windows:
 
-```powershell
+```
 Get-Service |
     Where-Object DisplayName -Match "Splunk"
 ```
 
 Test receiver:
 
-```powershell
+```
 Test-NetConnection `
     <SPLUNK_SERVER> `
     -Port <SPLUNK_RECEIVER_PORT>
@@ -1818,11 +1818,11 @@ Check:
 
 ## Splunk Disk Usage High
 
-```bash
+```
 df -h
 ```
 
-```bash
+```
 sudo du -sh /opt/splunk/var/lib/splunk/*
 ```
 
@@ -1846,7 +1846,7 @@ Do not manually delete index directories.
 
 Check:
 
-```bash
+```
 ip address
 ip route
 nmcli device status
@@ -1869,7 +1869,7 @@ Confirm:
 
 Check:
 
-```bash
+```
 ip address
 ip route
 resolvectl status
@@ -1877,13 +1877,13 @@ resolvectl status
 
 Test IP:
 
-```bash
+```
 ping -c 4 1.1.1.1
 ```
 
 Test DNS:
 
-```bash
+```
 dig example.com
 ```
 
@@ -1906,7 +1906,7 @@ Possible causes:
 
 Validate one known port:
 
-```bash
+```
 nc -vz <AUTHORIZED_TARGET> <KNOWN_PORT>
 ```
 
@@ -1916,13 +1916,13 @@ nc -vz <AUTHORIZED_TARGET> <KNOWN_PORT>
 
 List interfaces:
 
-```bash
+```
 sudo tcpdump -D
 ```
 
 Capture a small sample:
 
-```bash
+```
 sudo tcpdump `
     -i <HOST_ONLY_INTERFACE> `
     -c 20
@@ -1930,7 +1930,7 @@ sudo tcpdump `
 
 On Linux shells, use backslashes rather than PowerShell backticks:
 
-```bash
+```
 sudo tcpdump \
     -i <HOST_ONLY_INTERFACE> \
     -c 20
@@ -1950,7 +1950,7 @@ Confirm:
 
 Use:
 
-```bash
+```
 sudo <COMMAND>
 ```
 
@@ -1981,7 +1981,7 @@ Then:
 
 ## Missing Event Decision Process
 
-```text
+```
 Expected Event Missing
         |
         v
@@ -2136,13 +2136,13 @@ Check:
 
 Test with:
 
-```powershell
+```
 Test-NetConnection <SERVER> -Port <PORT>
 ```
 
 Or:
 
-```bash
+```
 curl -I http://<SERVER>:<PORT>
 ```
 
@@ -2201,19 +2201,19 @@ Do not repeatedly guess administrative credentials.
 
 ## Docker Service Is Stopped
 
-```bash
+```
 sudo systemctl status docker
 ```
 
 Start:
 
-```bash
+```
 sudo systemctl start docker
 ```
 
 Enable at boot when appropriate:
 
-```bash
+```
 sudo systemctl enable docker
 ```
 
@@ -2223,19 +2223,19 @@ sudo systemctl enable docker
 
 Symptom:
 
-```text
+```
 permission denied while trying to connect to the Docker daemon socket
 ```
 
 Use:
 
-```bash
+```
 sudo docker ps
 ```
 
 Or confirm intentional Docker group membership:
 
-```bash
+```
 groups
 ```
 
@@ -2247,15 +2247,15 @@ Docker group access is effectively administrative.
 
 Check:
 
-```bash
+```
 docker ps
 ```
 
-```bash
+```
 docker inspect <CONTAINER_NAME>
 ```
 
-```bash
+```
 sudo ss -tulpn
 ```
 
@@ -2271,19 +2271,19 @@ Confirm:
 
 ## Container Logs
 
-```bash
+```
 docker logs --tail 200 <CONTAINER_NAME>
 ```
 
 Compose:
 
-```bash
+```
 docker compose logs --tail 200 <SERVICE_NAME>
 ```
 
 Follow:
 
-```bash
+```
 docker compose logs -f <SERVICE_NAME>
 ```
 
@@ -2295,7 +2295,7 @@ Logs may contain secrets and internal details.
 
 Avoid:
 
-```bash
+```
 docker compose down -v
 ```
 
@@ -2309,13 +2309,13 @@ The `-v` option can remove application data.
 
 ## Windows Service Review
 
-```powershell
+```
 Get-Service
 ```
 
 Specific services:
 
-```powershell
+```
 Get-Service `
     NTDS,
     DNS,
@@ -2325,13 +2325,13 @@ Get-Service `
 
 Start:
 
-```powershell
+```
 Start-Service <SERVICE_NAME>
 ```
 
 Restart:
 
-```powershell
+```
 Restart-Service <SERVICE_NAME>
 ```
 
@@ -2341,25 +2341,25 @@ Administrator privileges may be required.
 
 ## Linux Service Review
 
-```bash
+```
 systemctl status <SERVICE>
 ```
 
 Start:
 
-```bash
+```
 sudo systemctl start <SERVICE>
 ```
 
 Restart:
 
-```bash
+```
 sudo systemctl restart <SERVICE>
 ```
 
 Recent logs:
 
-```bash
+```
 journalctl -u <SERVICE> --since "15 minutes ago"
 ```
 
@@ -2388,7 +2388,7 @@ Review service logs before restarting repeatedly.
 
 Windows:
 
-```powershell
+```
 Get-Process |
     Sort-Object CPU -Descending |
     Select-Object -First 10
@@ -2396,13 +2396,13 @@ Get-Process |
 
 Linux:
 
-```bash
+```
 top
 ```
 
 Or:
 
-```bash
+```
 ps aux \
     --sort=-%cpu |
     head
@@ -2424,19 +2424,19 @@ Potential causes:
 
 Windows:
 
-```powershell
+```
 Get-Counter '\Memory\Available MBytes'
 ```
 
 Linux:
 
-```bash
+```
 free -h
 ```
 
 Docker:
 
-```bash
+```
 docker stats
 ```
 
@@ -2553,7 +2553,7 @@ After every repair:
 
 Recommended focused runbooks include:
 
-```text
+```
 runbooks/
 ├── vm-will-not-start.md
 ├── vm-unreachable.md
@@ -2577,7 +2577,7 @@ Runbooks should provide shorter operational procedures for specific incidents.
 
 ## Runbook Template
 
-```text
+```
 Title:
 
 Purpose:
@@ -2629,7 +2629,7 @@ Record changes to:
 
 ## Change Record Template
 
-```text
+```
 Date:
 
 System:
@@ -2698,7 +2698,7 @@ Remove or replace:
 
 Use placeholders such as:
 
-```text
+```
 <DOMAIN_CONTROLLER>
 <WINDOWS_ENDPOINT>
 <WAZUH_SERVER>
