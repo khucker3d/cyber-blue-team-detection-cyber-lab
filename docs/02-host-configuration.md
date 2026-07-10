@@ -109,7 +109,7 @@ Hardware virtualization must be enabled in the system firmware.
 
 Depending on the processor and firmware, the setting may be labeled:
 
-```text
+```
 Intel Virtualization Technology
 Intel VT-x
 AMD-V
@@ -119,7 +119,7 @@ Virtualization Technology
 
 Additional features may include:
 
-```text
+```
 Intel VT-d
 AMD IOMMU
 NX/XD
@@ -142,7 +142,7 @@ Virtualization status can be checked through Task Manager.
 
 PowerShell can also be used to review relevant system information:
 
-```powershell
+```
 systeminfo
 ```
 
@@ -244,7 +244,7 @@ Virtual machines should be stored in a dedicated parent directory.
 
 Example sanitized structure:
 
-```text
+```
 C:\CyberLab\
 ├── ISOs\
 ├── Installers\
@@ -257,7 +257,7 @@ C:\CyberLab\
 
 An alternative dedicated drive may also be used:
 
-```text
+```
 D:\CyberLab\
 ```
 
@@ -265,7 +265,7 @@ The public repository should avoid displaying a path containing a personal Windo
 
 For example, avoid publishing:
 
-```text
+```
 C:\Users\<PERSONAL_USERNAME>\Documents\Virtual Machines\
 ```
 
@@ -275,7 +275,7 @@ Use a neutral path in screenshots and documentation where possible.
 
 ## Recommended Directory Structure
 
-```text
+```
 <CYBERLAB_ROOT>\
 ├── ISOs\
 │   ├── Windows\
@@ -347,13 +347,13 @@ Recommended practices:
 
 PowerShell can calculate a SHA-256 hash:
 
-```powershell
+```
 Get-FileHash -Path "<PATH_TO_ISO>" -Algorithm SHA256
 ```
 
 Example:
 
-```powershell
+```
 Get-FileHash -Path "C:\CyberLab\ISOs\Linux\example.iso" -Algorithm SHA256
 ```
 
@@ -419,26 +419,26 @@ A lab should not operate with the host drive nearly full.
 
 Storage can be reviewed through File Explorer or PowerShell.
 
-```powershell
+```
 Get-Volume
 ```
 
 A simplified view:
 
-```powershell
+```
 Get-PSDrive -PSProvider FileSystem
 ```
 
 To inspect the size of a CyberLab directory:
 
-```powershell
+```
 Get-ChildItem "<CYBERLAB_ROOT>" -Recurse -File |
     Measure-Object -Property Length -Sum
 ```
 
 For a readable size calculation:
 
-```powershell
+```
 $size = (
     Get-ChildItem "<CYBERLAB_ROOT>" -Recurse -File |
     Measure-Object -Property Length -Sum
@@ -457,7 +457,7 @@ Each virtual machine should have its own directory.
 
 Example:
 
-```text
+```
 <CYBERLAB_ROOT>\Virtual-Machines\DC01\
 ```
 
@@ -503,7 +503,7 @@ Use consistent virtual machine names.
 
 Recommended public naming:
 
-```text
+```
 DC01
 WIN11TARGET
 WAZUH-SERVER
@@ -678,13 +678,13 @@ Snapshots should be:
 
 Recommended format:
 
-```text
+```
 <SEQUENCE>-<SYSTEM>-<MILESTONE>-<DATE>
 ```
 
 Example:
 
-```text
+```
 01-DC01-Clean-Install-YYYY-MM-DD
 02-DC01-Domain-Configured-YYYY-MM-DD
 03-WIN11TARGET-Domain-Joined-YYYY-MM-DD
@@ -730,25 +730,25 @@ The presence of multiple adapters can complicate troubleshooting.
 
 Useful command:
 
-```powershell
+```
 Get-NetAdapter
 ```
 
 Detailed IP configuration:
 
-```powershell
+```
 Get-NetIPConfiguration
 ```
 
 Routing table:
 
-```powershell
+```
 route print
 ```
 
 Or:
 
-```powershell
+```
 Get-NetRoute
 ```
 
@@ -801,7 +801,7 @@ Firewall rules should be specific.
 
 Avoid broad rules that allow:
 
-```text
+```
 Any program
 Any port
 Any protocol
@@ -825,13 +825,13 @@ Administrator privileges are required to create or modify Windows Firewall rules
 
 PowerShell:
 
-```powershell
+```
 Get-NetFirewallProfile
 ```
 
 Review enabled status:
 
-```powershell
+```
 Get-NetFirewallProfile |
     Select-Object Name, Enabled, DefaultInboundAction, DefaultOutboundAction
 ```
@@ -902,13 +902,13 @@ Do not publish recovery keys or screenshots containing them.
 
 From an elevated command prompt:
 
-```powershell
+```
 manage-bde -status
 ```
 
 Or through PowerShell:
 
-```powershell
+```
 Get-BitLockerVolume
 ```
 
@@ -1095,7 +1095,7 @@ Execution policy affects script behavior but is not a complete security boundary
 
 Check current policy:
 
-```powershell
+```
 Get-ExecutionPolicy -List
 ```
 
@@ -1103,7 +1103,7 @@ Do not globally weaken execution policy solely to run an unknown script.
 
 A temporary process-scoped policy may be safer when a trusted script requires it:
 
-```powershell
+```
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
 
@@ -1260,7 +1260,7 @@ Reliability Monitor provides a timeline of:
 
 Open it by searching for:
 
-```text
+```
 View reliability history
 ```
 
@@ -1272,7 +1272,7 @@ It is useful when an issue began after an update or installation.
 
 Each VM directory contains VMware log files, commonly named:
 
-```text
+```
 vmware.log
 vmware-0.log
 vmware-1.log
@@ -1373,13 +1373,13 @@ Copying an active VM can produce an inconsistent backup.
 
 Example:
 
-```text
+```
 <SYSTEM>-<MILESTONE>-<YYYY-MM-DD>
 ```
 
 Examples:
 
-```text
+```
 DC01-Domain-Configured-YYYY-MM-DD
 WIN11TARGET-Agent-Validated-YYYY-MM-DD
 WAZUH-SERVER-Baseline-YYYY-MM-DD
@@ -1446,7 +1446,7 @@ Examples include:
 
 A simple change record should include:
 
-```text
+```
 Date:
 Change:
 Reason:
@@ -1546,7 +1546,7 @@ Possible causes include:
 
 Suggested checks:
 
-```powershell
+```
 systeminfo
 Get-Service | Where-Object DisplayName -Match "VMware"
 Get-Process | Where-Object ProcessName -Match "vmware"
@@ -1573,7 +1573,7 @@ Check:
 
 Host commands:
 
-```powershell
+```
 Get-NetAdapter
 Get-NetIPConfiguration
 Get-NetRoute
@@ -1581,13 +1581,13 @@ Get-NetRoute
 
 Guest commands:
 
-```powershell
+```
 ipconfig /all
 ```
 
 Or:
 
-```bash
+```
 ip address
 ip route
 ```
@@ -1672,7 +1672,7 @@ Before publishing host screenshots or logs, remove:
 
 Use placeholders such as:
 
-```text
+```
 <WINDOWS_HOST>
 <CYBERLAB_ROOT>
 <HOST_ONLY_NETWORK>
