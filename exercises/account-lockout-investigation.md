@@ -27,7 +27,7 @@ All activity must remain inside the authorized CyberLab.
 
 ## Exercise ID
 
-```text
+```
 EX-02
 ```
 
@@ -35,7 +35,7 @@ EX-02
 
 ## Difficulty
 
-```text
+```
 Intermediate
 ```
 
@@ -79,7 +79,7 @@ Do not use:
 
 ## Public Example Environment
 
-```text
+```
 Domain controller: DC01
 Windows endpoint: WIN11TARGET
 Wazuh server: WAZUH-SERVER
@@ -130,7 +130,7 @@ Use three separate identities.
 
 Used for routine access and observation.
 
-```text
+```
 student.user
 ```
 
@@ -138,7 +138,7 @@ student.user
 
 Used only for account creation, unlock, and cleanup.
 
-```text
+```
 student.admin
 ```
 
@@ -146,7 +146,7 @@ student.admin
 
 Used only for the exercise.
 
-```text
+```
 lockout.test
 ```
 
@@ -186,7 +186,7 @@ Confirm the following before starting:
 
 A typical event sequence is:
 
-```text
+```
 Failed authentication attempt
         |
         v
@@ -287,25 +287,25 @@ A new snapshot is not always required for this exercise, but one should exist be
 
 On DC01 and WIN11TARGET:
 
-```powershell
+```
 Get-Date
 ```
 
 Review time synchronization:
 
-```powershell
+```
 w32tm /query /status
 ```
 
 Review the configured source:
 
-```powershell
+```
 w32tm /query /source
 ```
 
 On Wazuh and Splunk:
 
-```bash
+```
 timedatectl
 ```
 
@@ -317,13 +317,13 @@ Record any offset before proceeding.
 
 Run on DC01 as an administrator:
 
-```powershell
+```
 dcdiag
 ```
 
 Review core services:
 
-```powershell
+```
 Get-Service `
     NTDS,
     DNS,
@@ -333,7 +333,7 @@ Get-Service `
 
 Expected state:
 
-```text
+```
 Running
 ```
 
@@ -343,19 +343,19 @@ Running
 
 Run on WIN11TARGET:
 
-```powershell
+```
 Test-ComputerSecureChannel -Verbose
 ```
 
 Expected result:
 
-```text
+```
 True
 ```
 
 Confirm the domain controller can be discovered:
 
-```powershell
+```
 nltest /dsgetdc:cyberlab.example
 ```
 
@@ -365,7 +365,7 @@ nltest /dsgetdc:cyberlab.example
 
 On WIN11TARGET:
 
-```powershell
+```
 Get-Service |
     Where-Object DisplayName -Match "Wazuh"
 ```
@@ -378,7 +378,7 @@ Confirm the agent is active in the Wazuh dashboard.
 
 On WIN11TARGET:
 
-```powershell
+```
 Get-Service |
     Where-Object DisplayName -Match "Splunk"
 ```
@@ -398,7 +398,7 @@ index=windows host=WIN11TARGET earliest=-15m
 
 Run on DC01:
 
-```powershell
+```
 Get-ADDefaultDomainPasswordPolicy |
     Select-Object `
         LockoutThreshold,
@@ -408,7 +408,7 @@ Get-ADDefaultDomainPasswordPolicy |
 
 Record:
 
-```text
+```
 Lockout threshold:
 Lockout duration:
 Observation window:
@@ -422,7 +422,7 @@ Do not proceed until the threshold is known.
 
 The policy may also be reviewed with:
 
-```powershell
+```
 net accounts /domain
 ```
 
@@ -438,7 +438,7 @@ Create the account through Active Directory Users and Computers or approved Powe
 
 Example:
 
-```powershell
+```
 $Password = Read-Host `
     "Enter the temporary test password" `
     -AsSecureString
@@ -458,7 +458,7 @@ Do not place the password directly in the script or documentation.
 
 ## Verify the Test Account
 
-```powershell
+```
 Get-ADUser `
     -Identity "lockout.test" `
     -Properties Enabled, LockedOut, MemberOf |
@@ -502,7 +502,7 @@ Sign out after validation.
 
 On DC01:
 
-```powershell
+```
 Get-ADUser `
     -Identity "lockout.test" `
     -Properties LockedOut |
@@ -513,7 +513,7 @@ Select-Object `
 
 Expected:
 
-```text
+```
 LockedOut: False
 ```
 
@@ -523,7 +523,7 @@ LockedOut: False
 
 Record:
 
-```text
+```
 Exercise ID: EX-02
 Test account: lockout.test
 Source system: WIN11TARGET
@@ -544,7 +544,7 @@ Use the WIN11TARGET sign-in screen or another approved Windows authentication pr
 
 Enter:
 
-```text
+```
 CYBERLAB\lockout.test
 ```
 
@@ -574,7 +574,7 @@ Once Windows reports that the account is locked or the threshold has been reache
 
 Run as an administrator:
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -602,7 +602,7 @@ Review:
 
 Open:
 
-```text
+```
 Event Viewer
 └── Windows Logs
     └── Security
@@ -610,7 +610,7 @@ Event Viewer
 
 Filter the current log for:
 
-```text
+```
 4625
 ```
 
@@ -620,7 +620,7 @@ Use a narrow time window around the exercise.
 
 ## Record WIN11TARGET Findings
 
-```text
+```
 First failed attempt:
 Last failed attempt:
 Number of local failures:
@@ -638,7 +638,7 @@ Workstation:
 
 Run on DC01:
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -663,7 +663,7 @@ Review:
 
 ## Search for the Specific Test Account
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -681,7 +681,7 @@ Where-Object {
 
 Search for Event ID `4776`:
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -699,7 +699,7 @@ Where-Object {
 
 Search for Event ID `4771`:
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -717,7 +717,7 @@ The relevant event depends on how the authentication attempt was performed.
 
 ## Confirm the Locked State
 
-```powershell
+```
 Get-ADUser `
     -Identity "lockout.test" `
     -Properties LockedOut, Enabled |
@@ -729,7 +729,7 @@ Select-Object `
 
 Expected:
 
-```text
+```
 Enabled: True
 LockedOut: True
 ```
@@ -738,7 +738,7 @@ LockedOut: True
 
 ## Find All Locked Accounts
 
-```powershell
+```
 Search-ADAccount -LockedOut |
     Select-Object `
         Name,
@@ -767,7 +767,7 @@ In the Wazuh dashboard, confirm that:
 
 Use the Wazuh dashboard search and filters to locate:
 
-```text
+```
 lockout.test
 ```
 
@@ -779,7 +779,7 @@ Use a narrow time range around the exercise.
 
 Review events associated with:
 
-```text
+```
 4625
 4740
 4771
@@ -825,7 +825,7 @@ Record:
 
 If the event is collected but no useful alert appears, document:
 
-```text
+```
 Telemetry present: Yes
 Alert present: No
 Decoder result:
@@ -978,7 +978,7 @@ Do not use packet capture as a substitute for Windows security logs.
 
 From an authorized capture system:
 
-```bash
+```
 sudo tcpdump \
     -i <HOST_ONLY_INTERFACE> \
     host <WINDOWS_ENDPOINT> \
@@ -1026,7 +1026,7 @@ Use sanitized times and values in public examples.
 
 For this controlled exercise, the root cause should be:
 
-```text
+```
 Authorized repeated authentication failures against a disposable CyberLab test account.
 ```
 
@@ -1158,7 +1158,7 @@ A lockout does not automatically prove brute force.
 
 This exercise may relate to:
 
-```text
+```
 T1110 – Brute Force
 ```
 
@@ -1194,7 +1194,7 @@ Preserve:
 
 Example:
 
-```powershell
+```
 wevtutil epl Security "<EVIDENCE_PATH>\DC01-Security.evtx"
 ```
 
@@ -1220,7 +1220,7 @@ Review and sanitize before publication.
 
 Windows:
 
-```powershell
+```
 Get-FileHash `
     -Path "<EVIDENCE_FILE>" `
     -Algorithm SHA256
@@ -1228,7 +1228,7 @@ Get-FileHash `
 
 Linux:
 
-```bash
+```
 sha256sum <EVIDENCE_FILE>
 ```
 
@@ -1236,7 +1236,7 @@ sha256sum <EVIDENCE_FILE>
 
 ## Evidence Record
 
-```text
+```
 Exercise: EX-02
 File:
 Source:
@@ -1268,7 +1268,7 @@ Before cleanup:
 
 Run on DC01:
 
-```powershell
+```
 Unlock-ADAccount `
     -Identity "lockout.test"
 ```
@@ -1279,7 +1279,7 @@ Authorized domain permissions are required.
 
 ## Confirm the Account Is Unlocked
 
-```powershell
+```
 Get-ADUser `
     -Identity "lockout.test" `
     -Properties LockedOut, Enabled |
@@ -1291,7 +1291,7 @@ Select-Object `
 
 Expected:
 
-```text
+```
 Enabled: True
 LockedOut: False
 ```
@@ -1302,7 +1302,7 @@ LockedOut: False
 
 Search DC01 for Event ID `4767`:
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -1338,14 +1338,14 @@ After all evidence is collected, either disable or delete the disposable account
 
 Disable:
 
-```powershell
+```
 Disable-ADAccount `
     -Identity "lockout.test"
 ```
 
 Delete:
 
-```powershell
+```
 Remove-ADUser `
     -Identity "lockout.test" `
     -Confirm
@@ -1359,7 +1359,7 @@ Deletion is permanent unless restored from backup.
 
 Record:
 
-```text
+```
 Account unlocked:
 Successful authentication confirmed:
 Account disabled or deleted:
@@ -1463,13 +1463,13 @@ Check:
 
 Review:
 
-```powershell
+```
 Get-ADDefaultDomainPasswordPolicy
 ```
 
 Check whether a fine-grained policy applies:
 
-```powershell
+```
 Get-ADUserResultantPasswordPolicy `
     -Identity "lockout.test"
 ```
@@ -1581,7 +1581,7 @@ Check:
 
 Review:
 
-```powershell
+```
 Get-ADUser `
     -Identity "lockout.test" `
     -Properties *
@@ -1610,7 +1610,7 @@ Remove or replace:
 
 Use placeholders such as:
 
-```text
+```
 <TEST_ACCOUNT>
 <DOMAIN_CONTROLLER>
 <WINDOWS_ENDPOINT>
@@ -1652,13 +1652,13 @@ Before publishing:
 
 ## Executive Summary
 
-```text
+```
 A controlled lockout was generated against a disposable Active Directory test account. The failed authentication events and resulting account lockout were reviewed on the Windows systems and correlated through Wazuh and Splunk. The source, account, timestamps, and recovery actions were documented.
 ```
 
 ## Findings
 
-```text
+```
 Test account:
 
 Source system:
@@ -1682,19 +1682,19 @@ False-positive considerations:
 
 ## Root Cause
 
-```text
+```
 Authorized repeated authentication failures performed as part of CyberLab Exercise EX-02.
 ```
 
 ## Resolution
 
-```text
+```
 The account was unlocked by an authorized administrator, successful authentication was validated, and the disposable account was disabled or removed after evidence collection.
 ```
 
 ## Recommendations
 
-```text
+```
 - Improve lockout-event field extraction.
 - Correlate failed logons with Event ID 4740.
 - Add privileged-account context.
