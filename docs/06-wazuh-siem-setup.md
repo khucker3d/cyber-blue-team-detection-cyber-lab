@@ -52,7 +52,7 @@ It is not exposed to the public internet.
 
 The public documentation uses placeholder values such as:
 
-```text
+```
 Server hostname: WAZUH-SERVER
 Internal address: 192.0.2.30
 Internal network: 192.0.2.0/24
@@ -73,7 +73,7 @@ The Wazuh server communicates with monitored systems through the VMware host-onl
 
 A second VMware NAT adapter provides controlled outbound access for installation and updates.
 
-```text
+```
                               Internet
                                  |
                           VMware NAT Network
@@ -172,7 +172,7 @@ Create a dedicated Ubuntu Server virtual machine.
 
 Suggested public VM name:
 
-```text
+```
 WAZUH-SERVER
 ```
 
@@ -228,7 +228,7 @@ The server uses two VMware adapters.
 
 ### Internal Adapter
 
-```text
+```
 Type: Host-only
 Purpose: CyberLab communication
 Addressing: Static
@@ -237,7 +237,7 @@ Default gateway: none
 
 ### External Adapter
 
-```text
+```
 Type: VMware NAT
 Purpose: Updates and downloads
 Addressing: VMware DHCP
@@ -293,7 +293,7 @@ Use a normal Linux user with `sudo` privileges for administration.
 
 Public placeholder:
 
-```text
+```
 <ADMIN_USER>
 ```
 
@@ -315,15 +315,15 @@ Avoid using the root account for normal daily administration.
 
 ## Verify the Operating System
 
-```bash
+```
 hostnamectl
 ```
 
-```bash
+```
 cat /etc/os-release
 ```
 
-```bash
+```
 uname -a
 ```
 
@@ -343,19 +343,19 @@ Sanitize command output before publishing it because it may contain internal ide
 
 Set the public example hostname:
 
-```bash
+```
 sudo hostnamectl set-hostname WAZUH-SERVER
 ```
 
 Update `/etc/hosts` if required:
 
-```bash
+```
 sudo nano /etc/hosts
 ```
 
 Example structure:
 
-```text
+```
 127.0.0.1       localhost
 127.0.1.1       WAZUH-SERVER
 ```
@@ -366,15 +366,15 @@ Restart or open a new session after changing the hostname.
 
 ## Verify Network Interfaces
 
-```bash
+```
 ip address
 ```
 
-```bash
+```
 ip link
 ```
 
-```bash
+```
 ip route
 ```
 
@@ -388,7 +388,7 @@ Identify:
 
 Interface names vary and may appear similar to:
 
-```text
+```
 ens33
 ens37
 ```
@@ -399,7 +399,7 @@ Do not assume interface names without checking.
 
 ## Example Network Design
 
-```text
+```
 Host-only interface:
 Address: 192.0.2.30/24
 Gateway: none
@@ -421,13 +421,13 @@ Ubuntu Server commonly uses Netplan.
 
 Review available configuration files:
 
-```bash
+```
 ls -l /etc/netplan
 ```
 
 Open the active file:
 
-```bash
+```
 sudo nano /etc/netplan/<CONFIGURATION_FILE>.yaml
 ```
 
@@ -457,7 +457,7 @@ The exact DNS configuration depends on whether the Wazuh server must resolve the
 
 Use:
 
-```bash
+```
 sudo netplan try
 ```
 
@@ -465,13 +465,13 @@ This provides a temporary validation period and rollback opportunity.
 
 After confirming connectivity:
 
-```bash
+```
 sudo netplan apply
 ```
 
 Verify:
 
-```bash
+```
 ip address
 ip route
 resolvectl status
@@ -479,7 +479,7 @@ resolvectl status
 
 Expected routing design:
 
-```text
+```
 default via <VMWARE_NAT_GATEWAY> dev <NAT_INTERFACE>
 192.0.2.0/24 dev <HOST_ONLY_INTERFACE>
 ```
@@ -490,19 +490,19 @@ default via <VMWARE_NAT_GATEWAY> dev <NAT_INTERFACE>
 
 Test DC01:
 
-```bash
+```
 ping -c 4 192.0.2.10
 ```
 
 Test the Windows endpoint:
 
-```bash
+```
 ping -c 4 192.0.2.20
 ```
 
 Test internal DNS when configured:
 
-```bash
+```
 resolvectl query DC01.cyberlab.example
 ```
 
@@ -514,19 +514,19 @@ A failed ping does not necessarily mean the target service is unavailable becaus
 
 Test an external address:
 
-```bash
+```
 ping -c 4 1.1.1.1
 ```
 
 Test DNS:
 
-```bash
+```
 resolvectl query example.com
 ```
 
 Test HTTPS:
 
-```bash
+```
 curl -I https://example.com
 ```
 
@@ -536,11 +536,11 @@ If IP connectivity works but DNS does not, investigate resolver configuration ra
 
 ## Update Ubuntu
 
-```bash
+```
 sudo apt update
 ```
 
-```bash
+```
 sudo apt upgrade
 ```
 
@@ -548,13 +548,13 @@ Review the packages before confirming major upgrades.
 
 Restart when required:
 
-```bash
+```
 sudo reboot
 ```
 
 After restart, confirm:
 
-```bash
+```
 ip address
 ip route
 ```
@@ -565,13 +565,13 @@ ip route
 
 Useful administration tools may include:
 
-```bash
+```
 sudo apt install curl wget unzip ca-certificates gnupg lsb-release
 ```
 
 Additional troubleshooting tools:
 
-```bash
+```
 sudo apt install net-tools dnsutils traceroute tcpdump
 ```
 
@@ -592,13 +592,13 @@ Accurate time is essential for:
 
 Review time:
 
-```bash
+```
 timedatectl
 ```
 
 Review synchronization:
 
-```bash
+```
 timedatectl timesync-status
 ```
 
@@ -610,13 +610,13 @@ If the server uses another time service, review that service instead.
 
 Set the correct timezone:
 
-```bash
+```
 sudo timedatectl set-timezone <TIMEZONE>
 ```
 
 Verify:
 
-```bash
+```
 timedatectl
 ```
 
@@ -632,17 +632,17 @@ Install Docker through the supported repository or another trusted method docume
 
 After installation, verify:
 
-```bash
+```
 docker --version
 ```
 
-```bash
+```
 docker compose version
 ```
 
 Review service status:
 
-```bash
+```
 sudo systemctl status docker
 ```
 
@@ -654,7 +654,7 @@ Docker normally requires root privileges.
 
 A user may be added to the Docker group:
 
-```bash
+```
 sudo usermod -aG docker <ADMIN_USER>
 ```
 
@@ -662,7 +662,7 @@ Sign out and sign back in before testing.
 
 Verify:
 
-```bash
+```
 docker ps
 ```
 
@@ -720,13 +720,13 @@ General workflow:
 
 Example:
 
-```bash
+```
 mkdir -p ~/wazuh-docker
 ```
 
 Move into the directory:
 
-```bash
+```
 cd ~/wazuh-docker
 ```
 
@@ -742,13 +742,13 @@ Use the official Wazuh repository or approved release package.
 
 Example placeholder workflow:
 
-```bash
+```
 git clone <OFFICIAL_WAZUH_REPOSITORY>
 ```
 
 Move into the single-node deployment directory:
 
-```bash
+```
 cd <WAZUH_DEPLOYMENT_DIRECTORY>
 ```
 
@@ -764,7 +764,7 @@ Record the deployed version because installation files and configuration formats
 
 Private change records should include:
 
-```text
+```
 Wazuh version:
 Deployment method:
 Ubuntu version:
@@ -782,13 +782,13 @@ Avoid committing operational credentials or generated private keys.
 
 Before starting the stack:
 
-```bash
+```
 less docker-compose.yml
 ```
 
 Or:
 
-```bash
+```
 nano docker-compose.yml
 ```
 
@@ -814,7 +814,7 @@ The deployment may include a certificate-generation Compose file or script.
 
 General example:
 
-```bash
+```
 docker compose -f generate-indexer-certs.yml run --rm generator
 ```
 
@@ -836,7 +836,7 @@ Private keys must never be committed to GitHub.
 
 Review certificate permissions:
 
-```bash
+```
 find . -type f -maxdepth 4 -ls
 ```
 
@@ -859,7 +859,7 @@ Public documentation may explain the process without including the files.
 
 From the deployment directory:
 
-```bash
+```
 docker compose up -d
 ```
 
@@ -867,7 +867,7 @@ This starts the containers in detached mode.
 
 Depending on local permissions, `sudo` may be required:
 
-```bash
+```
 sudo docker compose up -d
 ```
 
@@ -877,13 +877,13 @@ Use normal-user Docker access only when the user has intentionally been granted 
 
 ## Review Container Status
 
-```bash
+```
 docker compose ps
 ```
 
 Or:
 
-```bash
+```
 docker ps
 ```
 
@@ -897,25 +897,25 @@ If a container repeatedly restarts, inspect its logs before retrying the install
 
 All services:
 
-```bash
+```
 docker compose logs
 ```
 
 Follow logs:
 
-```bash
+```
 docker compose logs -f
 ```
 
 Specific service:
 
-```bash
+```
 docker compose logs <SERVICE_NAME>
 ```
 
 Limit output when practical:
 
-```bash
+```
 docker compose logs --tail 100 <SERVICE_NAME>
 ```
 
@@ -936,13 +936,13 @@ Sanitize before publication.
 
 Review host listeners:
 
-```bash
+```
 sudo ss -tulpn
 ```
 
 Review Docker-published ports:
 
-```bash
+```
 docker ps --format "table {{.Names}}\t{{.Ports}}"
 ```
 
@@ -958,7 +958,7 @@ Access the dashboard from the Acer host through the internal host-only address.
 
 Public example:
 
-```text
+```
 https://<WAZUH_SERVER>
 ```
 
@@ -1019,7 +1019,7 @@ Ubuntu firewall controls should be reviewed before exposing any management servi
 
 Check status:
 
-```bash
+```
 sudo ufw status verbose
 ```
 
@@ -1027,11 +1027,11 @@ If UFW is used, permit only required traffic from the host-only subnet.
 
 Example structure:
 
-```bash
+```
 sudo ufw allow from 192.0.2.0/24 to any port <DASHBOARD_PORT> proto tcp
 ```
 
-```bash
+```
 sudo ufw allow from 192.0.2.0/24 to any port <AGENT_PORT> proto tcp
 ```
 
@@ -1045,11 +1045,11 @@ Do not copy placeholder rules without confirming the deployment requirements.
 
 A controlled lab firewall strategy may include:
 
-```bash
+```
 sudo ufw default deny incoming
 ```
 
-```bash
+```
 sudo ufw default allow outgoing
 ```
 
@@ -1062,7 +1062,7 @@ Then add narrow rules for:
 
 Enable only after confirming that the required management rule exists:
 
-```bash
+```
 sudo ufw enable
 ```
 
@@ -1078,13 +1078,13 @@ SSH provides remote command-line administration from the Acer host.
 
 Review status:
 
-```bash
+```
 sudo systemctl status ssh
 ```
 
 Review listening state:
 
-```bash
+```
 sudo ss -tulpn | grep ssh
 ```
 
@@ -1103,13 +1103,13 @@ Recommended controls include:
 
 Review:
 
-```bash
+```
 sudo nano /etc/ssh/sshd_config
 ```
 
 Relevant settings may include:
 
-```text
+```
 PermitRootLogin no
 PasswordAuthentication yes
 PubkeyAuthentication yes
@@ -1119,13 +1119,13 @@ Do not disable password authentication until key-based access has been tested.
 
 Validate the configuration:
 
-```bash
+```
 sudo sshd -t
 ```
 
 Restart:
 
-```bash
+```
 sudo systemctl restart ssh
 ```
 
@@ -1137,13 +1137,13 @@ Keep the VMware console open during SSH configuration changes.
 
 Review container status:
 
-```bash
+```
 docker compose ps
 ```
 
 Review recent logs:
 
-```bash
+```
 docker compose logs --tail 50
 ```
 
@@ -1186,7 +1186,7 @@ General workflow:
 
 The endpoint should communicate with the internal Wazuh address.
 
-```text
+```
 WIN11TARGET
      |
      | Agent telemetry
@@ -1225,7 +1225,7 @@ The package version should be compatible with the Wazuh server.
 
 A generic silent installation pattern may resemble:
 
-```powershell
+```
 msiexec.exe /i "<WAZUH_AGENT_INSTALLER>" /q `
     WAZUH_MANAGER="<WAZUH_SERVER>" `
     WAZUH_AGENT_NAME="WIN11TARGET"
@@ -1243,7 +1243,7 @@ Do not place enrollment passwords or keys directly into documentation.
 
 On the endpoint:
 
-```powershell
+```
 Get-Service |
     Where-Object DisplayName -Match "Wazuh"
 ```
@@ -1256,7 +1256,7 @@ Confirm that the service:
 
 Start when required:
 
-```powershell
+```
 Start-Service <WAZUH_AGENT_SERVICE>
 ```
 
@@ -1379,13 +1379,13 @@ Generate a harmless event on the endpoint.
 
 Example:
 
-```powershell
+```
 whoami
 ```
 
 Or:
 
-```powershell
+```
 Get-Service |
     Select-Object -First 5
 ```
@@ -1408,7 +1408,7 @@ Wazuh file integrity monitoring can detect changes to selected files and directo
 
 Suitable lab paths include:
 
-```text
+```
 C:\CyberLab-Test\Files
 ```
 
@@ -1429,7 +1429,7 @@ Overly broad monitoring can create excessive events.
 
 On the endpoint, create a file:
 
-```powershell
+```
 New-Item `
     -Path "C:\CyberLab-Test\Files\wazuh-test.txt" `
     -ItemType File `
@@ -1438,7 +1438,7 @@ New-Item `
 
 Add content:
 
-```powershell
+```
 Set-Content `
     -Path "C:\CyberLab-Test\Files\wazuh-test.txt" `
     -Value "Authorized Wazuh file integrity test."
@@ -1446,7 +1446,7 @@ Set-Content `
 
 Modify it:
 
-```powershell
+```
 Add-Content `
     -Path "C:\CyberLab-Test\Files\wazuh-test.txt" `
     -Value "Controlled modification."
@@ -1454,7 +1454,7 @@ Add-Content `
 
 Delete it after validation:
 
-```powershell
+```
 Remove-Item `
     -Path "C:\CyberLab-Test\Files\wazuh-test.txt"
 ```
@@ -1687,7 +1687,7 @@ Avoid locking out administrative accounts.
 
 Run a harmless command:
 
-```powershell
+```
 Get-Process |
     Sort-Object CPU -Descending |
     Select-Object -First 5
@@ -1752,19 +1752,19 @@ In a container deployment, configuration may be bind-mounted from the host.
 
 Example:
 
-```bash
+```
 cp <CONFIGURATION_FILE> <CONFIGURATION_FILE>.bak
 ```
 
 For protected files:
 
-```bash
+```
 sudo cp <CONFIGURATION_FILE> <CONFIGURATION_FILE>.bak
 ```
 
 Record:
 
-```text
+```
 Date:
 File:
 Reason:
@@ -1819,7 +1819,7 @@ Use a consistent rule identifier range reserved for local rules.
 
 Example naming:
 
-```text
+```
 LAB - Repeated Failed Logons
 LAB - Suspicious PowerShell Test
 LAB - Monitored File Modified
@@ -1828,7 +1828,7 @@ LAB - Test Administrator Group Change
 
 Avoid vague names such as:
 
-```text
+```
 Test Rule
 Rule 1
 New Alert
@@ -1856,25 +1856,25 @@ Document false positives and limitations.
 
 Restart the entire stack only when necessary:
 
-```bash
+```
 docker compose restart
 ```
 
 Restart a single service when possible:
 
-```bash
+```
 docker compose restart <SERVICE_NAME>
 ```
 
 Review status afterward:
 
-```bash
+```
 docker compose ps
 ```
 
 Review logs:
 
-```bash
+```
 docker compose logs --tail 100 <SERVICE_NAME>
 ```
 
@@ -1884,25 +1884,25 @@ docker compose logs --tail 100 <SERVICE_NAME>
 
 After the Ubuntu VM starts:
 
-```bash
+```
 cd <WAZUH_DEPLOYMENT_DIRECTORY>
 ```
 
 Review status:
 
-```bash
+```
 docker compose ps
 ```
 
 Start when required:
 
-```bash
+```
 docker compose up -d
 ```
 
 If the Docker service is not running:
 
-```bash
+```
 sudo systemctl start docker
 ```
 
@@ -1964,7 +1964,7 @@ After starting the VM:
 
 Stop the stack:
 
-```bash
+```
 docker compose down
 ```
 
@@ -1976,7 +1976,7 @@ Do not use commands that delete volumes unless intentional data removal is part 
 
 Commands such as the following may delete stored data:
 
-```bash
+```
 docker compose down -v
 ```
 
@@ -1998,7 +1998,7 @@ Do not use volume-deleting commands as a routine shutdown method.
 
 Recommended milestones:
 
-```text
+```
 01-WAZUH-Ubuntu-Clean-Install
 02-WAZUH-Ubuntu-Patched
 03-WAZUH-Network-Configured
@@ -2107,7 +2107,7 @@ A sanitized configuration export may be stored in GitHub when it contains:
 
 Use `.example` files for templates:
 
-```text
+```
 docker-compose.example.yml
 manager-config.example.xml
 agent-config.example.xml
@@ -2146,25 +2146,25 @@ Review the repository before every public push.
 
 Review filesystem usage:
 
-```bash
+```
 df -h
 ```
 
 Review directory sizes:
 
-```bash
+```
 du -sh <WAZUH_DEPLOYMENT_DIRECTORY>
 ```
 
 Docker usage:
 
-```bash
+```
 docker system df
 ```
 
 Detailed Docker usage:
 
-```bash
+```
 docker system df -v
 ```
 
@@ -2176,7 +2176,7 @@ Do not delete Docker resources without confirming whether Wazuh depends on them.
 
 Commands such as:
 
-```bash
+```
 docker system prune
 ```
 
@@ -2204,23 +2204,23 @@ Before cleanup:
 
 Review server resources:
 
-```bash
+```
 free -h
 ```
 
-```bash
+```
 top
 ```
 
 Or:
 
-```bash
+```
 htop
 ```
 
 Review containers:
 
-```bash
+```
 docker stats
 ```
 
@@ -2269,15 +2269,15 @@ Check:
 
 Commands:
 
-```bash
+```
 docker compose ps
 ```
 
-```bash
+```
 docker compose logs --tail 100 <DASHBOARD_SERVICE>
 ```
 
-```bash
+```
 sudo ss -tulpn
 ```
 
@@ -2287,15 +2287,15 @@ sudo ss -tulpn
 
 Review:
 
-```bash
+```
 docker ps
 ```
 
-```bash
+```
 docker inspect <CONTAINER_NAME>
 ```
 
-```bash
+```
 docker logs --tail 200 <CONTAINER_NAME>
 ```
 
@@ -2358,14 +2358,14 @@ Check:
 
 Endpoint:
 
-```powershell
+```
 Get-Service |
     Where-Object DisplayName -Match "Wazuh"
 ```
 
 Connectivity:
 
-```powershell
+```
 Test-NetConnection <WAZUH_SERVER> -Port <AGENT_PORT>
 ```
 
@@ -2431,7 +2431,7 @@ Use a simple dedicated test file to validate the path.
 
 Check:
 
-```bash
+```
 ip address
 ip route
 resolvectl status
@@ -2467,13 +2467,13 @@ Check:
 
 Test from Windows:
 
-```powershell
+```
 Test-NetConnection <WAZUH_SERVER> -Port <PORT>
 ```
 
 Test locally on Ubuntu:
 
-```bash
+```
 sudo ss -tulpn
 ```
 
@@ -2483,11 +2483,11 @@ sudo ss -tulpn
 
 Review:
 
-```bash
+```
 resolvectl status
 ```
 
-```bash
+```
 ip route
 ```
 
@@ -2507,15 +2507,15 @@ Configure DNS according to the server’s actual needs and validate internal and
 
 Review:
 
-```bash
+```
 df -h
 ```
 
-```bash
+```
 docker system df
 ```
 
-```bash
+```
 sudo du -xh /var/lib/docker |
     sort -h |
     tail
@@ -2539,11 +2539,11 @@ Do not delete index data or Docker volumes without a recovery plan.
 
 Review:
 
-```bash
+```
 free -h
 ```
 
-```bash
+```
 docker stats
 ```
 
@@ -2609,19 +2609,19 @@ Avoid repeated guessing that could lock an account or hide the underlying proble
 
 Symptom:
 
-```text
+```
 permission denied while trying to connect to the Docker daemon socket
 ```
 
 Options include:
 
-```bash
+```
 sudo docker ps
 ```
 
 Or confirm intentional Docker group membership:
 
-```bash
+```
 groups
 ```
 
@@ -2651,7 +2651,7 @@ Document significant Wazuh changes, including:
 
 Example record:
 
-```text
+```
 Date:
 Change:
 Reason:
@@ -2711,7 +2711,7 @@ Remove or replace:
 
 Use placeholders such as:
 
-```text
+```
 <WAZUH_SERVER>
 <WAZUH_SERVER_IP>
 <WINDOWS_ENDPOINT>
