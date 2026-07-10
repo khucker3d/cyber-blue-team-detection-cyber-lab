@@ -471,7 +471,7 @@ IsEnabled: True
 
 ## Confirm Script Block Logging Policy
 
-Recommended Group Policy path:
+Group Policy path:
 
 ```
 Computer Configuration
@@ -487,7 +487,7 @@ Optional settings may include invocation start and stop logging, but additional 
 
 ## Confirm Module Logging Policy
 
-Recommended Group Policy path:
+Group Policy path:
 
 ```
 Computer Configuration
@@ -1162,7 +1162,7 @@ Alert present:
 Rule:
 Rule level:
 Missing fields:
-Recommended improvement:
+Improvement:
 ```
 
 A PowerShell process alone should not automatically be classified as malicious.
@@ -1770,7 +1770,7 @@ Severity should reflect context, impact, and confidence.
 
 # Evidence Collection
 
-## Recommended Evidence
+## Evidence
 
 Preserve:
 
@@ -2036,7 +2036,7 @@ Document whether the platforms lacked:
 
 ---
 
-## Recommended Improvements
+## Improvements
 
 Potential improvements include:
 
