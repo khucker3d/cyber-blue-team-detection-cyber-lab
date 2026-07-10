@@ -49,7 +49,7 @@ Bridged networking is intentionally avoided for normal lab operation.
 
 ## High-Level Network Layout
 
-```text
+```
                                Internet
                                   |
                          Physical Home Router
@@ -80,7 +80,7 @@ The host-only network provides isolated communication between lab systems and th
 
 The following values are documentation examples only.
 
-```text
+```
 Host-only subnet: 192.0.2.0/24
 NAT subnet: 198.51.100.0/24
 Internal domain: cyberlab.example
@@ -143,7 +143,7 @@ VMware creates a virtual network adapter on the Windows host for the host-only n
 
 The adapter may appear with a name similar to:
 
-```text
+```
 VMware Network Adapter VMnet1
 ```
 
@@ -151,7 +151,7 @@ The host adapter allows the Acer system to communicate with the virtual machines
 
 Example documentation address:
 
-```text
+```
 192.0.2.1
 ```
 
@@ -263,7 +263,7 @@ The Windows host typically has a virtual adapter associated with the NAT network
 
 It may appear as:
 
-```text
+```
 VMware Network Adapter VMnet8
 ```
 
@@ -359,7 +359,7 @@ The domain controller should use the host-only network as its primary interface.
 
 Recommended configuration:
 
-```text
+```
 Host-only adapter:
 - Static internal address
 - Internal subnet mask
@@ -379,7 +379,7 @@ The domain controller should use its own DNS service for the internal domain.
 
 Example:
 
-```text
+```
 Preferred DNS: 192.0.2.10
 Alternate DNS: blank or another approved internal DNS server
 ```
@@ -396,7 +396,7 @@ The Windows endpoint should use the host-only network for domain communication.
 
 Recommended internal settings:
 
-```text
+```
 IP address: 192.0.2.20
 Subnet mask: 255.255.255.0
 Default gateway: blank for isolated operation
@@ -440,7 +440,7 @@ Used for:
 
 Example:
 
-```text
+```
 Interface: host-only
 Address: 192.0.2.30
 Gateway: none
@@ -458,7 +458,7 @@ Used for:
 
 Example:
 
-```text
+```
 Interface: NAT
 Address: assigned by VMware DHCP
 Gateway: assigned by VMware
@@ -546,7 +546,7 @@ Only one interface should normally provide the default route.
 
 A Linux SIEM server may use:
 
-```text
+```
 Host-only interface:
 - Static address
 - No default gateway
@@ -560,19 +560,19 @@ NAT interface:
 
 Review Linux addresses:
 
-```bash
+```
 ip address
 ```
 
 Review routes:
 
-```bash
+```
 ip route
 ```
 
 Expected design:
 
-```text
+```
 default via <NAT_GATEWAY> dev <NAT_INTERFACE>
 192.0.2.0/24 dev <HOST_ONLY_INTERFACE>
 ```
@@ -583,7 +583,7 @@ default via <NAT_GATEWAY> dev <NAT_INTERFACE>
 
 A Windows system may use:
 
-```text
+```
 Host-only adapter:
 - Static internal address
 - Internal DNS
@@ -597,7 +597,7 @@ NAT adapter:
 
 Review configuration:
 
-```powershell
+```
 ipconfig /all
 Get-NetIPConfiguration
 Get-NetRoute
@@ -615,7 +615,7 @@ A lower metric generally indicates a more preferred route.
 
 Review metrics:
 
-```powershell
+```
 Get-NetIPInterface |
     Sort-Object InterfaceMetric |
     Select-Object InterfaceAlias, AddressFamily, InterfaceMetric, ConnectionState
@@ -623,7 +623,7 @@ Get-NetIPInterface |
 
 Linux route metrics can be reviewed with:
 
-```bash
+```
 ip route
 ```
 
@@ -637,7 +637,7 @@ A default gateway should be configured only on the interface that provides acces
 
 For a dual-adapter VM:
 
-```text
+```
 Host-only adapter:
 Default gateway: none
 
@@ -677,7 +677,7 @@ Use NAT-provided DNS for general package access when isolated from domain testin
 
 ## DNS Forwarding Flow
 
-```text
+```
 Windows Endpoint
       |
       | DNS request
@@ -733,7 +733,7 @@ Do not publish unsanitized screenshots of the Virtual Network Editor.
 
 ## Example VMware Network Configuration
 
-```text
+```
 VMnet1
 Type: Host-only
 Host adapter: Enabled
@@ -821,7 +821,7 @@ Each VM adapter should be labeled and documented.
 
 Example:
 
-```text
+```
 Network Adapter 1
 Type: Host-only
 Purpose: Internal CyberLab
@@ -889,11 +889,11 @@ In VMware:
 
 ## Windows Static IP Configuration
 
-Static addressing may be configured through the Windows interface or PowerShell.
+Static addressing may be configured through the Windows interface or .
 
-Example PowerShell workflow:
+Example  workflow:
 
-```powershell
+```
 New-NetIPAddress `
     -InterfaceAlias "<HOST_ONLY_ADAPTER>" `
     -IPAddress "192.0.2.20" `
@@ -902,7 +902,7 @@ New-NetIPAddress `
 
 Configure DNS:
 
-```powershell
+```
 Set-DnsClientServerAddress `
     -InterfaceAlias "<HOST_ONLY_ADAPTER>" `
     -ServerAddresses "192.0.2.10"
@@ -916,19 +916,19 @@ Administrator privileges are required.
 
 ## Review Windows IP Settings
 
-```powershell
+```
 ipconfig /all
 ```
 
-```powershell
+```
 Get-NetIPConfiguration
 ```
 
-```powershell
+```
 Get-DnsClientServerAddress
 ```
 
-```powershell
+```
 Get-NetRoute
 ```
 
@@ -971,7 +971,7 @@ Root privileges are required to change Linux network configuration.
 
 ## Apply Netplan
 
-```bash
+```
 sudo netplan try
 ```
 
@@ -979,13 +979,13 @@ Use `netplan try` when possible because it provides a rollback window.
 
 After validation:
 
-```bash
+```
 sudo netplan apply
 ```
 
 Verify:
 
-```bash
+```
 ip address
 ip route
 resolvectl status
@@ -997,19 +997,19 @@ resolvectl status
 
 List connections:
 
-```bash
+```
 nmcli connection show
 ```
 
 Review devices:
 
-```bash
+```
 nmcli device status
 ```
 
 Configure a static internal connection:
 
-```bash
+```
 sudo nmcli connection modify "<CONNECTION_NAME>" \
     ipv4.method manual \
     ipv4.addresses "192.0.2.30/24" \
@@ -1019,7 +1019,7 @@ sudo nmcli connection modify "<CONNECTION_NAME>" \
 
 Restart the connection:
 
-```bash
+```
 sudo nmcli connection down "<CONNECTION_NAME>"
 sudo nmcli connection up "<CONNECTION_NAME>"
 ```
@@ -1036,13 +1036,13 @@ Validation should progress from the local interface outward.
 
 Windows:
 
-```powershell
+```
 Get-NetAdapter
 ```
 
 Linux:
 
-```bash
+```
 ip link
 ```
 
@@ -1050,13 +1050,13 @@ ip link
 
 Windows:
 
-```powershell
+```
 ipconfig /all
 ```
 
 Linux:
 
-```bash
+```
 ip address
 ```
 
@@ -1064,43 +1064,43 @@ ip address
 
 Windows:
 
-```powershell
+```
 Get-NetRoute
 ```
 
 Linux:
 
-```bash
+```
 ip route
 ```
 
 ### Step 4: Test Local Subnet Communication
 
-```powershell
+```
 ping <LAB_SYSTEM>
 ```
 
-```bash
+```
 ping -c 4 <LAB_SYSTEM>
 ```
 
 ### Step 5: Test DNS
 
-```powershell
+```
 nslookup <LAB_DOMAIN>
 ```
 
-```bash
+```
 dig <LAB_DOMAIN>
 ```
 
 ### Step 6: Test a Service Port
 
-```powershell
+```
 Test-NetConnection <LAB_SYSTEM> -Port <PORT>
 ```
 
-```bash
+```
 nc -vz <LAB_SYSTEM> <PORT>
 ```
 
@@ -1110,7 +1110,7 @@ nc -vz <LAB_SYSTEM> <PORT>
 
 Examples include:
 
-```powershell
+```
 Test-NetConnection <DOMAIN_CONTROLLER> -Port 53
 Test-NetConnection <WAZUH_SERVER> -Port <MANAGEMENT_PORT>
 Test-NetConnection <SPLUNK_SERVER> -Port 8000
@@ -1118,11 +1118,11 @@ Test-NetConnection <SPLUNK_SERVER> -Port 8000
 
 Linux:
 
-```bash
+```
 curl -I http://<SPLUNK_SERVER>:8000
 ```
 
-```bash
+```
 ss -tulpn
 ```
 
@@ -1157,7 +1157,7 @@ The profile affects firewall behavior.
 
 Review profiles:
 
-```powershell
+```
 Get-NetConnectionProfile
 ```
 
@@ -1190,7 +1190,7 @@ Possible causes:
 
 Review host services:
 
-```powershell
+```
 Get-Service | Where-Object DisplayName -Match "VMware"
 ```
 
@@ -1221,7 +1221,7 @@ Checks:
 
 Windows guest:
 
-```powershell
+```
 ipconfig /release
 ipconfig /renew
 ipconfig /flushdns
@@ -1229,7 +1229,7 @@ ipconfig /flushdns
 
 Linux guest:
 
-```bash
+```
 sudo dhclient -r
 sudo dhclient
 ```
@@ -1247,7 +1247,7 @@ Symptoms:
 
 Checks:
 
-```powershell
+```
 nslookup <LAB_DOMAIN>
 nslookup <HOSTNAME>
 Get-DnsClientServerAddress
@@ -1255,7 +1255,7 @@ Get-DnsClientServerAddress
 
 Linux:
 
-```bash
+```
 resolvectl status
 dig <LAB_DOMAIN>
 ```
@@ -1276,13 +1276,13 @@ Duplicate addresses can cause:
 
 Windows:
 
-```powershell
+```
 arp -a
 ```
 
 Linux:
 
-```bash
+```
 ip neigh
 ```
 
@@ -1296,13 +1296,13 @@ ARP maps IP addresses to MAC addresses on the local network.
 
 Review Windows ARP cache:
 
-```powershell
+```
 arp -a
 ```
 
 Review Linux neighbor table:
 
-```bash
+```
 ip neigh
 ```
 
@@ -1338,13 +1338,13 @@ A service may be running but listening only on:
 
 Linux:
 
-```bash
+```
 ss -tulpn
 ```
 
 Windows:
 
-```powershell
+```
 Get-NetTCPConnection -State Listen
 ```
 
@@ -1365,13 +1365,13 @@ Potential tools include:
 
 Linux example:
 
-```bash
+```
 sudo tcpdump -i <HOST_ONLY_INTERFACE> host <LAB_SYSTEM>
 ```
 
 Windows built-in example:
 
-```powershell
+```
 pktmon start --capture
 ```
 
@@ -1392,7 +1392,7 @@ Useful capture points include:
 
 Suggested display filters:
 
-```text
+```
 arp
 dns
 icmp
@@ -1477,7 +1477,7 @@ Examples include:
 
 Change record example:
 
-```text
+```
 Date:
 Network change:
 Reason:
@@ -1530,7 +1530,7 @@ Remove or replace:
 
 Use placeholders such as:
 
-```text
+```
 <HOST_ONLY_SUBNET>
 <NAT_SUBNET>
 <DOMAIN_CONTROLLER>
