@@ -954,7 +954,7 @@ Process present:
 Alert present:
 Rule level:
 Missing fields:
-Recommended improvement:
+Improvement:
 ```
 
 ---
@@ -1531,7 +1531,7 @@ Severity should reflect path sensitivity, process, user, scale, and impact.
 
 # Evidence Collection
 
-## Recommended Evidence
+## Evidence
 
 Preserve:
 
@@ -1835,7 +1835,7 @@ Document whether the platforms lacked:
 
 ---
 
-## Recommended Improvements
+## Improvements
 
 Potential improvements include:
 
