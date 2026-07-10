@@ -949,7 +949,7 @@ Process present:
 Rule:
 Rule level:
 Missing fields:
-Recommended improvement:
+Improvement:
 ```
 
 ---
@@ -1550,7 +1550,7 @@ Severity should reflect threat type, execution state, spread, and remediation re
 
 # Evidence Collection
 
-## Recommended Evidence
+## Evidence
 
 Preserve:
 
@@ -1890,7 +1890,7 @@ Document whether the platforms lacked:
 
 ---
 
-## Recommended Improvements
+## Improvements
 
 Potential improvements include:
 
