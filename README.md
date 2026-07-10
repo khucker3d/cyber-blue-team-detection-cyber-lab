@@ -293,7 +293,7 @@ Controlled exercises are maintained separately from the deployment documentation
 | Exercise                                                                                  | Primary Objective                                           | Status  |
 | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------- | ------- |
 | [Detection Engineering Exercise Index](exercises/detection-engineering-exercises.md)      | Exercise standards, evidence, validation, and safety        | Active  |
-| [01 – Failed Logon Investigation](exercises/01-failed-logon-investigation.md)             | Investigate a controlled authentication failure             | Planned |
+| [01 – Failed Login Investigation](exercises/01-failed-logon-investigation.md)             | Investigate a controlled authentication failure             | Planned |
 | [02 – Account Lockout Investigation](exercises/02-account-lockout-investigation.md)       | Correlate failed attempts with account lockout              | Planned |
 | [03 – User Account Creation](exercises/03-user-account-creation.md)                       | Detect and investigate a new directory account              | Planned |
 | [04 – Privileged Group Change](exercises/04-privileged-group-change.md)                   | Monitor group-membership and privilege changes              | Planned |
