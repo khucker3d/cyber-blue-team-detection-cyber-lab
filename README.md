@@ -1,570 +1,694 @@
-# Acer Blue Team CyberLab
+<div align="center">
+
+# Blue Team Detection CyberLab
+
+### Enterprise-Inspired Security Monitoring, Identity, Log Analysis, and Detection Engineering Lab
+
+A modular cybersecurity home lab built with VMware Workstation, Windows Active Directory, Wazuh, Splunk, Kali Linux, and controlled detection-engineering exercises.
+
+<br>
+
+[![Project Status](https://img.shields.io/badge/Project_Status-Active_Development-2ea44f?style=for-the-badge)](#project-status)
+[![Lab Type](https://img.shields.io/badge/Lab_Type-Blue_Team-0078d4?style=for-the-badge)](#project-overview)
+[![Platform](https://img.shields.io/badge/Platform-VMware_Workstation-607078?style=for-the-badge)](#lab-platforms)
+[![Documentation](https://img.shields.io/badge/Documentation-GitHub_Ready-181717?style=for-the-badge\&logo=github)](#documentation)
+
+<br>
+
+[![Windows Server](https://img.shields.io/badge/Windows_Server-Active_Directory-0078D6?style=flat-square\&logo=windows)](#identity-and-endpoint-layer)
+[![Windows 11](https://img.shields.io/badge/Windows_11-Monitored_Endpoint-0078D6?style=flat-square\&logo=windows11)](#identity-and-endpoint-layer)
+[![Wazuh](https://img.shields.io/badge/Wazuh-SIEM-005571?style=flat-square)](#security-monitoring-layer)
+[![Splunk](https://img.shields.io/badge/Splunk-Log_Analytics-000000?style=flat-square\&logo=splunk)](#security-monitoring-layer)
+[![Kali Linux](https://img.shields.io/badge/Kali_Linux-Testing_System-557C94?style=flat-square\&logo=kalilinux)](#testing-layer)
+[![MITRE ATT\&CK](https://img.shields.io/badge/MITRE_ATT%26CK-Detection_Mapping-C00000?style=flat-square)](#detection-engineering)
+
+<br>
+
+[Project Overview](#project-overview) •
+[Architecture](#architecture) •
+[Documentation](#documentation) •
+[Exercises](#detection-engineering-exercises) •
+[Runbooks](#operational-runbooks) •
+[Skills Demonstrated](#skills-demonstrated)
+
+</div>
+
+---
 
 ## Project Overview
 
-The Acer Blue Team CyberLab is a virtualized cybersecurity environment designed for hands-on practice with:
+The **Blue Team Detection CyberLab** is a privately operated, enterprise-inspired security lab designed to develop practical experience with:
 
-* Windows system administration
-* Active Directory
-* Security monitoring
-* Security information and event management
-* Endpoint telemetry
-* Log collection and analysis
+* Active Directory administration
+* Windows endpoint monitoring
+* Security Information and Event Management
+* Centralized log ingestion
+* Security-event investigation
 * Detection engineering
-* Incident investigation
-* Network traffic analysis
-* Defensive security testing
+* MITRE ATT&CK mapping
+* Network and identity troubleshooting
+* Snapshot and recovery planning
+* Technical runbook development
+* Public security documentation
 
-The lab runs on an Acer Windows 11 workstation using VMware Workstation. It contains multiple isolated virtual machines representing common systems found in a small enterprise environment.
+The environment is designed as an interconnected defensive system rather than a collection of unrelated security tools.
 
-This repository documents the architecture, deployment process, security controls, validation procedures, troubleshooting methods, and defensive security exercises used throughout the project.
-
-All public documentation has been sanitized to remove internal IP addresses, usernames, passwords, host-specific identifiers, and other sensitive configuration details.
-
----
-
-## Project Goals
-
-The primary goal of this project is to build a reusable Blue Team training environment that supports practical security exercises without affecting production systems or the physical home network.
-
-The lab was designed to provide experience with:
-
-* Building and managing virtualized infrastructure
-* Configuring isolated and internet-enabled virtual networks
-* Deploying Windows Server and Active Directory
-* Joining Windows endpoints to a domain
-* Installing and managing SIEM platforms
-* Forwarding and analyzing Windows security events
-* Validating security alerts
-* Creating repeatable investigation workflows
-* Practicing detection engineering concepts
-* Documenting operational and recovery procedures
+The lab supports controlled activity generation, endpoint telemetry collection, SIEM analysis, alert validation, evidence preservation, and documented investigation workflows.
 
 ---
 
-## Lab Components
+## Project Highlights
 
-| Component                        | Purpose                                                                |
-| -------------------------------- | ---------------------------------------------------------------------- |
-| Windows 11 Host                  | Physical virtualization host                                           |
-| VMware Workstation               | Virtual machine and network management                                 |
-| Windows Server Domain Controller | Active Directory, DNS, authentication, and policy management           |
-| Windows 11 Endpoint              | Domain-joined monitored workstation                                    |
-| Wazuh Server                     | Endpoint monitoring, alerting, compliance visibility, and log analysis |
-| Splunk Enterprise                | Log searching, dashboards, correlation, and investigation practice     |
-| Kali Linux                       | Authorized testing and controlled activity generation                  |
-| Host-Only Network                | Isolated internal lab communication                                    |
-| NAT Network                      | Controlled internet access for updates and software installation       |
+| Capability                  | Implementation                                                |
+| --------------------------- | ------------------------------------------------------------- |
+| Identity services           | Windows Server Active Directory Domain Services               |
+| Internal name resolution    | Active Directory-integrated DNS                               |
+| Monitored endpoint          | Domain-joined Windows 11 virtual machine                      |
+| Primary security monitoring | Wazuh all-in-one deployment                                   |
+| Log analytics               | Splunk Enterprise                                             |
+| Testing workstation         | Kali Linux                                                    |
+| Virtualization              | VMware Workstation                                            |
+| Internal lab network        | VMware host-only networking                                   |
+| Controlled internet access  | Temporary VMware NAT adapters                                 |
+| Endpoint collection         | Wazuh agent and Splunk Universal Forwarder                    |
+| Detection development       | Wazuh rules, Splunk SPL, and controlled exercises             |
+| Framework alignment         | MITRE ATT&CK                                                  |
+| Recovery                    | VMware snapshots, cold VM backups, and configuration archives |
+| Documentation               | GitHub project guides, exercises, and operational runbooks    |
 
 ---
 
 ## Architecture
 
-The CyberLab uses separate VMware virtual networks to balance isolation and usability.
+The CyberLab uses a host-only VMware network as its primary security boundary.
 
 ```text
-                         Internet
-                            |
-                     Physical Router
-                            |
-                  Windows 11 Host System
-                            |
-                   VMware Workstation
-              _____________|_____________
-             |                           |
-        NAT Network                 Host-Only Network
-             |                           |
-      Controlled Internet         Isolated Lab Traffic
-             |                           |
-        Wazuh Server -------------- Domain Controller
-        Splunk Server ------------- Windows Endpoint
-        Kali Linux ---------------- Security Systems
+                         Acer Windows Host
+                                 |
+                         VMware Workstation
+                                 |
+                      Host-Only CyberLab Network
+                                 |
+        _________________________|_________________________
+       |                         |                         |
+     DC01                   WIN11TARGET              KALI-TEST
+ Active Directory         Monitored Endpoint      Authorized Testing
+       |                         |                         |
+       |                    _____|_____                    |
+       |                   |           |                   |
+       |                Wazuh       Splunk                 |
+       |                   |           |                   |
+       |                   |___________|                   |
+       |                         |                         |
+       |_________________________|_________________________|
+                                 |
+                    Detection and Investigation
 ```
 
-The exact network ranges used in the operational lab are intentionally omitted from the public repository.
-
-Documentation examples use reserved documentation address ranges such as:
-
-```text
-192.0.2.0/24
-198.51.100.0/24
-203.0.113.0/24
-```
-
-These ranges are reserved for documentation and should not be copied directly into a production network.
-
----
-
-## Virtual Machines
-
-### Domain Controller
-
-The Windows Server domain controller provides:
-
-* Active Directory Domain Services
-* Internal DNS
-* Centralized identity management
-* Domain authentication
-* Group Policy testing
-* Windows security event generation
-
-The public documentation uses placeholder values such as:
-
-```text
-Domain: cyberlab.example
-Hostname: DC01
-Address: 192.0.2.10
-```
-
-These values do not represent the operational environment.
-
-### Windows Endpoint
-
-The Windows endpoint represents a domain-joined employee workstation.
-
-It is used to generate and investigate activity such as:
-
-* Successful and failed logons
-* Account lockouts
-* User creation
-* Group membership changes
-* Administrative actions
-* PowerShell execution
-* Process creation
-* Remote access activity
-* File integrity events
-* Endpoint security alerts
-
-### Wazuh Server
-
-Wazuh provides:
-
-* Endpoint agent management
-* Security event collection
-* File integrity monitoring
-* Vulnerability visibility
-* Configuration assessment
-* MITRE ATT&CK mappings
-* Compliance-related event categorization
-* Alert investigation
-
-### Splunk Enterprise
-
-Splunk is used for:
-
-* Searching collected events
-* Building dashboards
-* Creating detection queries
-* Reviewing Windows event data
-* Correlating activity across systems
-* Practicing security investigation workflows
-
-### Kali Linux
-
-Kali Linux is used only within the authorized lab environment.
-
-Its purpose is to generate controlled activity for defensive monitoring, including:
-
-* Network discovery
-* Service enumeration
-* Authentication testing
-* Traffic generation
-* Security tool validation
-
-No testing is performed against systems outside the owner-controlled CyberLab.
-
----
-
-## Network Design
-
-The lab uses two primary VMware network types.
-
-### Host-Only Network
-
-The host-only network provides isolated communication between lab systems.
-
-It is used for:
-
-* Active Directory traffic
-* DNS communication
-* Endpoint-to-SIEM traffic
-* Administrative access
-* Controlled attack simulation
-* Log forwarding
-* Detection exercises
-
-The host-only network is not directly reachable from the internet.
-
-### NAT Network
-
-The NAT network provides controlled outbound internet access through the host computer.
-
-It is used temporarily for:
+Temporary NAT adapters may be enabled for:
 
 * Operating system updates
 * Package installation
-* Security tool downloads
 * Repository access
+* Software downloads
 * Time synchronization
 
-Virtual machines do not require direct inbound exposure from the home network or internet.
-
-### Multi-Homed Systems
-
-Some infrastructure systems may use more than one virtual network adapter.
-
-For example, a SIEM server may use:
-
-* One adapter for isolated lab communication
-* One adapter for controlled software updates
-
-Routing, DNS, and adapter priority must be configured carefully to prevent connectivity issues or unintended exposure.
+Bridged networking is not used as the default lab configuration.
 
 ---
 
-## Deployment Order
+## Architecture Principles
 
-The environment was built in the following order:
+The lab follows several core design principles:
 
-1. Prepare the Windows 11 virtualization host.
-2. Install VMware Workstation.
-3. Create the host-only and NAT virtual networks.
-4. Deploy the Windows Server domain controller.
-5. Configure Active Directory and DNS.
-6. Deploy the Windows 11 endpoint.
-7. Join the endpoint to the domain.
-8. Deploy the Wazuh server.
-9. Install the Wazuh agent on the endpoint.
-10. Validate endpoint enrollment and event ingestion.
-11. Deploy Splunk Enterprise.
-12. Configure test data ingestion.
-13. Deploy or connect the Kali testing system.
-14. Perform controlled validation exercises.
-15. Create clean virtual machine snapshots.
-16. Document the final architecture and recovery procedures.
+| Principle               | Application                                                               |
+| ----------------------- | ------------------------------------------------------------------------- |
+| Isolation               | Host-only networking separates lab traffic from the physical home network |
+| Least privilege         | Standard users are used for routine activity and testing                  |
+| Controlled connectivity | NAT access is enabled only when required                                  |
+| Stable infrastructure   | Core systems use predictable internal addressing                          |
+| Layered monitoring      | Endpoint, identity, SIEM, and packet-level evidence are compared          |
+| Repeatable validation   | Harmless known events are used to test ingestion                          |
+| Recoverability          | Snapshots and backups are created before major changes                    |
+| Public sanitization     | Operational values are removed from GitHub documentation                  |
 
 ---
 
-## Validation
+## Lab Platforms
 
-Each major component is validated before continuing to the next deployment phase.
+### Virtualization Layer
 
-### Domain Validation
+* VMware Workstation
+* Host-only virtual network
+* NAT virtual network
+* Powered-off snapshots
+* Cold virtual machine backups
+* Controlled adapter assignment
 
-Validation checks include:
+### Identity and Endpoint Layer
 
-* The domain controller responds on the internal network.
-* Internal DNS resolves the lab domain.
-* The Windows endpoint can locate the domain controller.
-* The endpoint successfully joins the domain.
-* Domain users can authenticate.
-* Windows security logs record authentication activity.
+* Windows Server
+* Active Directory Domain Services
+* Active Directory-integrated DNS
+* Group Policy
+* Domain user and administrative account separation
+* Domain-joined Windows 11 endpoint
+* Windows Event Logs
+* Microsoft Defender
+* Windows Firewall
+* PowerShell logging
 
-### Wazuh Validation
+### Security Monitoring Layer
 
-Validation checks include:
+* Wazuh manager
+* Wazuh indexer
+* Wazuh dashboard
+* Wazuh endpoint agent
+* File integrity monitoring
+* Security configuration assessment
+* Splunk Enterprise
+* Splunk Web
+* Splunk indexes
+* Splunk Search Processing Language
+* Splunk Universal Forwarder
 
-* The Wazuh server services are running.
-* The management dashboard is reachable.
-* The Windows endpoint agent is enrolled.
-* The endpoint reports as active.
-* Security events appear in the dashboard.
-* Test activity produces the expected alerts.
-* MITRE ATT&CK and compliance metadata are visible where applicable.
+### Testing Layer
 
-### Splunk Validation
+* Kali Linux
+* Nmap
+* Wireshark
+* tcpdump
+* DNS utilities
+* TCP connection testing
+* Controlled authentication exercises
+* Authorized network-activity generation
 
-Validation checks include:
+---
 
-* Splunk services start successfully.
-* The web interface is reachable.
-* The correct listening interfaces are configured.
-* Test events can be ingested.
-* Searches return expected results.
-* Time fields and source types are interpreted correctly.
+## Data Flow
 
-### Network Validation
-
-Typical validation commands include:
-
-```powershell
-ipconfig /all
-ping <lab-system>
-nslookup <lab-domain>
-Test-NetConnection <lab-system> -Port <service-port>
+```text
+Authorized Activity
+        |
+        v
+Windows or Linux Event Generation
+        |
+        v
+Local Event Log or File-System Record
+        |
+        v
+Wazuh Agent / Splunk Forwarder
+        |
+        v
+Internal VMware Network
+        |
+        v
+Wazuh / Splunk
+        |
+        v
+Alert, Search, and Timeline Analysis
+        |
+        v
+Documented Investigation
 ```
 
-Linux validation may include:
+Each detection exercise validates the full path rather than checking only whether a dashboard loads.
 
-```bash
-ip address
-ip route
-ping -c 4 <lab-system>
-ss -tulpn
-curl -I http://<lab-system>:<port>
+---
+
+## Detection Engineering
+
+The project uses a repeatable detection-development lifecycle:
+
+```text
+Define Behavior
+      |
+      v
+Identify Required Telemetry
+      |
+      v
+Generate Authorized Test Activity
+      |
+      v
+Validate the Source Event
+      |
+      v
+Confirm Log Ingestion
+      |
+      v
+Develop or Review Detection Logic
+      |
+      v
+Investigate the Result
+      |
+      v
+Test False Positives
+      |
+      v
+Tune and Document
 ```
 
-Administrative or root permissions should only be used when required by the specific command or service.
+Detection work may include:
+
+* Wazuh prebuilt-rule validation
+* Custom Wazuh rule development
+* Splunk SPL searches
+* Saved searches
+* Investigation dashboards
+* Authentication-event correlation
+* Account-management monitoring
+* PowerShell analysis
+* File integrity monitoring
+* Network reconnaissance visibility
+* Ingestion-health validation
 
 ---
 
-## Example Security Exercises
+## Documentation
 
-The lab supports repeatable exercises such as:
+The project documentation is organized as a structured deployment and operations guide.
 
-### Failed Logon Investigation
-
-Generate controlled failed authentication attempts and review:
-
-* Windows event identifiers
-* Source account
-* Source workstation
-* Failure reason
-* Authentication package
-* Alert severity
-* Related Wazuh or Splunk events
-
-### Account Lockout Investigation
-
-Trigger a test account lockout and identify:
-
-* The affected user
-* The system generating the failures
-* The number and timing of failed attempts
-* The lockout event
-* Related authentication events
-* Required remediation steps
-
-### Suspicious PowerShell Activity
-
-Execute a harmless PowerShell test command and review:
-
-* Process creation events
-* Command-line logging
-* Parent process
-* User context
-* Script block telemetry, when enabled
-* SIEM detection results
-
-### User and Privilege Changes
-
-Create a temporary test user or modify group membership, then investigate:
-
-* Who performed the change
-* Which account was modified
-* Which group was affected
-* Whether elevated privileges were granted
-* Whether the change was authorized
-
-### Network Reconnaissance Detection
-
-Run a controlled scan against authorized lab systems and review:
-
-* Source system
-* Destination systems
-* Ports contacted
-* Scan timing
-* Firewall or endpoint events
-* Detection opportunities
+| Document                                                                         | Purpose                                                        |
+| -------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| [01 – Project Overview](docs/01-project-overview.md)                             | Project purpose, goals, scope, and learning objectives         |
+| [02 – Architecture](docs/02-architecture.md)                                     | Logical design, systems, dependencies, and traffic flow        |
+| [03 – Host Configuration](docs/03-host-configuration.md)                         | Acer host preparation and virtualization requirements          |
+| [04 – VMware Network Design](docs/04-vmware-network-design.md)                   | Host-only and NAT network architecture                         |
+| [05 – Domain Controller Setup](docs/05-domain-controller-setup.md)               | Windows Server, AD DS, DNS, users, groups, and policy          |
+| [06 – Windows Endpoint Setup](docs/06-windows-endpoint-setup.md)                 | Windows 11 deployment, domain join, auditing, and monitoring   |
+| [07 – Wazuh SIEM Setup](docs/07-wazuh-siem-setup.md)                             | Wazuh deployment, agent enrollment, and event validation       |
+| [08 – Splunk Setup](docs/08-splunk-setup.md)                                     | Splunk installation, service startup, forwarding, and searches |
+| [09 – Kali Testing System](docs/09-kali-testing-system.md)                       | Authorized activity-generation and testing workstation         |
+| [10 – Log Ingestion and Validation](docs/10-log-ingestion-and-validation.md)     | End-to-end telemetry and data-quality validation               |
+| [11 – Snapshot and Recovery Strategy](docs/11-snapshot-and-recovery-strategy.md) | Snapshots, backups, restoration, and recovery testing          |
+| [12 – Troubleshooting](docs/12-troubleshooting.md)                               | Layered diagnostic and repair framework                        |
+| [13 – Security and Sanitization](docs/13-security-and-sanitization.md)           | Isolation, credential protection, and public-release controls  |
+| [14 – Lessons Learned](docs/14-lessons-learned.md)                               | Technical findings, improvements, and project assessment       |
 
 ---
 
-## Snapshot and Recovery Strategy
+## Detection Engineering Exercises
 
-Virtual machine snapshots are taken at stable milestones.
+Controlled exercises are maintained separately from the deployment documentation.
 
-Recommended snapshot points include:
+| Exercise                                                                                  | Primary Objective                                           | Status  |
+| ----------------------------------------------------------------------------------------- | ----------------------------------------------------------- | ------- |
+| [Detection Engineering Exercise Index](exercises/detection-engineering-exercises.md)      | Exercise standards, evidence, validation, and safety        | Active  |
+| [01 – Failed Logon Investigation](exercises/01-failed-logon-investigation.md)             | Investigate a controlled authentication failure             | Planned |
+| [02 – Account Lockout Investigation](exercises/02-account-lockout-investigation.md)       | Correlate failed attempts with account lockout              | Planned |
+| [03 – User Account Creation](exercises/03-user-account-creation.md)                       | Detect and investigate a new directory account              | Planned |
+| [04 – Privileged Group Change](exercises/04-privileged-group-change.md)                   | Monitor group-membership and privilege changes              | Planned |
+| [05 – Suspicious PowerShell](exercises/05-suspicious-powershell.md)                       | Validate PowerShell process and script telemetry            | Planned |
+| [06 – File Integrity Change](exercises/06-file-integrity-change.md)                       | Detect controlled file creation, modification, and deletion | Planned |
+| [07 – Defender Alert Validation](exercises/07-defender-alert-validation.md)               | Validate endpoint-protection telemetry                      | Planned |
+| [08 – Firewall Block Investigation](exercises/08-firewall-block-investigation.md)         | Investigate a controlled blocked connection                 | Planned |
+| [09 – Network Reconnaissance Detection](exercises/09-network-reconnaissance-detection.md) | Evaluate visibility into a limited authorized scan          | Planned |
+| [10 – Ingestion Health Validation](exercises/10-ingestion-health-validation.md)           | Validate the full source-to-SIEM pipeline                   | Planned |
 
-* Clean operating system installation
-* Post-update baseline
-* Domain controller configured
-* Endpoint joined to the domain
-* SIEM server installed
-* Agent enrollment validated
-* Splunk installation validated
-* Pre-exercise baseline
-* Final documented configuration
+Exercise statuses will be updated as validation work is completed.
 
-Snapshots are created only while the virtual machines are in a safe state.
+---
 
-For important infrastructure changes, the preferred process is:
+## Operational Runbooks
 
-1. Shut down the virtual machine cleanly.
-2. Confirm that the virtual disk is no longer active.
-3. Create a clearly named snapshot.
-4. Add a description explaining the milestone.
-5. Start the virtual machine.
-6. Confirm that services still operate correctly.
+Short operational runbooks are planned for repeatable administration and incident handling.
 
-Snapshots improve recovery but are not considered a replacement for independent backups.
+```text
+runbooks/
+├── README.md
+├── start-cyberlab.md
+├── stop-cyberlab.md
+├── vm-unreachable.md
+├── dns-resolution-failure.md
+├── domain-join-failure.md
+├── repair-domain-secure-channel.md
+├── wazuh-dashboard-down.md
+├── wazuh-agent-disconnected.md
+├── splunk-web-down.md
+├── splunk-forwarder-not-sending.md
+├── missing-security-events.md
+├── low-disk-space.md
+└── restore-vm-snapshot.md
+```
+
+Runbooks are intentionally shorter than the main documentation and focus on:
+
+* Symptoms
+* Required access
+* Evidence preservation
+* Diagnostic steps
+* Recovery steps
+* Validation
+* Rollback
+* Escalation conditions
+
+---
+
+## Repository Structure
+
+```text
+Blue-Team-CyberLab/
+├── README.md
+├── docs/
+│   ├── 01-project-overview.md
+│   ├── 02-architecture.md
+│   ├── 03-host-configuration.md
+│   ├── 04-vmware-network-design.md
+│   ├── 05-domain-controller-setup.md
+│   ├── 06-windows-endpoint-setup.md
+│   ├── 07-wazuh-siem-setup.md
+│   ├── 08-splunk-setup.md
+│   ├── 09-kali-testing-system.md
+│   ├── 10-log-ingestion-and-validation.md
+│   ├── 11-snapshot-and-recovery-strategy.md
+│   ├── 12-troubleshooting.md
+│   ├── 13-security-and-sanitization.md
+│   └── 14-lessons-learned.md
+├── exercises/
+│   ├── detection-engineering-exercises.md
+│   ├── 01-failed-logon-investigation.md
+│   ├── 02-account-lockout-investigation.md
+│   ├── 03-user-account-creation.md
+│   ├── 04-privileged-group-change.md
+│   ├── 05-suspicious-powershell.md
+│   ├── 06-file-integrity-change.md
+│   ├── 07-defender-alert-validation.md
+│   ├── 08-firewall-block-investigation.md
+│   ├── 09-network-reconnaissance-detection.md
+│   └── 10-ingestion-health-validation.md
+├── runbooks/
+│   └── README.md
+├── images/
+├── templates/
+├── scripts/
+├── .gitignore
+├── LICENSE
+└── SECURITY.md
+```
+
+---
+
+## Project Gallery
+
+> Replace the image paths below with the final sanitized screenshots as they are added to the repository.
+
+| CyberLab Architecture                                                          | Wazuh Security Monitoring                                                    |
+| ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| ![Sanitized Blue Team CyberLab architecture](images/cyberlab-architecture.png) | ![Sanitized Wazuh security monitoring dashboard](images/wazuh-dashboard.png) |
+
+| Splunk Log Analysis                                                     | Windows Endpoint Telemetry                                                              |
+| ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| ![Sanitized Splunk log analysis interface](images/splunk-dashboard.png) | ![Sanitized Windows endpoint security telemetry](images/windows-endpoint-telemetry.png) |
+
+| Active Directory Lab                                                             | Detection Exercise                                                         |
+| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| ![Sanitized Active Directory lab configuration](images/active-directory-lab.png) | ![Sanitized detection engineering exercise](images/detection-exercise.png) |
+
+---
+
+## Validation Methodology
+
+A system or service is not considered validated simply because it starts.
+
+The project uses known test events to verify:
+
+* Source event generation
+* Local event visibility
+* Agent or forwarder operation
+* Network transport
+* SIEM receipt
+* Parsing
+* Timestamp accuracy
+* Host identity
+* Searchability
+* Alerting
+* Investigation context
+
+Example validation chain:
+
+```text
+Harmless Test Action
+        |
+        v
+Windows Event Viewer
+        |
+        v
+Wazuh Agent and Splunk Forwarder
+        |
+        v
+Wazuh Alert and Splunk Search
+        |
+        v
+Timeline and Investigation Notes
+```
 
 ---
 
 ## Security Controls
 
-The lab follows several defensive design principles:
+The CyberLab uses the following safeguards:
 
-* No production credentials are used.
-* No business or customer data is stored in the lab.
-* Virtual machines are isolated from production systems where possible.
-* Internet access is limited to systems that require it.
-* No lab services are intentionally exposed to the public internet.
-* Default passwords are changed.
-* Administrative access is restricted.
-* Test accounts are separate from normal user accounts.
-* Snapshots are created before high-risk configuration changes.
-* Security exercises are limited to systems owned and controlled by the lab operator.
-* Screenshots are reviewed and sanitized before publication.
+* Host-only networking by default
+* No public port forwarding
+* No public SIEM exposure
+* Temporary NAT access only when needed
+* Separate standard and administrative accounts
+* Dedicated test accounts
+* Strong unique credentials
+* Windows and Linux firewalls
+* Limited root and administrative access
+* Snapshots before significant changes
+* Independent configuration backups
+* Sanitized public documentation
+* No raw operational logs or packet captures in GitHub
 
 ---
 
-## Public Sanitization Standards
+## Public Sanitization
 
-The following information is removed or replaced before content is committed to GitHub:
+This repository intentionally excludes or replaces:
 
-* Real internal IP addresses
-* Public IP addresses
-* MAC addresses
-* Router and gateway identifiers
-* Wireless network names
-* Email addresses
-* Personal usernames
-* Passwords
-* API keys
-* Enrollment tokens
-* Agent registration keys
-* Session cookies
+* Operational IP addresses
 * Internal domain names
-* Device serial numbers
-* VMware identifiers
+* Personal usernames
+* Email addresses
+* Passwords
+* API tokens
+* Session identifiers
+* Agent enrollment keys
+* Private keys
 * License information
-* Browser bookmarks
-* File paths containing personal names
-* QR codes
-* Notification webhook addresses
+* MAC addresses
+* VMware identifiers
+* Backup locations
+* Raw packet captures
+* Unsanitized event logs
 
-Placeholder examples should be clearly labeled.
+Documentation-safe examples use reserved values such as:
 
 ```text
-<SIEM_SERVER_IP>
-<DOMAIN_NAME>
-<WINDOWS_ENDPOINT>
-<ADMIN_USERNAME>
-<REDACTED_TOKEN>
+Documentation network: 192.0.2.0/24
+Example domain: cyberlab.example
+Example endpoint: WIN11TARGET
+Example SIEM server: WAZUH-SERVER
 ```
 
-Documentation-only IP ranges should be used when an example address is necessary.
+The repository demonstrates architecture and methodology without publishing direct access information.
 
 ---
 
-## Troubleshooting Areas
+## Project Status
 
-Common issues encountered during the project included:
-
-* Virtual machines receiving addresses from the wrong VMware network
-* Incorrect DNS settings preventing domain joins
-* Multi-adapter routing conflicts
-* SIEM services not starting after reboot
-* Web interfaces listening on unexpected interfaces
-* Firewall rules blocking management ports
-* Windows agents failing to enroll
-* Incorrect system time affecting log correlation
-* Splunk installation package transfer issues
-* Services requiring elevated startup permissions
-* Host-only systems being unable to reach package repositories
-
-Each troubleshooting document records:
-
-* Symptoms
-* Likely causes
-* Diagnostic commands
-* Corrective actions
-* Validation steps
-* Lessons learned
+| Area                       | Status       |
+| -------------------------- | ------------ |
+| VMware architecture        | Complete     |
+| Host-only network          | Complete     |
+| Domain controller          | Complete     |
+| Active Directory DNS       | Complete     |
+| Windows endpoint           | Complete     |
+| Domain membership          | Complete     |
+| Wazuh deployment           | Complete     |
+| Wazuh dashboard access     | Complete     |
+| Wazuh agent enrollment     | Complete     |
+| Splunk installation        | Complete     |
+| Splunk Web validation      | Complete     |
+| Kali testing system        | In progress  |
+| Splunk forwarder ingestion | Planned      |
+| Sysmon deployment          | Planned      |
+| Detection exercise library | In progress  |
+| Operational runbooks       | Planned      |
+| Network IDS telemetry      | Future phase |
+| External VM backups        | Planned      |
 
 ---
 
-## Skills Demonstrated
+## Current Lab Milestone
 
-This project demonstrates practical experience with:
+The environment currently provides:
 
-* VMware Workstation
-* Windows 11 administration
-* Windows Server
-* Active Directory
-* DNS
-* Group Policy concepts
-* Linux administration
-* Wazuh
-* Splunk
-* SIEM deployment
-* Log ingestion
-* Windows Event Viewer
-* Endpoint agent management
-* Network troubleshooting
-* PowerShell
-* Bash
-* Security monitoring
-* Detection engineering
-* Incident investigation
-* Snapshot management
-* Technical documentation
-* Security sanitization
+* A functioning Active Directory domain
+* Internal DNS
+* A domain-joined Windows endpoint
+* A deployed Wazuh SIEM
+* Wazuh dashboard access
+* Endpoint monitoring
+* A deployed Splunk server
+* Splunk Web access
+* A controlled Kali testing role
+* Documented snapshot milestones
+* GitHub-ready sanitized project documentation
 
----
+The next technical phase focuses on:
 
-## Lessons Learned
-
-Several engineering lessons became clear during the project:
-
-* DNS configuration is critical to Active Directory reliability.
-* Network isolation should be designed before deploying services.
-* Multi-homed virtual machines require careful routing and DNS planning.
-* Each service should be validated independently before adding additional complexity.
-* Snapshots should be created at known-good milestones.
-* Successful installation does not automatically mean successful integration.
-* Log timestamps and system time must be synchronized.
-* Troubleshooting steps should be documented while the issue is being resolved.
-* Public documentation requires a separate sanitization review.
-* Recovery procedures are as important as deployment procedures.
+* Windows log forwarding to Splunk
+* Sysmon deployment
+* Known-event ingestion validation
+* Authentication detection exercises
+* Coverage tracking
+* Short operational runbooks
 
 ---
 
 ## Planned Improvements
 
-Future improvements may include:
+Future work includes:
 
-* Sysmon deployment
-* Centralized Windows event forwarding
-* Additional Wazuh custom rules
-* Splunk dashboards
-* Sigma rule testing
-* Suricata or Zeek integration
-* Vulnerability scanning
-* Linux endpoint monitoring
-* Automated log generation
-* Incident response playbooks
-* Detection-as-code workflows
-* Active Directory attack-path monitoring
-* Network segmentation exercises
-* Automated environment health checks
-* Infrastructure backup documentation
+* Deploy Splunk Universal Forwarder
+* Migrate Splunk away from root execution
+* Install and tune Sysmon
+* Add Windows Event Forwarding
+* Develop custom Wazuh rules
+* Build Splunk saved searches and alerts
+* Add Suricata
+* Add Zeek
+* Create a detection coverage matrix
+* Automate lab health checks
+* Automate configuration backups
+* Complete individual exercise reports
+* Build incident-response runbooks
+* Test full lab recovery
+* Add sanitized screenshots and diagrams
 
 ---
 
-## Ethical Use Statement
+## Skills Demonstrated
 
-This CyberLab is intended exclusively for education, defensive security research, and authorized testing.
+### Infrastructure
 
-All security testing must be limited to systems that the operator owns or has explicit permission to assess.
+* VMware Workstation
+* Virtual network design
+* Host-only and NAT networking
+* Windows Server
+* Windows 11
+* Ubuntu Linux
+* Kali Linux
+* Docker
+* Docker Compose
 
-The techniques documented in this repository should not be used against third-party systems, networks, services, accounts, or data without authorization.
+### Identity and Access
+
+* Active Directory
+* DNS
+* Group Policy
+* Domain joining
+* User and group administration
+* Administrative account separation
+* Domain secure-channel troubleshooting
+
+### Security Monitoring
+
+* Wazuh
+* Splunk
+* Windows Event Logs
+* File integrity monitoring
+* Security configuration assessment
+* Endpoint telemetry
+* Log ingestion
+* Data-quality validation
+
+### Detection and Investigation
+
+* Splunk SPL
+* Wazuh rule analysis
+* MITRE ATT&CK mapping
+* Authentication-event analysis
+* Account-change monitoring
+* PowerShell telemetry
+* Network reconnaissance analysis
+* Timeline reconstruction
+* False-positive evaluation
+
+### Operations
+
+* Snapshot management
+* Backup planning
+* Recovery testing
+* Troubleshooting
+* Change management
+* Evidence preservation
+* Runbook development
+* Security sanitization
+
+---
+
+## Key Lessons
+
+* Stable infrastructure must come before advanced testing.
+* DNS and time are critical security dependencies.
+* Host-only networking provides an effective default safety boundary.
+* A running service does not guarantee application health.
+* A running agent does not guarantee complete telemetry.
+* A visible alert does not prove correct detection logic.
+* Source events should be validated before troubleshooting the SIEM.
+* Missing alerts often reveal valuable telemetry or detection gaps.
+* Snapshots are rollback tools, not independent backups.
+* Evidence should be exported before restoration.
+* Public technical documentation requires a separate security review.
+* Documentation is part of the engineering process.
+
+---
+
+## Ethical Use
+
+This project documents a privately owned cybersecurity training environment.
+
+All security testing described in this repository is limited to:
+
+* Systems owned by the operator
+* CyberLab virtual machines
+* Dedicated test accounts
+* Synthetic test data
+* Explicitly authorized targets
+
+Nothing in this repository should be interpreted as permission to scan, access, disrupt, or test a third-party system.
 
 ---
 
 ## Disclaimer
 
-This repository documents a personal educational lab.
+This repository is intended for:
 
-The configurations and procedures may require modification for other environments. They should not be treated as production deployment guidance without additional security review, testing, and organizational approval.
+* Defensive security education
+* Blue Team practice
+* Lab administration
+* Detection engineering
+* Incident investigation
+* Technical portfolio development
 
+Commands and configurations should be reviewed and adapted before use in another environment.
+
+The public examples are sanitized and may not match an operational deployment exactly.
+
+---
+
+<div align="center">
+
+## Blue Team Engineering Through Infrastructure, Telemetry, Detection, and Documentation
+
+Built as a practical cybersecurity learning environment focused on repeatability, investigation, recovery, and continuous defensive improvement.
+
+<br>
+
+[Back to Top](#blue-team-detection-cyberlab)
+
+</div>
