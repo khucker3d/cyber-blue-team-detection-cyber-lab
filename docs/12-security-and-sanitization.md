@@ -46,7 +46,7 @@ The CyberLab security and sanitization process is designed to:
 
 The CyberLab uses a defense-in-depth approach.
 
-```text
+```
 Physical Host Security
         |
         v
@@ -130,7 +130,7 @@ Public documentation should not contain values that provide direct access to the
 
 Before information crosses from the private environment into the public repository, it should pass through a review boundary.
 
-```text
+```
 Private CyberLab
       |
       | Raw configuration, logs, screenshots, notes
@@ -215,19 +215,19 @@ Use reserved example values in public documentation.
 
 ### Example IPv4 Network
 
-```text
+```
 192.0.2.0/24
 ```
 
 ### Example Domain
 
-```text
+```
 cyberlab.example
 ```
 
 ### Example Hostnames
 
-```text
+```
 DC01
 WIN11TARGET
 WAZUH-SERVER
@@ -237,7 +237,7 @@ KALI-TEST
 
 ### Example Accounts
 
-```text
+```
 student.user
 student.admin
 validation.user
@@ -252,7 +252,7 @@ These values should not reveal the actual operational environment.
 
 Use consistent placeholders such as:
 
-```text
+```
 <DOMAIN_CONTROLLER>
 <WINDOWS_ENDPOINT>
 <WAZUH_SERVER>
@@ -349,7 +349,7 @@ Before publishing a version:
 
 Example:
 
-```text
+```
 A supported Splunk Enterprise release
 ```
 
@@ -432,7 +432,7 @@ Use separate identities for:
 
 Examples:
 
-```text
+```
 student.user
 student.admin
 svc.monitoring
@@ -463,13 +463,13 @@ Examples:
 
 Linux commands requiring elevation should use:
 
-```bash
+```
 sudo <COMMAND>
 ```
 
 Avoid routine use of:
 
-```bash
+```
 sudo su
 ```
 
@@ -507,7 +507,7 @@ Only trusted administrative users should belong to the Docker group.
 
 The current lab may use:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk start --run-as-root
 ```
 
@@ -765,15 +765,15 @@ Before every public push, review:
 
 Commands:
 
-```bash
+```
 git status
 ```
 
-```bash
+```
 git diff
 ```
 
-```bash
+```
 git diff --staged
 ```
 
@@ -868,7 +868,7 @@ Before publication, search for likely secrets.
 
 Examples:
 
-```bash
+```
 grep -RniE \
     'password|passwd|secret|token|api[_-]?key|private[_-]?key' \
     .
@@ -876,7 +876,7 @@ grep -RniE \
 
 Search for private-key markers:
 
-```bash
+```
 grep -Rni \
     "BEGIN.*PRIVATE KEY" \
     .
@@ -926,7 +926,7 @@ Do not include:
 
 Use neutral messages such as:
 
-```text
+```
 Add sanitized Wazuh deployment documentation
 ```
 
@@ -1034,7 +1034,7 @@ Before publishing terminal output:
 
 A public example prompt may use:
 
-```text
+```
 student@LAB-SERVER:~$
 ```
 
@@ -1114,7 +1114,7 @@ Before publishing a configuration file:
 
 Example:
 
-```text
+```
 outputs.conf.example
 docker-compose.example.yml
 agent-config.example.xml
@@ -1481,7 +1481,7 @@ Public filenames should be descriptive but neutral.
 
 Good examples:
 
-```text
+```
 wazuh-dashboard-sanitized.png
 splunk-authentication-search.png
 vmware-host-only-topology.png
@@ -1490,7 +1490,7 @@ file-integrity-alert.png
 
 Avoid:
 
-```text
+```
 my-home-network-192-168-x-x.png
 admin-password-reset.png
 personal-name-domain-controller.png
@@ -1502,7 +1502,7 @@ personal-name-domain-controller.png
 
 Recommended structure:
 
-```text
+```
 CyberLab/
 ├── README.md
 ├── docs/
@@ -1534,7 +1534,7 @@ A `SECURITY.md` file may explain:
 
 ## Example Security Statement
 
-```text
+```
 This repository documents a privately owned cybersecurity training lab.
 
 All testing described in this project is limited to systems owned by the operator or systems for which explicit authorization has been granted.
@@ -1619,7 +1619,7 @@ Search the public project for each value before pushing.
 
 Example:
 
-```powershell
+```
 Get-ChildItem `
     -Path . `
     -Recurse `
@@ -1638,7 +1638,7 @@ Do not commit the search list.
 
 Example:
 
-```bash
+```
 grep -Rni "<PRIVATE_VALUE>" .
 ```
 
@@ -1686,7 +1686,7 @@ Do not wait to rotate a secret until repository history cleanup is complete.
 
 For major public releases, maintain a private record.
 
-```text
+```
 Release:
 
 Files reviewed:
