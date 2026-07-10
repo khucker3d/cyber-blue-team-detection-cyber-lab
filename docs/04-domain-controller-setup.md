@@ -47,7 +47,7 @@ Changes should be documented and protected with stable snapshots or backups.
 
 The public documentation uses the following placeholder values:
 
-```text
+```
 Server hostname: DC01
 Domain name: cyberlab.example
 NetBIOS name: CYBERLAB
@@ -67,7 +67,7 @@ These values do not represent the operational CyberLab.
 
 The domain controller is connected primarily to the VMware host-only network.
 
-```text
+```
 Acer Windows Host
         |
         | VMware Host-Only Network
@@ -140,7 +140,7 @@ The internal domain name should be selected before Active Directory is installed
 
 For public documentation, use a reserved example domain such as:
 
-```text
+```
 cyberlab.example
 ```
 
@@ -164,7 +164,7 @@ A lab domain name should be:
 
 Avoid names such as:
 
-```text
+```
 <PERSONAL_NAME>.local
 <HOME_ADDRESS>.local
 <REAL_COMPANY_DOMAIN>
@@ -176,19 +176,19 @@ Avoid names such as:
 
 Avoid creating a domain with only one label, such as:
 
-```text
+```
 CYBERLAB
 ```
 
 Use a fully qualified domain name instead:
 
-```text
+```
 cyberlab.example
 ```
 
 The NetBIOS name may still use the shorter form:
 
-```text
+```
 CYBERLAB
 ```
 
@@ -200,7 +200,7 @@ Create a dedicated Windows Server virtual machine.
 
 Suggested public VM name:
 
-```text
+```
 DC01
 ```
 
@@ -253,7 +253,7 @@ The domain controller should initially use one host-only adapter.
 
 Recommended VMware settings:
 
-```text
+```
 Network Adapter 1
 Type: Custom
 VMnet: designated host-only network
@@ -335,7 +335,7 @@ A domain controller should use a stable hostname.
 
 Public example:
 
-```text
+```
 DC01
 ```
 
@@ -343,7 +343,7 @@ DC01
 
 Run PowerShell as Administrator:
 
-```powershell
+```
 Rename-Computer -NewName "DC01" -Restart
 ```
 
@@ -357,20 +357,20 @@ The server restarts immediately when `-Restart` is included.
 
 After restart:
 
-```powershell
+```
 hostname
 ```
 
 Or:
 
-```powershell
+```
 Get-ComputerInfo |
     Select-Object CsName, WindowsProductName, WindowsVersion
 ```
 
 Expected public example:
 
-```text
+```
 DC01
 ```
 
@@ -380,13 +380,13 @@ DC01
 
 Review network interfaces:
 
-```powershell
+```
 Get-NetAdapter
 ```
 
 Review detailed configuration:
 
-```powershell
+```
 Get-NetIPConfiguration
 ```
 
@@ -402,7 +402,7 @@ Renaming the adapter can reduce confusion.
 
 Example:
 
-```powershell
+```
 Rename-NetAdapter `
     -Name "<CURRENT_ADAPTER_NAME>" `
     -NewName "CyberLab-Internal"
@@ -412,7 +412,7 @@ Administrator privileges are required.
 
 Confirm the new name:
 
-```powershell
+```
 Get-NetAdapter
 ```
 
@@ -424,7 +424,7 @@ Run PowerShell as Administrator.
 
 Example:
 
-```powershell
+```
 New-NetIPAddress `
     -InterfaceAlias "CyberLab-Internal" `
     -IPAddress "192.0.2.10" `
@@ -439,7 +439,7 @@ For the isolated host-only adapter, do not add a default gateway unless the arch
 
 If the adapter already has an incorrect static address:
 
-```powershell
+```
 Get-NetIPAddress `
     -InterfaceAlias "CyberLab-Internal" `
     -AddressFamily IPv4
@@ -447,7 +447,7 @@ Get-NetIPAddress `
 
 Remove only the incorrect address:
 
-```powershell
+```
 Remove-NetIPAddress `
     -InterfaceAlias "CyberLab-Internal" `
     -IPAddress "<INCORRECT_ADDRESS>" `
@@ -464,7 +464,7 @@ Use caution to avoid removing the address from the wrong adapter.
 
 The future domain controller should use its own static IP address as its preferred DNS server.
 
-```powershell
+```
 Set-DnsClientServerAddress `
     -InterfaceAlias "CyberLab-Internal" `
     -ServerAddresses "192.0.2.10"
@@ -480,17 +480,17 @@ External lookups will later be handled through DNS forwarders.
 
 ## Review the Static Configuration
 
-```powershell
+```
 Get-NetIPConfiguration `
     -InterfaceAlias "CyberLab-Internal"
 ```
 
-```powershell
+```
 Get-DnsClientServerAddress `
     -InterfaceAlias "CyberLab-Internal"
 ```
 
-```powershell
+```
 ipconfig /all
 ```
 
@@ -508,13 +508,13 @@ Confirm:
 
 From the Windows Server VM, test the VMware host adapter:
 
-```powershell
+```
 ping <VMWARE_HOST_ADAPTER>
 ```
 
 From the Acer host, test the server:
 
-```powershell
+```
 ping <DOMAIN_CONTROLLER>
 ```
 
@@ -522,7 +522,7 @@ A failed ping may be caused by Windows Firewall blocking ICMP.
 
 Also test the network path using:
 
-```powershell
+```
 Test-NetConnection <DOMAIN_CONTROLLER>
 ```
 
@@ -554,7 +554,7 @@ A safe approach is:
 
 The temporary NAT adapter should normally use:
 
-```text
+```
 Addressing: VMware DHCP
 Default gateway: VMware NAT gateway
 Purpose: updates and software downloads
@@ -562,7 +562,7 @@ Purpose: updates and software downloads
 
 The host-only adapter should retain:
 
-```text
+```
 Static internal address
 No default gateway
 Internal DNS configuration
@@ -605,7 +605,7 @@ Graphical method:
 
 PowerShell method:
 
-```powershell
+```
 Set-DnsClient `
     -InterfaceAlias "<NAT_ADAPTER>" `
     -RegisterThisConnectionsAddress $false
@@ -621,7 +621,7 @@ Open PowerShell as Administrator.
 
 Install the AD DS role and management tools:
 
-```powershell
+```
 Install-WindowsFeature `
     -Name AD-Domain-Services `
     -IncludeManagementTools
@@ -635,13 +635,13 @@ Review the result and confirm that a restart is not unexpectedly required before
 
 ## Verify Role Installation
 
-```powershell
+```
 Get-WindowsFeature AD-Domain-Services
 ```
 
 Expected state:
 
-```text
+```
 Installed
 ```
 
@@ -653,7 +653,7 @@ The DNS role is normally installed as part of the new forest promotion process.
 
 Create a new forest using the sanitized example domain:
 
-```powershell
+```
 Install-ADDSForest `
     -DomainName "cyberlab.example" `
     -DomainNetbiosName "CYBERLAB" `
@@ -694,7 +694,7 @@ After restart, sign in using the domain Administrator account.
 
 Public example:
 
-```text
+```
 CYBERLAB\Administrator
 ```
 
@@ -708,15 +708,15 @@ Confirm that Server Manager recognizes the machine as a domain controller.
 
 Run PowerShell as Administrator or as an account with appropriate domain permissions:
 
-```powershell
+```
 Get-ADDomain
 ```
 
-```powershell
+```
 Get-ADForest
 ```
 
-```powershell
+```
 Get-ADDomainController
 ```
 
@@ -733,7 +733,7 @@ Expected information includes:
 
 ## Verify Installed Roles
 
-```powershell
+```
 Get-WindowsFeature |
     Where-Object InstallState -eq "Installed"
 ```
@@ -749,7 +749,7 @@ Confirm that the following are present:
 
 ## Verify Active Directory Services
 
-```powershell
+```
 Get-Service NTDS, DNS, Netlogon, Kdc
 ```
 
@@ -770,7 +770,7 @@ Relevant services include:
 
 Important domain controller data includes:
 
-```text
+```
 Active Directory database: NTDS.dit
 SYSVOL: Group Policy and logon-related files
 ```
@@ -781,13 +781,13 @@ SYSVOL is normally available through administrative shares after successful prom
 
 Review shares:
 
-```powershell
+```
 Get-SmbShare
 ```
 
 Expected domain-related shares include:
 
-```text
+```
 NETLOGON
 SYSVOL
 ```
@@ -798,7 +798,7 @@ SYSVOL
 
 Open DNS Manager or use PowerShell:
 
-```powershell
+```
 Get-DnsServerZone
 ```
 
@@ -819,7 +819,7 @@ Active Directory relies on DNS service records.
 
 Query domain controller records:
 
-```powershell
+```
 Resolve-DnsName `
     -Name "_ldap._tcp.dc._msdcs.cyberlab.example" `
     -Type SRV
@@ -827,7 +827,7 @@ Resolve-DnsName `
 
 Query Kerberos records:
 
-```powershell
+```
 Resolve-DnsName `
     -Name "_kerberos._tcp.cyberlab.example" `
     -Type SRV
@@ -839,11 +839,11 @@ Expected results should reference the domain controller.
 
 ## Verify Hostname Resolution
 
-```powershell
+```
 Resolve-DnsName "DC01.cyberlab.example"
 ```
 
-```powershell
+```
 nslookup DC01.cyberlab.example
 ```
 
@@ -857,7 +857,7 @@ DNS forwarders allow the domain controller to resolve external domains through a
 
 The Windows endpoint continues to query the domain controller.
 
-```text
+```
 Windows Endpoint
         |
         | Internal DNS request
@@ -875,7 +875,7 @@ Approved Upstream Resolver
 
 Run PowerShell as Administrator:
 
-```powershell
+```
 Add-DnsServerForwarder `
     -IPAddress "<APPROVED_UPSTREAM_DNS>" `
     -PassThru
@@ -889,7 +889,7 @@ Do not publish the actual home-network resolver configuration unless it is inten
 
 ## Review DNS Forwarders
 
-```powershell
+```
 Get-DnsServerForwarder
 ```
 
@@ -906,7 +906,7 @@ Confirm:
 
 With temporary NAT access available:
 
-```powershell
+```
 Resolve-DnsName example.com
 ```
 
@@ -936,7 +936,7 @@ A reverse zone is helpful but not always required for a small lab.
 
 Example PowerShell command:
 
-```powershell
+```
 Add-DnsServerPrimaryZone `
     -NetworkId "192.0.2.0/24" `
     -ReplicationScope "Domain"
@@ -950,7 +950,7 @@ The documentation network is only an example.
 
 ## Create a PTR Record
 
-```powershell
+```
 Add-DnsServerResourceRecordPtr `
     -Name "10" `
     -ZoneName "2.0.192.in-addr.arpa" `
@@ -961,7 +961,7 @@ The reverse zone name depends on the actual subnet.
 
 Verify:
 
-```powershell
+```
 Resolve-DnsName "192.0.2.10"
 ```
 
@@ -973,13 +973,13 @@ A single-domain-controller lab normally uses the default site.
 
 Open:
 
-```text
+```
 Active Directory Sites and Services
 ```
 
 Confirm that DC01 appears under:
 
-```text
+```
 Default-First-Site-Name
 ```
 
@@ -987,7 +987,7 @@ The default site name can be renamed for clarity, but this is optional.
 
 Example public site name:
 
-```text
+```
 CyberLab-Site
 ```
 
@@ -999,7 +999,7 @@ Creating a subnet object improves directory topology documentation.
 
 Example:
 
-```powershell
+```
 New-ADReplicationSubnet `
     -Name "192.0.2.0/24" `
     -Site "CyberLab-Site"
@@ -1017,7 +1017,7 @@ Organizational units allow accounts and systems to be grouped logically.
 
 Example structure:
 
-```text
+```
 CyberLab
 ├── Users
 ├── Administrators
@@ -1034,7 +1034,7 @@ This is more manageable than leaving every object in the default containers.
 
 ## Create the Root Organizational Unit
 
-```powershell
+```
 New-ADOrganizationalUnit `
     -Name "CyberLab" `
     -Path "DC=cyberlab,DC=example" `
@@ -1047,7 +1047,7 @@ Appropriate domain permissions are required.
 
 ## Create Child Organizational Units
 
-```powershell
+```
 $base = "OU=CyberLab,DC=cyberlab,DC=example"
 
 "Users",
@@ -1067,7 +1067,7 @@ ForEach-Object {
 
 Verify:
 
-```powershell
+```
 Get-ADOrganizationalUnit -Filter *
 ```
 
@@ -1094,7 +1094,7 @@ Do not use the built-in domain Administrator account for normal daily administra
 
 Public placeholder examples:
 
-```text
+```
 student.user
 student.admin
 test.user01
@@ -1109,7 +1109,7 @@ Avoid using real personal names, personal email addresses, or production naming 
 
 Create a secure password interactively:
 
-```powershell
+```
 $password = Read-Host `
     "Enter temporary password" `
     -AsSecureString
@@ -1117,7 +1117,7 @@ $password = Read-Host `
 
 Create the account:
 
-```powershell
+```
 New-ADUser `
     -Name "Student User" `
     -GivenName "Student" `
@@ -1138,7 +1138,7 @@ Do not place passwords directly in PowerShell scripts committed to GitHub.
 
 ## Create a Dedicated Administrative Account
 
-```powershell
+```
 $adminPassword = Read-Host `
     "Enter administrative password" `
     -AsSecureString
@@ -1154,7 +1154,7 @@ New-ADUser `
 
 Add the account to the required administrative group:
 
-```powershell
+```
 Add-ADGroupMember `
     -Identity "Domain Admins" `
     -Members "student.admin"
@@ -1185,7 +1185,7 @@ Security groups simplify access management.
 
 Example groups:
 
-```text
+```
 GG-CyberLab-Users
 GG-CyberLab-Admins
 GG-SIEM-Analysts
@@ -1201,7 +1201,7 @@ A naming convention should be documented and used consistently.
 
 ## Create a Security Group
 
-```powershell
+```
 New-ADGroup `
     -Name "GG-SIEM-Analysts" `
     -SamAccountName "GG-SIEM-Analysts" `
@@ -1212,7 +1212,7 @@ New-ADGroup `
 
 Add a user:
 
-```powershell
+```
 Add-ADGroupMember `
     -Identity "GG-SIEM-Analysts" `
     -Members "student.user"
@@ -1224,7 +1224,7 @@ Add-ADGroupMember `
 
 The default domain password policy should be reviewed.
 
-```powershell
+```
 Get-ADDefaultDomainPasswordPolicy
 ```
 
@@ -1266,7 +1266,7 @@ Before changing it:
 
 The following values are examples only:
 
-```text
+```
 Lockout threshold: 5 invalid attempts
 Lockout duration: 15 minutes
 Observation window: 15 minutes
@@ -1274,7 +1274,7 @@ Observation window: 15 minutes
 
 Apply with PowerShell:
 
-```powershell
+```
 Set-ADDefaultDomainPasswordPolicy `
     -Identity "cyberlab.example" `
     -LockoutThreshold 5 `
@@ -1292,7 +1292,7 @@ Group Policy provides centralized configuration for domain systems.
 
 Open Group Policy Management:
 
-```text
+```
 gpmc.msc
 ```
 
@@ -1329,7 +1329,7 @@ Each policy should have:
 
 ## Example GPO Naming Standard
 
-```text
+```
 GPO-Audit-Policy
 GPO-PowerShell-Logging
 GPO-Windows-Defender
@@ -1339,7 +1339,7 @@ GPO-Event-Log-Sizing
 
 Avoid names such as:
 
-```text
+```
 New Group Policy Object
 Test
 Policy 2
@@ -1352,13 +1352,13 @@ Clear names improve troubleshooting.
 
 ## Create a Group Policy Object
 
-```powershell
+```
 New-GPO -Name "GPO-Audit-Policy"
 ```
 
 Link it to the Workstations OU:
 
-```powershell
+```
 New-GPLink `
     -Name "GPO-Audit-Policy" `
     -Target "OU=Workstations,OU=CyberLab,DC=cyberlab,DC=example"
@@ -1394,7 +1394,7 @@ Advanced Audit Policy is normally configured through Group Policy.
 
 Example navigation:
 
-```text
+```
 Computer Configuration
 └── Policies
     └── Windows Settings
@@ -1423,7 +1423,7 @@ To improve process investigation, enable command-line logging for process creati
 
 Group Policy path:
 
-```text
+```
 Computer Configuration
 └── Administrative Templates
     └── System
@@ -1448,7 +1448,7 @@ Useful PowerShell logging features include:
 
 Group Policy path:
 
-```text
+```
 Computer Configuration
 └── Administrative Templates
     └── Windows Components
@@ -1488,13 +1488,13 @@ Log sizing should balance:
 
 ## Review Event Log Configuration
 
-```powershell
+```
 wevtutil gl Security
 ```
 
 PowerShell example:
 
-```powershell
+```
 Get-WinEvent -ListLog Security |
     Select-Object LogName, MaximumSizeInBytes, RecordCount, IsEnabled
 ```
@@ -1518,13 +1518,13 @@ The Active Directory role creates required rules for services such as:
 
 Review profiles:
 
-```powershell
+```
 Get-NetFirewallProfile
 ```
 
 Review enabled rules related to Active Directory:
 
-```powershell
+```
 Get-NetFirewallRule |
     Where-Object DisplayGroup -Match "Active Directory|DNS|File and Printer Sharing"
 ```
@@ -1541,19 +1541,19 @@ In a single-domain-controller lab, DC01 holds the Primary Domain Controller Emul
 
 Review domain roles:
 
-```powershell
+```
 netdom query fsmo
 ```
 
 Review time status:
 
-```powershell
+```
 w32tm /query /status
 ```
 
 Review configuration:
 
-```powershell
+```
 w32tm /query /configuration
 ```
 
@@ -1579,7 +1579,7 @@ Avoid conflicting time sources.
 
 Run from an elevated command prompt or PowerShell:
 
-```powershell
+```
 w32tm /config `
     /manualpeerlist:"<APPROVED_NTP_SOURCE>" `
     /syncfromflags:manual `
@@ -1589,13 +1589,13 @@ w32tm /config `
 
 Restart the time service:
 
-```powershell
+```
 Restart-Service w32time
 ```
 
 Request synchronization:
 
-```powershell
+```
 w32tm /resync
 ```
 
@@ -1632,19 +1632,19 @@ After reverting a snapshot:
 
 Run:
 
-```powershell
+```
 dcdiag
 ```
 
 A more detailed report:
 
-```powershell
+```
 dcdiag /v
 ```
 
 DNS-focused testing:
 
-```powershell
+```
 dcdiag /test:dns /v
 ```
 
@@ -1658,11 +1658,11 @@ Sanitize it before publication.
 
 A single-domain-controller lab has no partner replication, but the following tools are still useful for understanding domain health:
 
-```powershell
+```
 repadmin /replsummary
 ```
 
-```powershell
+```
 repadmin /showrepl
 ```
 
@@ -1672,13 +1672,13 @@ The output will be limited in a single-controller environment.
 
 ## Verify SYSVOL and NETLOGON
 
-```powershell
+```
 net share
 ```
 
 Confirm:
 
-```text
+```
 SYSVOL
 NETLOGON
 ```
@@ -1697,7 +1697,7 @@ If these shares are missing after promotion, investigate:
 
 Important logs include:
 
-```text
+```
 Applications and Services Logs
 └── Directory Service
 └── DNS Server
@@ -1743,7 +1743,7 @@ Create a non-administrative test account for domain validation.
 
 Example:
 
-```powershell
+```
 $password = Read-Host `
     "Enter temporary password" `
     -AsSecureString
@@ -1764,7 +1764,7 @@ This account can later be used to validate the Windows endpoint domain join and 
 
 ## Validate Account Creation
 
-```powershell
+```
 Get-ADUser `
     -Identity "validation.user" `
     -Properties Enabled, PasswordLastSet, LastLogonDate
@@ -1786,7 +1786,7 @@ After promotion, DC01 normally appears in the built-in Domain Controllers OU.
 
 This is the expected default location:
 
-```text
+```
 OU=Domain Controllers,DC=cyberlab,DC=example
 ```
 
@@ -1815,7 +1815,7 @@ Recommended practice:
 
 Back up all GPOs:
 
-```powershell
+```
 Backup-GPO `
     -All `
     -Path "<GPO_BACKUP_PATH>"
@@ -1833,14 +1833,14 @@ The Active Directory Recycle Bin can simplify recovery of deleted objects.
 
 Check status:
 
-```powershell
+```
 Get-ADOptionalFeature `
     -Filter 'Name -like "Recycle Bin Feature"'
 ```
 
 Enable it:
 
-```powershell
+```
 Enable-ADOptionalFeature `
     -Identity "Recycle Bin Feature" `
     -Scope ForestOrConfigurationSet `
@@ -1871,7 +1871,7 @@ Windows Server Backup may need to be installed.
 
 ## Install Windows Server Backup
 
-```powershell
+```
 Install-WindowsFeature Windows-Server-Backup
 ```
 
@@ -1879,7 +1879,7 @@ Administrator privileges are required.
 
 Verify:
 
-```powershell
+```
 Get-WindowsFeature Windows-Server-Backup
 ```
 
@@ -1891,7 +1891,7 @@ A system state backup must target a suitable backup location.
 
 Example:
 
-```powershell
+```
 wbadmin start systemstatebackup `
     -backuptarget:<BACKUP_DESTINATION> `
     -quiet
@@ -1907,7 +1907,7 @@ Do not store the only backup on the same virtual disk as the domain controller.
 
 Recommended domain controller snapshot milestones:
 
-```text
+```
 01-DC01-Clean-Install
 02-DC01-Patched-Baseline
 03-DC01-Static-Network
@@ -2082,7 +2082,7 @@ Possible causes include:
 
 Review:
 
-```powershell
+```
 Get-NetIPConfiguration
 Get-DnsClientServerAddress
 Get-WindowsFeature AD-Domain-Services
@@ -2099,7 +2099,7 @@ Also review Event Viewer and the AD DS deployment logs.
 
 Check:
 
-```powershell
+```
 Get-Service DNS
 Get-DnsServerZone
 Resolve-DnsName "_ldap._tcp.dc._msdcs.cyberlab.example" -Type SRV
@@ -2118,13 +2118,13 @@ Possible causes include:
 
 Restart Netlogon to trigger registration when appropriate:
 
-```powershell
+```
 Restart-Service Netlogon
 ```
 
 Then:
 
-```powershell
+```
 ipconfig /registerdns
 ```
 
@@ -2153,7 +2153,7 @@ Corrective actions:
 
 Review records:
 
-```powershell
+```
 Get-DnsServerResourceRecord `
     -ZoneName "cyberlab.example" `
     -Name "DC01"
@@ -2165,17 +2165,17 @@ Get-DnsServerResourceRecord `
 
 Check:
 
-```powershell
+```
 Get-Service NTDS, Netlogon, DFSR
 ```
 
-```powershell
+```
 dcdiag /v
 ```
 
 Review:
 
-```text
+```
 Applications and Services Logs
 └── DFS Replication
 └── Directory Service
@@ -2200,7 +2200,7 @@ Common causes include:
 
 Check:
 
-```powershell
+```
 w32tm /query /status
 Resolve-DnsName DC01.cyberlab.example
 setspn -L DC01
@@ -2208,7 +2208,7 @@ setspn -L DC01
 
 On a domain member:
 
-```powershell
+```
 Test-ComputerSecureChannel -Verbose
 ```
 
@@ -2229,7 +2229,7 @@ Check:
 
 Host commands:
 
-```powershell
+```
 Get-NetAdapter
 Get-NetIPConfiguration
 Get-NetRoute
@@ -2237,7 +2237,7 @@ Get-NetRoute
 
 Server commands:
 
-```powershell
+```
 ipconfig /all
 Get-NetConnectionProfile
 Get-NetFirewallProfile
@@ -2257,7 +2257,7 @@ Check:
 * The host VPN is not blocking VMware traffic.
 * DNS forwarding is configured correctly.
 
-```powershell
+```
 Get-NetIPConfiguration
 Get-NetRoute
 Resolve-DnsName example.com
@@ -2272,13 +2272,13 @@ Do not add a gateway to the host-only adapter simply to restore internet access.
 
 If a test account becomes locked:
 
-```powershell
+```
 Search-ADAccount -LockedOut
 ```
 
 Unlock the intended account:
 
-```powershell
+```
 Unlock-ADAccount -Identity "<TEST_USERNAME>"
 ```
 
@@ -2292,17 +2292,17 @@ Do not unlock an account before investigating the source of repeated failures du
 
 On the endpoint:
 
-```powershell
+```
 gpupdate /force
 ```
 
-```powershell
+```
 gpresult /r
 ```
 
 Generate an HTML report:
 
-```powershell
+```
 gpresult /h "<REPORT_PATH>"
 ```
 
@@ -2344,7 +2344,7 @@ Remove or replace:
 
 Use placeholders such as:
 
-```text
+```
 <DOMAIN_NAME>
 <NETBIOS_NAME>
 <DOMAIN_CONTROLLER>
