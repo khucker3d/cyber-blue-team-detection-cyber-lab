@@ -63,7 +63,7 @@ The recovery strategy applies to:
 
 ## Recovery Architecture
 
-```text
+```
 Active CyberLab
       |
       | Stable milestone
@@ -218,13 +218,13 @@ Use clear, consistent snapshot names.
 
 Recommended format:
 
-```text
+```
 <SEQUENCE>-<SYSTEM>-<MILESTONE>-<DATE>
 ```
 
 Examples:
 
-```text
+```
 01-DC01-Clean-Install-YYYY-MM-DD
 02-DC01-Domain-Promoted-YYYY-MM-DD
 03-WIN11TARGET-Domain-Joined-YYYY-MM-DD
@@ -235,7 +235,7 @@ Examples:
 
 For pre-exercise snapshots:
 
-```text
+```
 PRE-EX01-Failed-Logon-YYYY-MM-DD
 PRE-EX04-Group-Change-YYYY-MM-DD
 PRE-EX09-Network-Recon-YYYY-MM-DD
@@ -249,7 +249,7 @@ Each snapshot should include a short description.
 
 Example:
 
-```text
+```
 System:
 Milestone:
 Date:
@@ -285,7 +285,7 @@ Do not publish operational snapshot notes containing internal addresses or crede
 
 ### DC01
 
-```text
+```
 01-DC01-Clean-Install
 02-DC01-Patched-Baseline
 03-DC01-Static-Network
@@ -298,7 +298,7 @@ Do not publish operational snapshot notes containing internal addresses or crede
 
 ### WIN11TARGET
 
-```text
+```
 01-WIN11TARGET-Clean-Install
 02-WIN11TARGET-Patched-Baseline
 03-WIN11TARGET-Static-Network
@@ -313,7 +313,7 @@ Do not publish operational snapshot notes containing internal addresses or crede
 
 ### WAZUH-SERVER
 
-```text
+```
 01-WAZUH-Ubuntu-Clean-Install
 02-WAZUH-Ubuntu-Patched
 03-WAZUH-Network-Configured
@@ -328,7 +328,7 @@ Do not publish operational snapshot notes containing internal addresses or crede
 
 ### SPLUNK-SERVER
 
-```text
+```
 01-SPLUNK-Ubuntu-Clean-Install
 02-SPLUNK-Ubuntu-Patched
 03-SPLUNK-Network-Configured
@@ -343,7 +343,7 @@ Do not publish operational snapshot notes containing internal addresses or crede
 
 ### KALI-TEST
 
-```text
+```
 01-KALI-Clean-Install
 02-KALI-Patched-Baseline
 03-KALI-VMware-Tools
@@ -382,47 +382,47 @@ Before creating a stable snapshot, confirm the system is not already broken.
 
 ### DC01
 
-```powershell
+```
 dcdiag
 ```
 
-```powershell
+```
 Get-Service NTDS, DNS, Netlogon, Kdc
 ```
 
 ### WIN11TARGET
 
-```powershell
+```
 Test-ComputerSecureChannel -Verbose
 ```
 
-```powershell
+```
 Get-NetIPConfiguration
 ```
 
 ### WAZUH-SERVER
 
-```bash
+```
 docker compose ps
 ```
 
-```bash
+```
 df -h
 ```
 
 ### SPLUNK-SERVER
 
-```bash
+```
 sudo /opt/splunk/bin/splunk status
 ```
 
-```bash
+```
 df -h
 ```
 
 ### KALI-TEST
 
-```bash
+```
 ip address
 ip route
 timedatectl
@@ -440,13 +440,13 @@ Some systems should have services stopped before the operating system is shut do
 
 From the deployment directory:
 
-```bash
+```
 docker compose down
 ```
 
 Do not use:
 
-```bash
+```
 docker compose down -v
 ```
 
@@ -454,7 +454,7 @@ unless deleting application data is intentional.
 
 ### Splunk
 
-```bash
+```
 sudo /opt/splunk/bin/splunk stop
 ```
 
@@ -688,19 +688,19 @@ After restoring DC01:
 4. Confirm AD DS services.
 5. Run:
 
-```powershell
+```
 dcdiag
 ```
 
 6. Confirm:
 
-```powershell
+```
 Get-Service NTDS, DNS, Netlogon, Kdc
 ```
 
 7. Confirm SYSVOL and NETLOGON:
 
-```powershell
+```
 net share
 ```
 
@@ -740,13 +740,13 @@ After restoring WIN11TARGET:
 4. Confirm domain discovery.
 5. Test:
 
-```powershell
+```
 Test-ComputerSecureChannel -Verbose
 ```
 
 6. Run:
 
-```powershell
+```
 gpupdate /force
 ```
 
@@ -782,14 +782,14 @@ Restoring Wazuh may cause:
 3. Confirm the default route.
 4. Confirm Docker:
 
-```bash
+```
 sudo systemctl status docker
 ```
 
 5. Move into the deployment directory.
 6. Start or review the stack:
 
-```bash
+```
 docker compose up -d
 docker compose ps
 ```
@@ -827,7 +827,7 @@ Restoring Splunk may cause:
 4. Start Splunk using the documented runtime account.
 5. Review status:
 
-```bash
+```
 sudo /opt/splunk/bin/splunk status
 ```
 
@@ -947,13 +947,13 @@ Do not copy an actively running VM as the only backup.
 
 ## Cold Backup Naming Standard
 
-```text
+```
 <SYSTEM>-<MILESTONE>-<YYYY-MM-DD>
 ```
 
 Examples:
 
-```text
+```
 DC01-Domain-Validated-YYYY-MM-DD
 WIN11TARGET-Exercise-Ready-YYYY-MM-DD
 WAZUH-SERVER-Agent-Validated-YYYY-MM-DD
@@ -1029,7 +1029,7 @@ Verification may include:
 
 Windows:
 
-```powershell
+```
 Get-FileHash `
     -Path "<BACKUP_FILE>" `
     -Algorithm SHA256
@@ -1037,13 +1037,13 @@ Get-FileHash `
 
 Linux:
 
-```bash
+```
 sha256sum <BACKUP_FILE>
 ```
 
 Record:
 
-```text
+```
 Backup:
 System:
 Milestone:
@@ -1115,13 +1115,13 @@ System state provides a more appropriate Active Directory recovery method than s
 
 Install Windows Server Backup:
 
-```powershell
+```
 Install-WindowsFeature Windows-Server-Backup
 ```
 
 Run a system state backup:
 
-```powershell
+```
 wbadmin start systemstatebackup `
     -backuptarget:<BACKUP_DESTINATION> `
     -quiet
@@ -1137,7 +1137,7 @@ The backup destination should not be the same virtual disk as DC01.
 
 Back up all Group Policy Objects:
 
-```powershell
+```
 Backup-GPO `
     -All `
     -Path "<GPO_BACKUP_PATH>"
@@ -1162,7 +1162,7 @@ From the Wazuh host, preserve:
 
 Example archive:
 
-```bash
+```
 tar -czf \
     <BACKUP_PATH>/wazuh-config-<DATE>.tar.gz \
     <WAZUH_CONFIG_PATH>
@@ -1180,7 +1180,7 @@ Stop Splunk before a consistent full configuration backup when practical.
 
 Example:
 
-```bash
+```
 sudo tar -czf \
     <BACKUP_PATH>/splunk-config-<DATE>.tar.gz \
     /opt/splunk/etc
@@ -1234,7 +1234,7 @@ The repository should include focused runbooks for common failures.
 
 Recommended files:
 
-```text
+```
 runbooks/
 ├── start-cyberlab.md
 ├── stop-cyberlab.md
@@ -1253,7 +1253,7 @@ Runbooks should contain direct operational steps rather than long architectural 
 
 ## Recovery Runbook Template
 
-```text
+```
 Title:
 
 Purpose:
@@ -1300,7 +1300,7 @@ This prevents recovery work from becoming undocumented configuration drift.
 
 ## Recovery Record
 
-```text
+```
 Date:
 
 Incident:
@@ -1663,13 +1663,13 @@ Validate the application separately from the VM boot.
 
 On WIN11TARGET:
 
-```powershell
+```
 Test-ComputerSecureChannel -Verbose
 ```
 
 Repair when appropriate:
 
-```powershell
+```
 Test-ComputerSecureChannel `
     -Repair `
     -Credential "CYBERLAB\<AUTHORIZED_ADMIN>"
@@ -1807,7 +1807,7 @@ Remove or replace:
 
 Use placeholders such as:
 
-```text
+```
 <VM_NAME>
 <SNAPSHOT_NAME>
 <BACKUP_PATH>
