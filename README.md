@@ -343,8 +343,7 @@ Runbooks are intentionally shorter than the main documentation and focus on:
 
 ---
 
-## Project Gallery
-
+## Project Gallery (WIP)
 > Replace the image paths below with the final sanitized screenshots as they are added to the repository.
 
 | CyberLab Architecture                                                          | Wazuh Security Monitoring                                                    |
