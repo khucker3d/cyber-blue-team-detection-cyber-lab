@@ -38,7 +38,7 @@ The environment was designed around the following goals:
 
 ## High-Level Architecture
 
-```text
+```
                                Internet
                                   |
                          Physical Home Router
@@ -128,7 +128,7 @@ Each virtual machine is assigned only the network adapters required for its role
 
 ### Public Example Identity
 
-```text
+```
 Hostname: DC01
 Domain: cyberlab.example
 Example address: 192.0.2.10
@@ -184,7 +184,7 @@ Administrative access should be limited to designated lab administrator accounts
 
 ### Public Example Identity
 
-```text
+```
 Hostname: WIN11TARGET
 Domain: cyberlab.example
 Example address: 192.0.2.20
@@ -244,7 +244,7 @@ The Windows endpoint generates telemetry for:
 
 ### Public Example Identity
 
-```text
+```
 Hostname: WAZUH-SERVER
 Example internal address: 192.0.2.30
 Example management URL: https://<WAZUH_SERVER>
@@ -318,7 +318,7 @@ The internal host-only adapter should generally not define an internet gateway.
 
 ### Public Example Identity
 
-```text
+```
 Hostname: SPLUNK-SERVER
 Example internal address: 192.0.2.40
 Example management URL: http://<SPLUNK_SERVER>:8000
@@ -369,7 +369,7 @@ It should not be:
 
 ### Public Example Identity
 
-```text
+```
 Hostname: KALI-TEST
 Example address: 192.0.2.50
 ```
@@ -450,7 +450,7 @@ The host-only network:
 
 ### Example Addressing
 
-```text
+```
 Documentation subnet: 192.0.2.0/24
 Gateway: Not required for isolated operation
 Domain Controller: 192.0.2.10
@@ -633,7 +633,7 @@ Testing systems should only receive the access required for a specific exercise.
 
 ## Domain Authentication Flow
 
-```text
+```
 Windows Endpoint
       |
       | DNS query
@@ -654,7 +654,7 @@ The endpoint must use the domain controller as its DNS server to reliably locate
 
 ## Wazuh Telemetry Flow
 
-```text
+```
 Windows Endpoint
       |
       | Security events
@@ -675,7 +675,7 @@ The exact ports and registration credentials are intentionally omitted from the 
 
 ## Splunk Ingestion Flow
 
-```text
+```
 Windows or Linux Source
       |
       | Forwarded logs or imported data
@@ -695,7 +695,7 @@ Data ingestion methods may vary by exercise.
 
 ## Controlled Test Flow
 
-```text
+```
 Kali Linux
       |
       | Authorized scan or test activity
@@ -723,7 +723,7 @@ All generated activity should be:
 
 ## Administrative Flow
 
-```text
+```
 Acer Windows Host
       |
       | VMware console
@@ -758,7 +758,7 @@ The domain controller may forward external DNS requests to an approved upstream 
 
 ### Example Flow
 
-```text
+```
 Windows Endpoint
       |
       | Internal DNS request
@@ -780,7 +780,7 @@ The NAT adapter provides the default route for systems that require internet acc
 
 A multi-homed system should generally follow this model:
 
-```text
+```
 Host-Only Adapter
 - Internal static address
 - No default gateway
@@ -890,7 +890,7 @@ Snapshot names should describe the state clearly.
 
 Example:
 
-```text
+```
 01-Clean-Install
 02-Patched-Baseline
 03-Domain-Configured
@@ -966,13 +966,13 @@ Confirm:
 
 Example commands:
 
-```powershell
+```
 ipconfig /all
 ping <LAB_SYSTEM>
 Test-NetConnection <LAB_SYSTEM> -Port <PORT>
 ```
 
-```bash
+```
 ip address
 ip route
 ping -c 4 <LAB_SYSTEM>
@@ -988,7 +988,7 @@ Confirm:
 * The lab domain resolves.
 * External forwarding works when required.
 
-```powershell
+```
 nslookup <LAB_DOMAIN>
 nslookup <HOSTNAME>
 ```
@@ -1052,7 +1052,7 @@ The following information is removed or replaced:
 
 Public examples use placeholders such as:
 
-```text
+```
 <DOMAIN_CONTROLLER>
 <WINDOWS_ENDPOINT>
 <WAZUH_SERVER>
