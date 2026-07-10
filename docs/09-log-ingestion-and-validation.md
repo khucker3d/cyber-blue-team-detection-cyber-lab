@@ -46,7 +46,7 @@ The log-ingestion process supports the following goals:
 
 The public documentation uses example values such as:
 
-```text
+```
 Domain controller: DC01
 Windows endpoint: WIN11TARGET
 Wazuh server: WAZUH-SERVER
@@ -64,7 +64,7 @@ These values do not represent the operational CyberLab.
 
 ## High-Level Ingestion Architecture
 
-```text
+```
                          Event Sources
                                |
           _____________________|_____________________
@@ -96,7 +96,7 @@ These values do not represent the operational CyberLab.
 
 A complete logging pipeline includes several stages:
 
-```text
+```
 Event Generation
       |
       v
@@ -197,7 +197,7 @@ The action, time, source, expected logs, and cleanup should be documented before
 
 ## Validation Record Template
 
-```text
+```
 Test name:
 
 Objective:
@@ -269,19 +269,19 @@ Time differences can cause:
 
 On a Windows system:
 
-```powershell
+```
 Get-Date
 ```
 
 Review Windows Time:
 
-```powershell
+```
 w32tm /query /status
 ```
 
 Review the configured source:
 
-```powershell
+```
 w32tm /query /source
 ```
 
@@ -291,17 +291,17 @@ Domain-joined endpoints should normally synchronize through the domain hierarchy
 
 ## Linux Time Validation
 
-```bash
+```
 date
 ```
 
-```bash
+```
 timedatectl
 ```
 
 Review synchronization:
 
-```bash
+```
 timedatectl timesync-status
 ```
 
@@ -315,7 +315,7 @@ When documenting an exercise, record the timezone.
 
 Example:
 
-```text
+```
 Exercise start: YYYY-MM-DD HH:MM:SS TZ
 Exercise stop: YYYY-MM-DD HH:MM:SS TZ
 ```
@@ -414,7 +414,7 @@ If the alert appears outside the expected time range, check:
 
 Important Windows sources include:
 
-```text
+```
 Windows Logs
 ├── Security
 ├── System
@@ -425,7 +425,7 @@ Windows Logs
 
 Additional sources include:
 
-```text
+```
 Applications and Services Logs
 └── Microsoft
     └── Windows
@@ -445,7 +445,7 @@ The exact available channels depend on installed roles and software.
 
 Review recent Security events:
 
-```powershell
+```
 Get-WinEvent `
     -LogName Security `
     -MaxEvents 20
@@ -455,7 +455,7 @@ Administrator privileges may be required to read the Security log.
 
 Filter by time:
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName  = "Security"
@@ -465,7 +465,7 @@ Get-WinEvent `
 
 Filter by event identifier:
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -510,13 +510,13 @@ If no local event was generated, the problem may be:
 
 Review effective Windows auditing:
 
-```powershell
+```
 auditpol /get /category:*
 ```
 
 Review a specific subcategory:
 
-```powershell
+```
 auditpol /get /subcategory:"Process Creation"
 ```
 
@@ -539,19 +539,19 @@ The required category must be enabled before the related event can be collected.
 
 Review applied policy:
 
-```powershell
+```
 gpresult /r
 ```
 
 Create an HTML report:
 
-```powershell
+```
 gpresult /h "<REPORT_PATH>"
 ```
 
 Force an update:
 
-```powershell
+```
 gpupdate /force
 ```
 
@@ -563,7 +563,7 @@ Confirm that the expected audit and PowerShell policies apply to the correct org
 
 On the Windows endpoint:
 
-```powershell
+```
 Get-Service |
     Where-Object DisplayName -Match "Wazuh"
 ```
@@ -582,7 +582,7 @@ A running service does not prove that the agent is connected to the manager.
 
 Test the required internal service port:
 
-```powershell
+```
 Test-NetConnection <WAZUH_SERVER> -Port <WAZUH_AGENT_PORT>
 ```
 
@@ -612,7 +612,7 @@ In the Wazuh dashboard, confirm:
 
 Expected status:
 
-```text
+```
 Active
 ```
 
@@ -675,13 +675,13 @@ A dedicated test directory should be monitored.
 
 Example:
 
-```text
+```
 C:\CyberLab-Test\Files
 ```
 
 Create a test file:
 
-```powershell
+```
 New-Item `
     -Path "C:\CyberLab-Test\Files\fim-validation.txt" `
     -ItemType File `
@@ -690,7 +690,7 @@ New-Item `
 
 Add content:
 
-```powershell
+```
 Set-Content `
     -Path "C:\CyberLab-Test\Files\fim-validation.txt" `
     -Value "Authorized file integrity validation."
@@ -698,7 +698,7 @@ Set-Content `
 
 Modify the file:
 
-```powershell
+```
 Add-Content `
     -Path "C:\CyberLab-Test\Files\fim-validation.txt" `
     -Value "Controlled modification."
@@ -706,7 +706,7 @@ Add-Content `
 
 Delete after validation:
 
-```powershell
+```
 Remove-Item `
     -Path "C:\CyberLab-Test\Files\fim-validation.txt"
 ```
@@ -736,7 +736,7 @@ File creation, modification, and deletion may appear as separate records.
 
 On the Windows endpoint:
 
-```powershell
+```
 Get-Service |
     Where-Object DisplayName -Match "Splunk"
 ```
@@ -751,7 +751,7 @@ The exact service name depends on the installation.
 
 Test the receiver:
 
-```powershell
+```
 Test-NetConnection `
     <SPLUNK_SERVER> `
     -Port <SPLUNK_RECEIVER_PORT>
@@ -772,7 +772,7 @@ It does not confirm that:
 
 On the Splunk server:
 
-```bash
+```
 sudo ss -tulpn |
     grep <SPLUNK_RECEIVER_PORT>
 ```
@@ -916,7 +916,7 @@ index=windows
 
 Expected public host examples:
 
-```text
+```
 DC01
 WIN11TARGET
 ```
@@ -966,7 +966,7 @@ The source should identify the event channel or monitored file.
 
 Examples may include:
 
-```text
+```
 WinEventLog:Security
 WinEventLog:System
 WinEventLog:Application
@@ -1036,7 +1036,7 @@ Are the host, user, process, source, and network fields available?
 
 ## Data Quality Record
 
-```text
+```
 Data source:
 
 Expected events:
@@ -1237,7 +1237,7 @@ A harmless command should be used.
 
 ## Harmless PowerShell Test
 
-```powershell
+```
 Get-Service |
     Sort-Object Status |
     Select-Object -First 10
@@ -1261,7 +1261,7 @@ Record:
 
 Review PowerShell Operational events:
 
-```powershell
+```
 Get-WinEvent `
     -LogName "Microsoft-Windows-PowerShell/Operational" `
     -MaxEvents 20
@@ -1269,7 +1269,7 @@ Get-WinEvent `
 
 Review recent process-creation events:
 
-```powershell
+```
 Get-WinEvent `
     -FilterHashtable @{
         LogName = "Security"
@@ -1320,7 +1320,7 @@ Use benign built-in tools for validation.
 
 Example:
 
-```powershell
+```
 Start-Process notepad.exe
 ```
 
@@ -1360,7 +1360,7 @@ Before testing:
 
 Review firewall settings:
 
-```powershell
+```
 Get-NetFirewallProfile |
     Select-Object Name, LogAllowed, LogBlocked, LogFileName
 ```
@@ -1387,7 +1387,7 @@ The objective is to determine which systems observe the traffic.
 
 From Kali:
 
-```bash
+```
 nc -vz <AUTHORIZED_TARGET> <APPROVED_PORT>
 ```
 
@@ -1414,7 +1414,7 @@ This may reveal a telemetry gap that requires:
 
 ## Limited Scan Validation
 
-```bash
+```
 nmap -sT \
     -p <APPROVED_PORT_LIST> \
     <AUTHORIZED_TARGET>
@@ -1441,7 +1441,7 @@ A packet capture can confirm that traffic occurred even when no SIEM event exist
 
 On Kali or another authorized sensor:
 
-```bash
+```
 sudo tcpdump \
     -i <HOST_ONLY_INTERFACE> \
     host <AUTHORIZED_TARGET> \
@@ -1456,13 +1456,13 @@ Treat the capture as sensitive evidence.
 
 ## Hash the Capture
 
-```bash
+```
 sha256sum <CAPTURE_FILE>.pcap
 ```
 
 Record:
 
-```text
+```
 File:
 Capture interface:
 Source:
@@ -1497,7 +1497,7 @@ The platforms should be treated as complementary learning tools rather than assu
 
 For one known test event, record:
 
-```text
+```
 Source event timestamp:
 
 Wazuh timestamp:
@@ -1595,7 +1595,7 @@ Did a rule or detection exist?
 
 ## Troubleshooting Decision Flow
 
-```text
+```
 Expected event missing
         |
         v
@@ -1645,15 +1645,15 @@ Check:
 
 Commands:
 
-```powershell
+```
 auditpol /get /category:*
 ```
 
-```powershell
+```
 gpresult /r
 ```
 
-```powershell
+```
 Get-Service EventLog
 ```
 
@@ -1663,14 +1663,14 @@ Get-Service EventLog
 
 Check:
 
-```powershell
+```
 Get-Service |
     Where-Object DisplayName -Match "Wazuh"
 ```
 
 Test connectivity:
 
-```powershell
+```
 Test-NetConnection <WAZUH_SERVER> -Port <WAZUH_AGENT_PORT>
 ```
 
@@ -1709,14 +1709,14 @@ The event may require a custom rule if the default ruleset does not alert on it.
 
 Review:
 
-```powershell
+```
 Get-Service |
     Where-Object DisplayName -Match "Splunk"
 ```
 
 Restart when appropriate:
 
-```powershell
+```
 Restart-Service <SPLUNK_FORWARDER_SERVICE>
 ```
 
@@ -1730,7 +1730,7 @@ Review the forwarder logs if the service stops again.
 
 From Windows:
 
-```powershell
+```
 Test-NetConnection `
     <SPLUNK_SERVER> `
     -Port <SPLUNK_RECEIVER_PORT>
@@ -1738,7 +1738,7 @@ Test-NetConnection `
 
 On the server:
 
-```bash
+```
 sudo ss -tulpn |
     grep <SPLUNK_RECEIVER_PORT>
 ```
@@ -1932,7 +1932,7 @@ Important evidence should be exported before data expires or the environment is 
 
 Review log size:
 
-```powershell
+```
 Get-WinEvent -ListLog Security |
     Select-Object LogName, MaximumSizeInBytes, RecordCount, LogMode
 ```
@@ -1997,7 +1997,7 @@ Evidence should be exported before snapshot rollback.
 
 ## Export a Windows Event Log
 
-```powershell
+```
 wevtutil epl Security "<EVIDENCE_PATH>\Security.evtx"
 ```
 
@@ -2032,7 +2032,7 @@ Review exports for:
 
 Windows:
 
-```powershell
+```
 Get-FileHash `
     -Path "<EVIDENCE_FILE>" `
     -Algorithm SHA256
@@ -2040,13 +2040,13 @@ Get-FileHash `
 
 Linux:
 
-```bash
+```
 sha256sum <EVIDENCE_FILE>
 ```
 
 Record:
 
-```text
+```
 File:
 Source system:
 Collection date:
@@ -2194,7 +2194,7 @@ Document changes to:
 
 Example:
 
-```text
+```
 Date:
 
 Change:
@@ -2248,7 +2248,7 @@ Remove or replace:
 
 Use placeholders such as:
 
-```text
+```
 <WINDOWS_ENDPOINT>
 <DOMAIN_CONTROLLER>
 <WAZUH_SERVER>
