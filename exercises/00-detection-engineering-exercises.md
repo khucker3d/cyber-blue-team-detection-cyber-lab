@@ -24,38 +24,6 @@ Each exercise is designed to answer four questions:
 * Could a student analyst investigate and explain what happened?
 
 The exercises use harmless, authorized actions performed only against CyberLab systems.
-
----
-
-## Folder Placement
-
-This document should be stored as:
-
-```
-exercises/detection-engineering-exercises.md
-```
-
-It serves as the central index for the individual exercise files.
-
-Recommended structure:
-
-```
-exercises/
-├── detection-engineering-exercises.md
-├── 01-failed-login-investigation.md
-├── 02-account-lockout-investigation.md
-├── 03-user-account-creation.md
-├── 04-privileged-group-change.md
-├── 05-suspicious-powershell.md
-├── 06-file-integrity-change.md
-├── 07-defender-alert-validation.md
-├── 08-firewall-block-investigation.md
-├── 09-network-reconnaissance-detection.md
-└── 10-ingestion-health-validation.md
-```
-
-The individual exercise files should contain the detailed procedures, expected telemetry, searches, cleanup steps, and findings.
-
 ---
 
 ## Exercise Goals
@@ -192,7 +160,7 @@ Not every exercise requires every system, but the exercise file should identify 
 
 ---
 
-## Recommended Startup Order
+## Startup Order
 
 1. Start DC01.
 2. Confirm Active Directory and DNS.
@@ -305,7 +273,7 @@ Conclusion:
 
 Each completed exercise should preserve enough evidence to demonstrate the full workflow.
 
-Recommended evidence includes:
+Evidence includes:
 
 * Exercise start and stop time
 * Source system
@@ -328,8 +296,6 @@ Evidence should be sanitized before publication.
 ---
 
 ## Evidence Naming Standard
-
-Recommended format:
 
 ```
 <DATE>-<EXERCISE-ID>-<SOURCE>-<EVIDENCE-TYPE>
@@ -365,7 +331,7 @@ Linux:
 sha256sum <EVIDENCE_FILE>
 ```
 
-Recommended record:
+Record:
 
 ```
 File:
@@ -1336,7 +1302,7 @@ A standard investigation should include:
 7. Identify the process or protocol.
 8. Compare with approved exercise activity.
 9. Determine whether the event is expected.
-10. Record the conclusion and recommended action.
+10. Record the conclusion and action.
 
 ---
 
@@ -1402,7 +1368,7 @@ This table should be updated as each exercise is completed.
 
 ## Exercise Status Values
 
-Recommended values:
+Values:
 
 ```
 Planned
@@ -1488,7 +1454,7 @@ Snapshots should be created before exercises that change:
 * Network adapters
 * System services
 
-Recommended snapshot names:
+Snapshot names:
 
 ```
 PRE-EX01-Failed-Logon
