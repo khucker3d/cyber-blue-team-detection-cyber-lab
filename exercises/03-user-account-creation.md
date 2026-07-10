@@ -1288,7 +1288,7 @@ Severity should reflect confidence, privilege, and impact.
 
 # Evidence Collection
 
-## Recommended Evidence
+## Evidence
 
 Preserve:
 
@@ -1551,7 +1551,7 @@ Document whether the platforms lacked:
 
 ---
 
-## Recommended Improvements
+## Improvements
 
 Potential improvements include:
 
