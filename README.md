@@ -270,19 +270,19 @@ The project documentation is organized as a structured deployment and operations
 
 | Document                                                                         | Purpose                                                        |
 | -------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| [01 – Architecture](docs/02-architecture.md)                                     | Logical design, systems, dependencies, and traffic flow        |
-| [02 – Host Configuration](docs/03-host-configuration.md)                         | Acer host preparation and virtualization requirements          |
-| [03 – VMware Network Design](docs/04-vmware-network-design.md)                   | Host-only and NAT network architecture                         |
-| [04 – Domain Controller Setup](docs/05-domain-controller-setup.md)               | Windows Server, AD DS, DNS, users, groups, and policy          |
-| [05 – Windows Endpoint Setup](docs/06-windows-endpoint-setup.md)                 | Windows 11 deployment, domain join, auditing, and monitoring   |
-| [06 – Wazuh SIEM Setup](docs/07-wazuh-siem-setup.md)                             | Wazuh deployment, agent enrollment, and event validation       |
-| [07 – Splunk Setup](docs/08-splunk-setup.md)                                     | Splunk installation, service startup, forwarding, and searches |
-| [08 – Kali Testing System](docs/09-kali-testing-system.md)                       | Authorized activity-generation and testing workstation         |
-| [09 – Log Ingestion and Validation](docs/10-log-ingestion-and-validation.md)     | End-to-end telemetry and data-quality validation               |
-| [10 – Snapshot and Recovery Strategy](docs/11-snapshot-and-recovery-strategy.md) | Snapshots, backups, restoration, and recovery testing          |
-| [11 – Troubleshooting](docs/12-troubleshooting.md)                               | Layered diagnostic and repair framework                        |
-| [12 – Security and Sanitization](docs/13-security-and-sanitization.md)           | Isolation, credential protection, and public-release controls  |
-| [13 – Lessons Learned](docs/14-lessons-learned.md)                               | Technical findings, improvements, and project assessment       |
+| [01 – Architecture](docs/01-architecture.md)                                     | Logical design, systems, dependencies, and traffic flow        |
+| [02 – Host Configuration](docs/02-host-configuration.md)                         | Acer host preparation and virtualization requirements          |
+| [03 – VMware Network Design](docs/03-vmware-network-design.md)                   | Host-only and NAT network architecture                         |
+| [04 – Domain Controller Setup](docs/04-domain-controller-setup.md)               | Windows Server, AD DS, DNS, users, groups, and policy          |
+| [05 – Windows Endpoint Setup](docs/05-windows-endpoint-setup.md)                 | Windows 11 deployment, domain join, auditing, and monitoring   |
+| [06 – Wazuh SIEM Setup](docs/06-wazuh-siem-setup.md)                             | Wazuh deployment, agent enrollment, and event validation       |
+| [07 – Splunk Setup](docs/07-splunk-setup.md)                                     | Splunk installation, service startup, forwarding, and searches |
+| [08 – Kali Testing System](docs/08-kali-testing-system.md)                       | Authorized activity-generation and testing workstation         |
+| [09 – Log Ingestion and Validation](docs/09-log-ingestion-and-validation.md)     | End-to-end telemetry and data-quality validation               |
+| [10 – Snapshot and Recovery Strategy](docs/10-snapshot-and-recovery-strategy.md) | Snapshots, backups, restoration, and recovery testing          |
+| [11 – Troubleshooting](docs/11-troubleshooting.md)                               | Layered diagnostic and repair framework                        |
+| [12 – Security and Sanitization](docs/12-security-and-sanitization.md)           | Isolation, credential protection, and public-release controls  |
+| [13 – Lessons Learned](docs/13-lessons-learned.md)                               | Technical findings, improvements, and project assessment       |
 
 ---
 
@@ -292,7 +292,7 @@ Controlled exercises are maintained separately from the deployment documentation
 
 | Exercise                                                                                  | Primary Objective                                           | Status  |
 | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------- | ------- |
-| [Detection Engineering Exercise Index](exercises/detection-engineering-exercises.md)      | Exercise standards, evidence, validation, and safety        | Active  |
+| [Detection Engineering Exercise Index](exercises/00-detection-engineering-exercises.md)      | Exercise standards, evidence, validation, and safety        | Active  |
 | [01 – Failed Login Investigation](exercises/01-failed-logon-investigation.md)             | Investigate a controlled authentication failure             | Planned |
 | [02 – Account Lockout Investigation](exercises/02-account-lockout-investigation.md)       | Correlate failed attempts with account lockout              | Planned |
 | [03 – User Account Creation](exercises/03-user-account-creation.md)                       | Detect and investigate a new directory account              | Planned |
