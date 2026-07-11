@@ -8,22 +8,6 @@ A modular cybersecurity home lab built with VMware Workstation, Windows Active D
 
 <br>
 
-[![Project Status](https://img.shields.io/badge/Project_Status-Active_Development-2ea44f?style=for-the-badge)](#project-status)
-[![Lab Type](https://img.shields.io/badge/Lab_Type-Blue_Team-0078d4?style=for-the-badge)](#project-overview)
-[![Platform](https://img.shields.io/badge/Platform-VMware_Workstation-607078?style=for-the-badge)](#lab-platforms)
-[![Documentation](https://img.shields.io/badge/Documentation-GitHub_Ready-181717?style=for-the-badge\&logo=github)](#documentation)
-
-<br>
-
-[![Windows Server](https://img.shields.io/badge/Windows_Server-Active_Directory-0078D6?style=flat-square\&logo=windows)](#identity-and-endpoint-layer)
-[![Windows 11](https://img.shields.io/badge/Windows_11-Monitored_Endpoint-0078D6?style=flat-square\&logo=windows11)](#identity-and-endpoint-layer)
-[![Wazuh](https://img.shields.io/badge/Wazuh-SIEM-005571?style=flat-square)](#security-monitoring-layer)
-[![Splunk](https://img.shields.io/badge/Splunk-Log_Analytics-000000?style=flat-square\&logo=splunk)](#security-monitoring-layer)
-[![Kali Linux](https://img.shields.io/badge/Kali_Linux-Testing_System-557C94?style=flat-square\&logo=kalilinux)](#testing-layer)
-[![MITRE ATT\&CK](https://img.shields.io/badge/MITRE_ATT%26CK-Detection_Mapping-C00000?style=flat-square)](#detection-engineering)
-
-<br>
-
 [Project Overview](#project-overview) •
 [Architecture](#architecture) •
 [Documentation](#documentation) •
@@ -32,6 +16,22 @@ A modular cybersecurity home lab built with VMware Workstation, Windows Active D
 [Skills Demonstrated](#skills-demonstrated)
 
 </div>
+
+---
+
+## Project Gallery
+
+| CyberLab Architecture (Sanitized)                                                          | Wazuh Security Monitoring (Sanitized)                                                    |
+| ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
+| ![Sanitized Blue Team CyberLab architecture](images/cyberlab-architecture-sanitized.png) | ![Sanitized Wazuh security monitoring dashboard](images/wazuh-dashboard-sanitized.png) |
+
+| Splunk Log Analysis (Sanitized)                                                    | Windows Endpoint Telemetry (Sanitized)                                                             |
+| ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| ![Sanitized Splunk log analysis interface](images/splunk-dashboard-sanitized.png) | ![Sanitized Windows endpoint security telemetry](images/windows-event-validation-sanitized.png) |
+
+| Active Directory Lab (Sanitized)                                                            | Detection Exercise (Sanitized)                                                         |
+| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| ![Sanitized Active Directory lab configuration](images/active-directory-lab-sanitized.png) | ![Sanitized detection engineering exercise](images/detection-exercise-sanitized.png) |
 
 ---
 
@@ -340,22 +340,6 @@ Runbooks are intentionally shorter than the main documentation and focus on:
 * Validation
 * Rollback
 * Escalation conditions
-
----
-
-## Project Gallery (WIP)
-
-| CyberLab Architecture (Sanitized)                                                          | Wazuh Security Monitoring (Sanitized)                                                    |
-| ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
-| ![Sanitized Blue Team CyberLab architecture](images/cyberlab-architecture-sanitized.png) | ![Sanitized Wazuh security monitoring dashboard](images/wazuh-dashboard-sanitized.png) |
-
-| Splunk Log Analysis (Sanitized)                                                    | Windows Endpoint Telemetry (Sanitized)                                                             |
-| ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| ![Sanitized Splunk log analysis interface](images/splunk-dashboard-sanitized.png) | ![Sanitized Windows endpoint security telemetry](images/windows-event-validation-sanitized.png) |
-
-| Active Directory Lab (Sanitized)                                                            | Detection Exercise (Sanitized)                                                         |
-| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| ![Sanitized Active Directory lab configuration](images/active-directory-lab-sanitized.png) | ![Sanitized detection engineering exercise](images/detection-exercise-sanitized.png) |
 
 ---
 
