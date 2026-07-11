@@ -347,15 +347,15 @@ Runbooks are intentionally shorter than the main documentation and focus on:
 
 | CyberLab Architecture (Sanitized)                                                          | Wazuh Security Monitoring (Sanitized)                                                    |
 | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------- |
-| ![Sanitized Blue Team CyberLab architecture](images/cyberlab-architecture.png) | ![Sanitized Wazuh security monitoring dashboard](images/wazuh-dashboard-sanitized.png) |
+| ![Sanitized Blue Team CyberLab architecture](images/cyberlab-architecture-sanitized.png) | ![Sanitized Wazuh security monitoring dashboard](images/wazuh-dashboard-sanitized.png) |
 
 | Splunk Log Analysis (Sanitized)                                                    | Windows Endpoint Telemetry (Sanitized)                                                             |
 | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| ![Sanitized Splunk log analysis interface](images/splunk-dashboard-sanitized.png) | ![Sanitized Windows endpoint security telemetry](images/windows-event-validation.png) |
+| ![Sanitized Splunk log analysis interface](images/splunk-dashboard-sanitized.png) | ![Sanitized Windows endpoint security telemetry](images/windows-event-validation-sanitized.png) |
 
 | Active Directory Lab (Sanitized)                                                            | Detection Exercise (Sanitized)                                                         |
 | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| ![Sanitized Active Directory lab configuration](images/active-directory-lab.png) | ![Sanitized detection engineering exercise](images/detection-exercise.png) |
+| ![Sanitized Active Directory lab configuration](images/active-directory-lab-sanitized.png) | ![Sanitized detection engineering exercise](images/detection-exercise-sanitized.png) |
 
 ---
 
