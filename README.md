@@ -637,10 +637,6 @@ The public examples are sanitized and may not match an operational deployment ex
 
 <div align="center">
 
-## Blue Team Engineering Through Infrastructure, Telemetry, Detection, and Documentation
-
-Built as a practical cybersecurity learning environment focused on repeatability, investigation, recovery, and continuous defensive improvement.
-
 <br>
 
 [Back to Top](#blue-team-detection-cyberlab)
