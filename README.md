@@ -268,21 +268,21 @@ Detection work may include:
 
 The project documentation is organized as a structured deployment and operations guide.
 
-| Document                                                                         | Purpose                                                        |
-| -------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| [01 – Architecture](docs/01-architecture.md)                                     | Logical design, systems, dependencies, and traffic flow        |
-| [02 – Host Configuration](docs/02-host-configuration.md)                         | Acer host preparation and virtualization requirements          |
-| [03 – VMware Network Design](docs/03-vmware-network-design.md)                   | Host-only and NAT network architecture                         |
-| [04 – Domain Controller Setup](docs/04-domain-controller-setup.md)               | Windows Server, AD DS, DNS, users, groups, and policy          |
-| [05 – Windows Endpoint Setup](docs/05-windows-endpoint-setup.md)                 | Windows 11 deployment, domain join, auditing, and monitoring   |
-| [06 – Wazuh SIEM Setup](docs/06-wazuh-siem-setup.md)                             | Wazuh deployment, agent enrollment, and event validation       |
-| [07 – Splunk Setup](docs/07-splunk-setup.md)                                     | Splunk installation, service startup, forwarding, and searches |
-| [08 – Kali Testing System](docs/08-kali-testing-system.md)                       | Authorized activity-generation and testing workstation         |
-| [09 – Log Ingestion and Validation](docs/09-log-ingestion-and-validation.md)     | End-to-end telemetry and data-quality validation               |
-| [10 – Snapshot and Recovery Strategy](docs/10-snapshot-and-recovery-strategy.md) | Snapshots, backups, restoration, and recovery testing          |
-| [11 – Troubleshooting](docs/11-troubleshooting.md)                               | Layered diagnostic and repair framework                        |
-| [12 – Security and Sanitization](docs/12-security-and-sanitization.md)           | Isolation, credential protection, and public-release controls  |
-| [13 – Lessons Learned](docs/13-lessons-learned.md)                               | Technical findings, improvements, and project assessment       |
+| Document                                                                        | Purpose                                                        |
+| ------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| 1. [Architecture](docs/01-architecture.md)                                      | Logical design, systems, dependencies, and traffic flow        |
+| 2. [Host Configuration](docs/02-host-configuration.md)                          | Acer host preparation and virtualization requirements          |
+| 3. [VMware Network Design](docs/03-vmware-network-design.md)                    | Host-only and NAT network architecture                         |
+| 4. [Domain Controller Setup](docs/04-domain-controller-setup.md)                | Windows Server, AD DS, DNS, users, groups, and policy          |
+| 5. [Windows Endpoint Setup](docs/05-windows-endpoint-setup.md)                  | Windows 11 deployment, domain join, auditing, and monitoring   |
+| 6. [Wazuh SIEM Setup](docs/06-wazuh-siem-setup.md)                              | Wazuh deployment, agent enrollment, and event validation       |
+| 7. [Splunk Setup](docs/07-splunk-setup.md)                                      | Splunk installation, service startup, forwarding, and searches |
+| 8. [Kali Testing System](docs/08-kali-testing-system.md)                        | Authorized activity-generation and testing workstation         |
+| 9. [Log Ingestion and Validation](docs/09-log-ingestion-and-validation.md)      | End-to-end telemetry and data-quality validation               |
+| 10. [Snapshot and Recovery Strategy](docs/10-snapshot-and-recovery-strategy.md) | Snapshots, backups, restoration, and recovery testing          |
+| 11. [Troubleshooting](docs/11-troubleshooting.md)                               | Layered diagnostic and repair framework                        |
+| 12. [Security and Sanitization](docs/12-security-and-sanitization.md)           | Isolation, credential protection, and public-release controls  |
+| 13. [Lessons Learned](docs/13-lessons-learned.md)                               | Technical findings, improvements, and project assessment       |
 
 ---
 
@@ -292,17 +292,17 @@ Controlled exercises are maintained separately from the deployment documentation
 
 | Exercise                                                                                  | Primary Objective                                           | Status  |
 | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------- | ------- |
-| [Detection Engineering Exercise Index](exercises/00-detection-engineering-exercises.md)      | Exercise standards, evidence, validation, and safety        | Active  |
-| [01 – Failed Login Investigation](exercises/01-failed-logon-investigation.md)             | Investigate a controlled authentication failure             | Planned |
-| [02 – Account Lockout Investigation](exercises/02-account-lockout-investigation.md)       | Correlate failed attempts with account lockout              | Planned |
-| [03 – User Account Creation](exercises/03-user-account-creation.md)                       | Detect and investigate a new directory account              | Planned |
-| [04 – Privileged Group Change](exercises/04-privileged-group-change.md)                   | Monitor group-membership and privilege changes              | Planned |
-| [05 – Suspicious PowerShell](exercises/05-suspicious-powershell.md)                       | Validate PowerShell process and script telemetry            | Planned |
-| [06 – File Integrity Change](exercises/06-file-integrity-change.md)                       | Detect controlled file creation, modification, and deletion | Planned |
-| [07 – Defender Alert Validation](exercises/07-defender-alert-validation.md)               | Validate endpoint-protection telemetry                      | Planned |
-| [08 – Firewall Block Investigation](exercises/08-firewall-block-investigation.md)         | Investigate a controlled blocked connection                 | Planned |
-| [09 – Network Reconnaissance Detection](exercises/09-network-reconnaissance-detection.md) | Evaluate visibility into a limited authorized scan          | Planned |
-| [10 – Ingestion Health Validation](exercises/10-ingestion-health-validation.md)           | Validate the full source-to-SIEM pipeline                   | Planned |
+| [Detection Engineering Exercise Index](exercises/00-detection-engineering-exercises.md)   | Exercise standards, evidence, validation, and safety        | Active  |
+| 1. [Failed Login Investigation](exercises/01-failed-logon-investigation.md)               | Investigate a controlled authentication failure             | Planned |
+| 2. [Account Lockout Investigation](exercises/02-account-lockout-investigation.md)         | Correlate failed attempts with account lockout              | Planned |
+| 3. [User Account Creation](exercises/03-user-account-creation.md)                         | Detect and investigate a new directory account              | Planned |
+| 4. [Privileged Group Change](exercises/04-privileged-group-change.md)                     | Monitor group-membership and privilege changes              | Planned |
+| 5. [Suspicious PowerShell](exercises/05-suspicious-powershell.md)                         | Validate PowerShell process and script telemetry            | Planned |
+| 6. [File Integrity Change](exercises/06-file-integrity-change.md)                         | Detect controlled file creation, modification, and deletion | Planned |
+| 7. [Defender Alert Validation](exercises/07-defender-alert-validation.md)                 | Validate endpoint-protection telemetry                      | Planned |
+| 8. [Firewall Block Investigation](exercises/08-firewall-block-investigation.md)           | Investigate a controlled blocked connection                 | Planned |
+| 9. [Network Reconnaissance Detection](exercises/09-network-reconnaissance-detection.md)   | Evaluate visibility into a limited authorized scan          | Planned |
+| 10. [Ingestion Health Validation](exercises/10-ingestion-health-validation.md)            | Validate the full source-to-SIEM pipeline                   | Planned |
 
 Exercise statuses will be updated as validation work is completed.
 
